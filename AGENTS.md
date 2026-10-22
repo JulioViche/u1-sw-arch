@@ -38,7 +38,9 @@ entregables**.
    español según la convención que ya exista en la carpeta.
 7. **Mantén la coherencia entre variantes.** Mismas entidades, casos de uso y contrato lógico
    en las cuatro, aunque cambien la tecnología y el estilo de servicio.
-8. **No borres `.gitkeep`.** Se usan para conservar carpetas vacías en git.
+8. **Uso de `.gitkeep` y contenido en `01. ERS/`:**
+   - No borres `.gitkeep` en carpetas vacías (ej. `02. MER/`, `03. BDD/`).
+   - En las carpetas `01. UML/01. ERS/` solo va el archivo Word oficial (`.docx`), sin archivos `.md` duplicados ni `.gitkeep` innecesarios.
 9. **Todo proyecto inicia con login.** Antes de convertir, el usuario debe autenticarse con
    las credenciales **quemadas** `MONSTER` / `MONSTER9`. Ver
    [authentication](vault/01-architecture/authentication.md).

@@ -12,7 +12,7 @@ modelos UML.
 
 | Carpeta | Contenido | Formato |
 | --- | --- | --- |
-| `01. ERS/` | Especificación de Requisitos de Software + plantilla | `.docx` |
+| `01. ERS/` | Especificación de Requisitos de Software (únicamente Word oficial) | `.docx` |
 | `02. ECUD/` | Especificación de Casos de Uso Detallados | `.pdf` / `.docx` |
 | `03. DIAGRAMAS UML/` | Modelos y exportados | nativo + `.png`/`.pdf` |
 
@@ -51,3 +51,7 @@ Ver [naming-conventions](../01-architecture/naming-conventions.md).
 > [!info] Relacionado
 > - [02-mer](02-mer.md)
 > - [generate-ers](../04-guides/generate-ers.md)
+
+
+> [!IMPORTANT] Formato exclusivo en `01. ERS/`
+> La carpeta `01. UML/01. ERS/` de cada variante contiene **exclusivamente el archivo Word final oficial (`.docx`)**. Los archivos `.md` de redacción y plantillas no deben colocarse en esta carpeta; residen centralizados en [vault/03-deliverables](srs-template.md). Tampoco requiere `.gitkeep` al contener ya el archivo `.docx`.
