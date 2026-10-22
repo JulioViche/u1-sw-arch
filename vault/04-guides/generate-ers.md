@@ -72,11 +72,14 @@ flowchart TD
 - [srs-variations.md](../03-deliverables/srs-variations.md): Diccionario de diferencias tecnológicas (SOAP vs REST, Java vs .NET, bibliotecas cliente, servidores Kestrel/Tomcat y tokens).
 
 ### Paso 2: Generación de los Markdown Específicos de cada Taller
-Para cada variante se genera un documento Markdown específico que adapta la carátula, RNF-001 a RNF-005, e interfaces según la plataforma:
-- `TI.1.1`: SOAP en Java (JAX-WS, NetBeans, Tomcat/Embebido).
-- `TI.1.2`: SOAP en .NET (CoreWCF, Visual Studio, Kestrel).
-- `TI.1.3`: REST en Java (Jakarta REST / Spring Boot, Jackson).
-- `TI.1.4`: REST en .NET (ASP.NET Core Web API, System.Text.Json).
+Para cada variante se genera automáticamente un documento Markdown específico que adapta la carátula institucional, RNF-001 a RNF-005, el protocolo de red y las librerías cliente multi-canal:
+
+| Taller | Archivo en Vault (Documentación) | Archivo en Carpeta de Entrega | Stack Tecnológico |
+| :--- | :--- | :--- | :--- |
+| **TI.1.1** | [srs-ti-1-1-soap-java.md](../03-deliverables/srs-ti-1-1-soap-java.md) | TI.1.1.../01. UML/01. ERS/ERS_SOAP_JAVA_SINBDD_GR09.md | SOAP 1.2, Java 17/21 (JAX-WS, NetBeans, Tomcat) |
+| **TI.1.2** | [srs-ti-1-2-soap-dotnet.md](../03-deliverables/srs-ti-1-2-soap-dotnet.md) | TI.1.2.../01. UML/01. ERS/ERS_SOAP_DOTNET_SINBDD_GR09.md | SOAP 1.2, C# .NET 8/9 (CoreWCF, Visual Studio, Kestrel) |
+| **TI.1.3** | [srs-ti-1-3-rest-java.md](../03-deliverables/srs-ti-1-3-rest-java.md) | TI.1.3.../01. UML/01. ERS/ERS_RESTFUL_JAVA_SINBDD_GR09.md | RESTful JSON, Java 17/21 (Jakarta REST, NetBeans, Tomcat) |
+| **TI.1.4** | [srs-ti-1-4-rest-dotnet.md](../03-deliverables/srs-ti-1-4-rest-dotnet.md) | TI.1.4.../01. UML/01. ERS/ERS_RESTFUL_DOTNET_SINBDD_GR09.md | RESTful JSON, C# .NET 8/9 (ASP.NET Core Web API, Kestrel) |
 
 ### Paso 3: Compilación a Microsoft Word (`.docx`)
 Una vez revisado y aprobado el Markdown de cada taller:
