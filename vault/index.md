@@ -64,7 +64,8 @@ flowchart TD
 
 ### 03 · Entregables
 - [[vault/03-deliverables/01-uml|01 · UML]]
-- [[vault/03-deliverables/srs-template|Plantilla ERS / SRS (Contenido extraído)]]
+- [[vault/03-deliverables/srs-template|Plantilla ERS / SRS (Documento base)]]
+- [[vault/03-deliverables/srs-variations|Variaciones del ERS por Taller (TI.1.1 a TI.1.4)]]
 - [[vault/03-deliverables/02-mer|02 · MER]]
 - [[vault/03-deliverables/03-bdd|03 · BDD]]
 - [[vault/03-deliverables/04-clients-and-server|04 · Clientes y servidor]]
