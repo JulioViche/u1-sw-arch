@@ -36,5 +36,5 @@ flowchart LR
 > de `examples/`**: cópialo si lo necesitas.
 
 > [!info] Relacionado
-> - [[vault/03 - Entregables/01 UML]]
-> - [[vault/01 - Arquitectura/Convenciones de nombres]]
+> - [[vault/03-deliverables/01-uml]]
+> - [[vault/01-architecture/naming-conventions]]

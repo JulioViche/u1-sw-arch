@@ -22,5 +22,5 @@ En el ejemplo de referencia (`examples/`) esta carpeta incluye subcarpetas
 repositorio no se crean** porque no aplican.
 
 > [!info] Relacionado
-> - [[vault/03 - Entregables/03 BDD]]
-> - [[vault/01 - Arquitectura/Estructura de carpetas]]
+> - [[vault/03-deliverables/03-bdd]]
+> - [[vault/01-architecture/folder-structure]]

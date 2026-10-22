@@ -15,7 +15,7 @@ unidades** construido como servicio web **RESTful** y **SOAP**, cada uno en **Ja
 
 > [!info] Documentación para agentes de IA
 > Lee **[AGENTS.md](AGENTS.md)** antes de tocar el repositorio.
-> La documentación detallada vive en el vault de Obsidian: **[vault/Inicio.md](vault/Inicio.md)**.
+> La documentación detallada vive en el vault de Obsidian: **[vault/index.md](vault/index.md)**.
 
 ---
 
@@ -71,7 +71,7 @@ Cada variante se ejecuta con las herramientas de su stack:
 
 > [!warning]
 > El servidor debe estar **en ejecución** antes de lanzar cualquier cliente.
-> Consulta [[vault/04 - Guías/Compilar y ejecutar|Compilar y ejecutar]] para el flujo completo.
+> Consulta [[vault/04-guides/build-and-run|Compilar y ejecutar]] para el flujo completo.
 
 ---
 
@@ -80,7 +80,7 @@ Cada variante se ejecuta con las herramientas de su stack:
 | Recurso | Propósito |
 | --- | --- |
 | [AGENTS.md](AGENTS.md) | Reglas y flujo de trabajo para agentes de IA |
-| [vault/Inicio.md](vault/Inicio.md) | Índice general (MOC) del vault de Obsidian |
+| [vault/index.md](vault/index.md) | Índice general (MOC) del vault de Obsidian |
 | `examples/` | Solución de referencia (SOAP + Java). Solo lectura |
 
 ### Abrir en Obsidian
@@ -98,5 +98,5 @@ Un **conversor de unidades** (longitud, masa, temperatura, etc.) con inicio de s
 > - Para esta unidad, las credenciales van **quemadas en el código** (sin base de datos):
 >   usuario **`MONSTER`** · contraseña **`MONSTER9`**.
 
-Ver [[vault/01 - Arquitectura/Autenticación|Autenticación (login)]] y
-[[vault/05 - Referencia/Datos académicos|Datos académicos]].
+Ver [[vault/01-architecture/authentication|Autenticación (login)]] y
+[[vault/05-reference/academic-data|Datos académicos]].

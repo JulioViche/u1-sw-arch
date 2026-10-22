@@ -22,7 +22,7 @@ En el ejemplo de referencia, el manual vive en una subcarpeta `02. MANUAL TECNIC
 3. Arquitectura (estilo de servicio y plataforma).
 4. Requisitos (referencia al ERS).
 5. Diseño (referencia a UML; MER y BDD no aplican por ser SINBDD).
-6. Guía de instalación y ejecución (ver [[vault/04 - Guías/Compilar y ejecutar]]).
+6. Guía de instalación y ejecución (ver [[vault/04-guides/build-and-run]]).
 7. Pruebas y resultados.
 8. Conclusiones y anexos.
 
@@ -31,5 +31,5 @@ En el ejemplo de referencia, el manual vive en una subcarpeta `02. MANUAL TECNIC
 > adapta solo lo específico de la tecnología y el protocolo.
 
 > [!info] Relacionado
-> - [[vault/01 - Arquitectura/Convenciones de nombres]]
-> - [[vault/03 - Entregables/04 Clientes y servidor]]
+> - [[vault/01-architecture/naming-conventions]]
+> - [[vault/03-deliverables/04-clients-and-server]]

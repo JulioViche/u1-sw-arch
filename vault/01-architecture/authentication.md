@@ -20,7 +20,7 @@ de datos:
 | `MONSTER` | `MONSTER9` |
 
 - Se escriben **literalmente en el código** como constantes (o archivo de configuración).
-- No hay tabla de usuarios, ni hash, ni persistencia (el proyecto es [[vault/03 - Entregables/03 BDD|SINBDD]]).
+- No hay tabla de usuarios, ni hash, ni persistencia (el proyecto es [[vault/03-deliverables/03-bdd|SINBDD]]).
 - La comparación de credenciales es directa contra esos valores fijos.
 
 ## Flujo esperado
@@ -56,6 +56,6 @@ sequenceDiagram
 > mecanismo de autenticación."
 
 > [!info] Relacionado
-> - [[vault/03 - Entregables/04 Clientes y servidor]]
-> - [[vault/02 - Variantes/RESTful vs SOAP]]
-> - [[vault/05 - Referencia/Datos académicos]]
+> - [[vault/03-deliverables/04-clients-and-server]]
+> - [[vault/02-variants/restful-vs-soap]]
+> - [[vault/05-reference/academic-data]]

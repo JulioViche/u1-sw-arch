@@ -58,5 +58,5 @@ sequenceDiagram
 ```
 
 > [!info] Relacionado
-> - [[vault/03 - Entregables/04 Clientes y servidor]]
-> - [[vault/02 - Variantes/Java vs .NET]]
+> - [[vault/03-deliverables/04-clients-and-server]]
+> - [[vault/02-variants/java-vs-dotnet]]

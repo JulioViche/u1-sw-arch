@@ -33,7 +33,7 @@ código** (hardcoded, sin base de datos):
 | --- | --- |
 | `MONSTER` | `MONSTER9` |
 
-Ver [[vault/01 - Arquitectura/Autenticación|Autenticación (login)]].
+Ver [[vault/01-architecture/authentication|Autenticación (login)]].
 
 ## Solución de referencia (`examples/`)
 
@@ -44,5 +44,5 @@ nomenclatura. Es material de **solo lectura** e ignorado por git (`.gitignore`).
 > No copies a ciegas ni modifiques `examples/`. Úsalo como referencia.
 
 > [!info] Relacionado
-> - [[vault/01 - Arquitectura/Convenciones de nombres]]
-> - [[vault/03 - Entregables/03 BDD]]
+> - [[vault/01-architecture/naming-conventions]]
+> - [[vault/03-deliverables/03-bdd]]

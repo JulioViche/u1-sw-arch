@@ -48,5 +48,5 @@ TI.1.1. PAO202651_<PROTOCOLO>_<PLATAFORMA>_SINBDD_NRC36884_GR09/
 | `05. DOCUMENTACION/` | vacío | manual técnico + presentación |
 
 > [!info] Relacionado
-> - [[vault/01 - Arquitectura/Convenciones de nombres]]
-> - [[vault/03 - Entregables/01 UML]]
+> - [[vault/01-architecture/naming-conventions]]
+> - [[vault/03-deliverables/01-uml]]

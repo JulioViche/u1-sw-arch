@@ -25,12 +25,12 @@ unidades); cambia la forma de exponerlas y transportarlas.
 
 > [!danger] Todo proyecto inicia con login
 > El login es obligatorio antes de convertir. Las credenciales van **quemadas**:
-> `MONSTER` / `MONSTER9`. Ver [[vault/01 - Arquitectura/Autenticación|Autenticación (login)]].
+> `MONSTER` / `MONSTER9`. Ver [[vault/01-architecture/authentication|Autenticación (login)]].
 
 > [!note] Sin base de datos
 > La autenticación valida credenciales **quemadas en el código**; no hay persistencia.
-> Ver [[vault/05 - Referencia/Datos académicos|Datos académicos]].
+> Ver [[vault/05-reference/academic-data|Datos académicos]].
 
 > [!info] Relacionado
-> - [[vault/03 - Entregables/04 Clientes y servidor]]
-> - [[vault/02 - Variantes/Java vs .NET]]
+> - [[vault/03-deliverables/04-clients-and-server]]
+> - [[vault/02-variants/java-vs-dotnet]]

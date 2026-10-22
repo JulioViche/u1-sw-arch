@@ -52,30 +52,31 @@ flowchart TD
 ## Secciones
 
 ### 01 · Arquitectura
-- [[vault/01 - Arquitectura/Visión general|Visión general]]
-- [[vault/01 - Arquitectura/Estructura de carpetas|Estructura de carpetas]]
-- [[vault/01 - Arquitectura/Convenciones de nombres|Convenciones de nombres]]
-- [[vault/01 - Arquitectura/Autenticación|Autenticación (login)]]
+- [[vault/01-architecture/overview|Visión general]]
+- [[vault/01-architecture/folder-structure|Estructura de carpetas]]
+- [[vault/01-architecture/naming-conventions|Convenciones de nombres]]
+- [[vault/01-architecture/authentication|Autenticación (login)]]
 
 ### 02 · Variantes
-- [[vault/02 - Variantes/Matriz de variantes|Matriz de variantes]]
-- [[vault/02 - Variantes/RESTful vs SOAP|RESTful vs SOAP]]
-- [[vault/02 - Variantes/Java vs .NET|Java vs .NET]]
+- [[vault/02-variants/variant-matrix|Matriz de variantes]]
+- [[vault/02-variants/restful-vs-soap|RESTful vs SOAP]]
+- [[vault/02-variants/java-vs-dotnet|Java vs .NET]]
 
 ### 03 · Entregables
-- [[vault/03 - Entregables/01 UML|01 · UML]]
-- [[vault/03 - Entregables/02 MER|02 · MER]]
-- [[vault/03 - Entregables/03 BDD|03 · BDD]]
-- [[vault/03 - Entregables/04 Clientes y servidor|04 · Clientes y servidor]]
-- [[vault/03 - Entregables/05 Documentación|05 · Documentación]]
+- [[vault/03-deliverables/01-uml|01 · UML]]
+- [[vault/03-deliverables/srs-template|Plantilla ERS / SRS (Contenido extraído)]]
+- [[vault/03-deliverables/02-mer|02 · MER]]
+- [[vault/03-deliverables/03-bdd|03 · BDD]]
+- [[vault/03-deliverables/04-clients-and-server|04 · Clientes y servidor]]
+- [[vault/03-deliverables/05-documentation|05 · Documentación]]
 
 ### 04 · Guías
-- [[vault/04 - Guías/Compilar y ejecutar|Compilar y ejecutar]]
-- [[vault/04 - Guías/Generar el ERS|Generar el ERS]]
+- [[vault/04-guides/build-and-run|Compilar y ejecutar]]
+- [[vault/04-guides/generate-ers|Generar el ERS]]
 
 ### 05 · Referencia
-- [[vault/05 - Referencia/Glosario|Glosario]]
-- [[vault/05 - Referencia/Datos académicos|Datos académicos]]
+- [[vault/05-reference/glossary|Glosario]]
+- [[vault/05-reference/academic-data|Datos académicos]]
 
 ---
 
@@ -92,4 +93,4 @@ flowchart TD
 > [!note] Caso de estudio
 > Conversor de unidades con inicio de sesión, **sin base de datos** (SINBDD). **Todo
 > proyecto inicia con login** y las credenciales van **quemadas**: `MONSTER` / `MONSTER9`.
-> Ver [[vault/01 - Arquitectura/Autenticación|Autenticación (login)]].
+> Ver [[vault/01-architecture/authentication|Autenticación (login)]].
