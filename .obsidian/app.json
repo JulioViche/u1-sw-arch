@@ -1,0 +1,9 @@
+{
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "vault",
+  "attachmentFolderPath": "vault/05 - Referencia/Adjuntos",
+  "useMarkdownLinks": false,
+  "readableLineLength": true,
+  "strictLineBreaks": false
+}
