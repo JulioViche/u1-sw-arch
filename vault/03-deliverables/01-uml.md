@@ -14,17 +14,22 @@ modelos UML.
 | --- | --- | --- |
 | `01. ERS/` | Especificación de Requisitos de Software (únicamente Word oficial) | `.docx` |
 | `02. ECUD/` | Especificación de Casos de Uso Detallados | `.pdf` / `.docx` |
-| `03. DIAGRAMAS UML/` | Modelos y exportados | nativo + `.png`/`.pdf` |
+| `03. DIAGRAMAS UML/` | Modelos y exportados | nativo (`.oom`, `.prj`, `.eam`, etc.) + `.png`/`.pdf` |
+
+Adicionalmente, en la raíz del proyecto se ubica el espacio de trabajo de PowerDesigner (`CON_UNI_GR09.sws`) que enlaza los proyectos de diagramas.
 
 ## Diagramas UML
 
-| Subcarpeta | Diagrama |
-| --- | --- |
-| `01_CASOS_DE_USO` | Casos de uso |
-| `02_ACTIVIDAD` | Actividades (login, conversión) |
-| `03_SECUENCIA` | Secuencia (login, conversión) |
-| `04_CLASES` | Clases del dominio |
-| `05_ARQUITECTURA` | Arquitectura de componentes |
+| Subcarpeta | Diagrama | Contenido y formatos |
+| --- | --- | --- |
+| `01_CASOS_DE_USO` | Casos de uso | Proyecto (`.prj`) y modelo de casos de uso (`.oom`) |
+| `02_ACTIVIDAD` | Actividades (login, conversión) | Proyecto (`.prj`) y modelo de actividades (`.oom`) |
+| `03_SECUENCIA` | Secuencia (login, conversión) | Proyecto (`.prj`) y modelo de secuencia (`.oom`) |
+| `04_CLASES` | Clases del dominio | Sin persistencia (`SINBDD`). Documentado mediante `README.txt` |
+| `05_ARQUITECTURA` | Arquitectura de componentes | Proyecto (`.prj`) y modelo de arquitectura (`.eam`) |
+
+> [!NOTE] Estructura de `04_CLASES`
+> Al tratarse de un sistema puramente en memoria y sin base de datos (`SINBDD`), la carpeta `04_CLASES` no requiere un modelo de persistencia relacional ni ORM. Siguiendo la convención de referencia, contiene un `README.txt` que documenta la metadata del estudiante, la naturaleza `SINBDD` y las credenciales quemadas (`MONSTER` / `MONSTER9`).
 
 ```mermaid
 flowchart TD
