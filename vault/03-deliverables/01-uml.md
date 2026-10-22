@@ -41,13 +41,13 @@ flowchart TD
 - Plantilla ERS: `ERS_<...>_PLANTILLA.docx`
 - ECUD: `ECUD_<PROYECTO>_<GRUPO>.pdf`
 
-Ver [[vault/01-architecture/naming-conventions]].
+Ver [naming-conventions](../01-architecture/naming-conventions.md).
 
 > [!tip] Modelos editables
 > Guarda el modelo editable (archivo del programa de modelado) **junto** al exportado en
-> la misma subcarpeta. La guía [[vault/04-guides/generate-ers]] explica cómo generar el
+> la misma subcarpeta. La guía [generate-ers](../04-guides/generate-ers.md) explica cómo generar el
 > documento desde la plantilla.
 
 > [!info] Relacionado
-> - [[vault/03-deliverables/02-mer]]
-> - [[vault/04-guides/generate-ers]]
+> - [02-mer](02-mer.md)
+> - [generate-ers](../04-guides/generate-ers.md)

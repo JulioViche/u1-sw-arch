@@ -35,5 +35,5 @@ Patrones tomados de la solución de referencia en `examples/`. Sustituye `<GRUPO
 > separa con guion bajo (`_`), igual que en el ejemplo.
 
 > [!info] Relacionado
-> - [[vault/03-deliverables/01-uml]]
-> - [[vault/03-deliverables/05-documentation]]
+> - [01-uml](../03-deliverables/01-uml.md)
+> - [05-documentation](../03-deliverables/05-documentation.md)

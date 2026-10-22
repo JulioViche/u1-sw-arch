@@ -9,7 +9,7 @@ Las cuatro variantes cruzan dos protocolos con dos plataformas:
 
 | Variante | Protocolo | Plataforma | Carpeta |
 | --- | --- | --- | --- |
-| RESTful + .NET | [[vault/02-variants/restful-vs-soap\|REST]] | [[vault/02-variants/java-vs-dotnet\|.NET]] | `TI.1.1. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09` |
+| RESTful + .NET | [REST](restful-vs-soap.md) | [.NET](java-vs-dotnet.md) | `TI.1.1. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09` |
 | RESTful + Java | REST | Java | `TI.1.1. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09` |
 | SOAP + .NET | SOAP | .NET | `TI.1.1. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09` |
 | SOAP + Java | SOAP | Java | `TI.1.1. PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09` |
@@ -43,6 +43,6 @@ quadrantChart
 | Cliente web / móvil | ❌ | Tecnología del cliente |
 
 > [!info] Relacionado
-> - [[vault/02-variants/restful-vs-soap]]
-> - [[vault/02-variants/java-vs-dotnet]]
-> - [[vault/01-architecture/overview]]
+> - [restful-vs-soap](restful-vs-soap.md)
+> - [java-vs-dotnet](java-vs-dotnet.md)
+> - [overview](../01-architecture/overview.md)

@@ -17,7 +17,7 @@ Carpeta `03. BDD/` de cada variante.
 la carpeta). No se agregan esquemas ni scripts SQL.
 
 Las credenciales y los factores de conversión son **fijos / en memoria**. Ver
-[[vault/03-deliverables/02-mer|02 · MER]], que también queda vacío por el mismo motivo.
+[02 · MER](02-mer.md), que también queda vacío por el mismo motivo.
 
 ## Credenciales quemadas (referencia)
 
@@ -28,12 +28,12 @@ Como no hay base de datos, el login valida contra valores **quemados en el códi
 | Usuario | `MONSTER` |
 | Contraseña | `MONSTER9` |
 
-Ver [[vault/01-architecture/authentication|Autenticación (login)]].
+Ver [Autenticación (login)](../01-architecture/authentication.md).
 
 > [!warning]
 > Verifica que la documentación (manual, ERS) **no** prometa persistencia. Si necesitas
 > datos, defínelos como constantes en el código.
 
 > [!info] Relacionado
-> - [[vault/03-deliverables/02-mer]]
-> - [[vault/05-reference/academic-data]]
+> - [02-mer](02-mer.md)
+> - [academic-data](../05-reference/academic-data.md)

@@ -55,7 +55,7 @@ TI.1.1. PAO202651_<PROTOCOLO>_<PLATAFORMA>_SINBDD_NRC36884_GR09/
 ```
 
 El código (servidor y cada cliente) va **dentro de su carpeta** de la estructura anterior.
-El detalle de cada entregable está en el vault → [[vault/03 - Entregables|Entregables]].
+El detalle de cada entregable está en el vault → [03 · Entregables](vault/03-deliverables/01-uml.md).
 
 ---
 
@@ -71,7 +71,7 @@ Cada variante se ejecuta con las herramientas de su stack:
 
 > [!warning]
 > El servidor debe estar **en ejecución** antes de lanzar cualquier cliente.
-> Consulta [[vault/04-guides/build-and-run|Compilar y ejecutar]] para el flujo completo.
+> Consulta [Compilar y ejecutar](vault/04-guides/build-and-run.md) para el flujo completo.
 
 ---
 
@@ -86,7 +86,7 @@ Cada variante se ejecuta con las herramientas de su stack:
 ### Abrir en Obsidian
 
 Abre la **raíz del repositorio** como bóveda en Obsidian (*Open folder as vault*). Así los
-enlaces `[[vault/…]]` de las notas y de `AGENTS.md` resuelven correctamente. Los ajustes del
+enlaces `[…](vault/index.md)` de las notas y de `AGENTS.md` resuelven correctamente. Los ajustes del
 vault ya están incluidos en `.obsidian/`.
 
 ## Caso de estudio
@@ -98,5 +98,5 @@ Un **conversor de unidades** (longitud, masa, temperatura, etc.) con inicio de s
 > - Para esta unidad, las credenciales van **quemadas en el código** (sin base de datos):
 >   usuario **`MONSTER`** · contraseña **`MONSTER9`**.
 
-Ver [[vault/01-architecture/authentication|Autenticación (login)]] y
-[[vault/05-reference/academic-data|Datos académicos]].
+Ver [Autenticación (login)](vault/01-architecture/authentication.md) y
+[Datos académicos](vault/05-reference/academic-data.md).

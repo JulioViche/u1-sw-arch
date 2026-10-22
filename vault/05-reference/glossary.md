@@ -22,5 +22,5 @@ tags: [referencia, glosario]
 | **Vault** | Carpeta raíz de una bóveda de Obsidian. |
 
 > [!info] Relacionado
-> - [[vault/05-reference/academic-data]]
-> - [[vault/index]]
+> - [academic-data](academic-data.md)
+> - [index](../index.md)

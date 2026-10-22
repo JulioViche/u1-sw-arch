@@ -19,7 +19,7 @@ el mismo caso —un **conversor de unidades** con inicio de sesión— usando:
 
 > **Todo proyecto debe iniciar con un login** (caso de uso obligatorio, en los cuatro
 > clientes). Para esta unidad las credenciales van **quemadas en el código** (hardcoded):
-> usuario **`MONSTER`**, contraseña **`MONSTER9`**. Ver [[vault/01-architecture/authentication]].
+> usuario **`MONSTER`**, contraseña **`MONSTER9`**. Ver [authentication](vault/01-architecture/authentication.md).
 
 Cada proyecto vive en su carpeta de primer nivel y comparte la **misma estructura de
 entregables**.
@@ -41,7 +41,7 @@ entregables**.
 8. **No borres `.gitkeep`.** Se usan para conservar carpetas vacías en git.
 9. **Todo proyecto inicia con login.** Antes de convertir, el usuario debe autenticarse con
    las credenciales **quemadas** `MONSTER` / `MONSTER9`. Ver
-   [[vault/01-architecture/authentication]].
+   [authentication](vault/01-architecture/authentication.md).
 
 ---
 
@@ -126,7 +126,7 @@ Reglas generales:
 **Añadir/ajustar diagramas**
 1. Guarda el modelo editable en la subcarpeta de `03. DIAGRAMAS UML/`.
 2. Exporta la imagen (PNG/PDF) junto al modelo.
-3. Refleja el cambio en [[vault/03-deliverables/01-uml]].
+3. Refleja el cambio en [01-uml](vault/03-deliverables/01-uml.md).
 
 **Documentación**
 - La fuente de verdad es `vault/`. Si cambia una convención, actualiza el vault **y**
@@ -145,24 +145,24 @@ Reglas generales:
 | Android (build) | `gradlew.bat assembleDebug` |
 
 > Ejecuta el **servidor** antes que los clientes. Ver
-> [[vault/04-guides/build-and-run]].
+> [build-and-run](vault/04-guides/build-and-run.md).
 
 ---
 
 ## 8. Dónde está la documentación
 
-Empieza por **[[vault/index]]** (índice MOC). Notas clave:
+Empieza por **[index](vault/index.md)** (índice MOC). Notas clave:
 
-- [[vault/01-architecture/overview]]
-- [[vault/01-architecture/folder-structure]]
-- [[vault/01-architecture/naming-conventions]]
-- [[vault/01-architecture/authentication]]
-- [[vault/02-variants/variant-matrix]]
-- [[vault/03-deliverables/01-uml]] · [[vault/03-deliverables/02-mer]] ·
-  [[vault/03-deliverables/03-bdd]] · [[vault/03-deliverables/04-clients-and-server]] ·
-  [[vault/03-deliverables/05-documentation]]
-- [[vault/04-guides/build-and-run]] · [[vault/04-guides/generate-ers]]
-- [[vault/05-reference/glossary]] · [[vault/05-reference/academic-data]]
+- [overview](vault/01-architecture/overview.md)
+- [folder-structure](vault/01-architecture/folder-structure.md)
+- [naming-conventions](vault/01-architecture/naming-conventions.md)
+- [authentication](vault/01-architecture/authentication.md)
+- [variant-matrix](vault/02-variants/variant-matrix.md)
+- [01-uml](vault/03-deliverables/01-uml.md) · [02-mer](vault/03-deliverables/02-mer.md) ·
+  [03-bdd](vault/03-deliverables/03-bdd.md) · [04-clients-and-server](vault/03-deliverables/04-clients-and-server.md) ·
+  [05-documentation](vault/03-deliverables/05-documentation.md)
+- [build-and-run](vault/04-guides/build-and-run.md) · [generate-ers](vault/04-guides/generate-ers.md)
+- [glossary](vault/05-reference/glossary.md) · [academic-data](vault/05-reference/academic-data.md)
 
 ---
 

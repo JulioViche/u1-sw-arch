@@ -40,7 +40,7 @@ flowchart LR
 ## Orden de trabajo
 
 1. Implementa el **login** (autenticación obligatoria; credenciales quemadas
-   `MONSTER` / `MONSTER9` — ver [[vault/01-architecture/authentication]]).
+   `MONSTER` / `MONSTER9` — ver [authentication](../01-architecture/authentication.md)).
 2. Implementa el **servidor** y verifica sus operaciones.
 3. Implementa **CLICON** (el más simple) para validar el contrato.
 4. Reutiliza el mismo contrato en **CLIESC**, **CLIWEB** y **CLIMOV**.
@@ -50,5 +50,5 @@ flowchart LR
 > solo cambia la tecnología. Esto facilita comparar los entregables.
 
 > [!info] Relacionado
-> - [[vault/03-deliverables/01-uml]]
-> - [[vault/04-guides/build-and-run]]
+> - [01-uml](01-uml.md)
+> - [build-and-run](../04-guides/build-and-run.md)

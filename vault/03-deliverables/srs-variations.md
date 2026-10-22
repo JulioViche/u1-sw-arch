@@ -5,7 +5,7 @@ tags: [deliverable, ers, srs, variations, architecture, comparison]
 
 # Variaciones del ERS / SRS según el Taller (TI.1.1 a TI.1.4)
 
-Este documento detalla **qué secciones, tablas y textos del ERS/SRS cambian en cada taller** y cuáles se mantienen constantes, sirviendo como guía de referencia para adaptar rápidamente la plantilla base [[vault/03-deliverables/srs-template|srs-template.md]] a cualquiera de las 4 entregas de la unidad.
+Este documento detalla **qué secciones, tablas y textos del ERS/SRS cambian en cada taller** y cuáles se mantienen constantes, sirviendo como guía de referencia para adaptar rápidamente la plantilla base [srs-template.md](srs-template.md) a cualquiera de las 4 entregas de la unidad.
 
 ---
 

@@ -8,7 +8,7 @@ tags: [deliverable, uml, ers, srs, template, requirements]
 > [!NOTE]
 > Plantilla del Documento de Especificación de Requerimientos de Software (ERS/SRS) según el estándar **IEEE-830**.
 > Adaptada a los lineamientos académicos de la Universidad de las Fuerzas Armadas ESPE y la tarea **TI.1.1** (Conversor de Unidades SOA - SINBDD).
-> Para conocer qué campos cambian al adaptar esta plantilla a los talleres TI.1.2, TI.1.3 y TI.1.4, consulta [[vault/03-deliverables/srs-variations|Variaciones del ERS por Taller]].
+> Para conocer qué campos cambian al adaptar esta plantilla a los talleres TI.1.2, TI.1.3 y TI.1.4, consulta [Variaciones del ERS por Taller](srs-variations.md).
 
 ## PORTADA Y METADATOS INSTITUCIONALES
 

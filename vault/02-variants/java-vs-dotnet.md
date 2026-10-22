@@ -38,8 +38,8 @@ flowchart LR
 
 > [!warning]
 > Ejecuta siempre el **servidor** antes que los clientes. Ver
-> [[vault/04-guides/build-and-run]].
+> [build-and-run](../04-guides/build-and-run.md).
 
 > [!info] Relacionado
-> - [[vault/02-variants/variant-matrix]]
-> - [[vault/04-guides/build-and-run]]
+> - [variant-matrix](variant-matrix.md)
+> - [build-and-run](../04-guides/build-and-run.md)

@@ -31,7 +31,7 @@ Para evitar la manipulación manual propensa a errores en archivos binarios `.do
   - `## 10. Conclusiones` y `## 11. Recomendaciones` (estandarizados como títulos H2 y reordenados lógicamente).
   - `## 12. Bibliografía` (incorporado con citas formales IEEE 830, W3C SOAP y Oracle Java).
 
-El resultado depurado es la plantilla maestra: [[vault/03-deliverables/srs-template|srs-template.md]].
+El resultado depurado es la plantilla maestra: [srs-template.md](../03-deliverables/srs-template.md).
 
 ---
 
@@ -68,8 +68,8 @@ flowchart TD
 ## 3. Etapas del Flujo de Trabajo
 
 ### Paso 1: Mantenimiento de la Plantilla Base y la Matriz
-- [[vault/03-deliverables/srs-template|srs-template.md]]: Estructura formal IEEE 830 completa.
-- [[vault/03-deliverables/srs-variations|srs-variations.md]]: Diccionario de diferencias tecnológicas (SOAP vs REST, Java vs .NET, bibliotecas cliente, servidores Kestrel/Tomcat y tokens).
+- [srs-template.md](../03-deliverables/srs-template.md): Estructura formal IEEE 830 completa.
+- [srs-variations.md](../03-deliverables/srs-variations.md): Diccionario de diferencias tecnológicas (SOAP vs REST, Java vs .NET, bibliotecas cliente, servidores Kestrel/Tomcat y tokens).
 
 ### Paso 2: Generación de los Markdown Específicos de cada Taller
 Para cada variante se genera un documento Markdown específico que adapta la carátula, RNF-001 a RNF-005, e interfaces según la plataforma:
