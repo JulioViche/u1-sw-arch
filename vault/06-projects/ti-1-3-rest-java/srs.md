@@ -7,7 +7,7 @@ tags: [deliverable, uml, ers, srs, template, requirements]
 
 > [!NOTE]
 > Especificación de Requerimientos de Software (SRS/ERS) para la entrega **TI.1.3** (REST sobre Java).
-> Caso de estudio: **Conversor de Unidades** multi-canal sin base de datos (**SINBDD**). Guía de variaciones en [srs-variations](srs-variations.md).
+> Caso de estudio: **Conversor de Unidades** multi-canal sin base de datos (**SINBDD**). Guía de variaciones en [srs-variations](../../03-deliverables/srs-variations.md).
 
 ## PORTADA Y METADATOS INSTITUCIONALES
 
@@ -403,7 +403,7 @@ Tabla 22. Convertir Temperatura
 
 #### 8.3.1 Objetivo General
 
-Para el Sistema “Servicio de Mantenimiento de Vehículos Monster” se ha identificado los siguientes requerimientos no funcionales en relación con la tecnología de la información.
+Para el Sistema “Conversión de Unidades Monster” se ha identificado los siguientes requerimientos no funcionales en relación con la tecnología de la información.
 
 Tabla 26. Requerimiento no funcional Protocolo de Arquitectura (RESTful)
 

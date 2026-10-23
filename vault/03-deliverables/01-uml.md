@@ -16,7 +16,7 @@ modelos UML.
 | `02. ECUD/` | Especificación de Casos de Uso Detallados | `.pdf` / `.docx` |
 | `03. DIAGRAMAS UML/` | Modelos y exportados | nativo (`.oom`, `.prj`, `.eam`, etc.) + `.png`/`.pdf` |
 
-Adicionalmente, en la raíz del proyecto se ubica el espacio de trabajo de PowerDesigner (`CON_UNI_GR09.sws`) que enlaza los proyectos de diagramas.
+Adicionalmente, en la raíz de cada variante se ubica el espacio de trabajo de PowerDesigner (`CON_UNI_GR09.sws`) que enlaza los proyectos de diagramas.
 
 ## Diagramas UML
 
@@ -40,6 +40,17 @@ flowchart TD
     CL --> ARQ[Arquitectura]
 ```
 
+## Diagramas por Proyecto (Mermaid en Vault)
+
+Las representaciones visuales interactivas en sintaxis Mermaid y el análisis detallado de cada modelo residen en la carpeta de documentación de cada proyecto en `vault/06-projects/`:
+
+| Proyecto | Protocolo / Plataforma | Modelos en Mermaid |
+| :--- | :--- | :--- |
+| **TI.1.1** | SOAP Java | [Diagramas TI.1.1 SOAP Java](../06-projects/ti-1-1-soap-java/diagrams.md) |
+| **TI.1.2** | SOAP .NET | *Pendiente* |
+| **TI.1.3** | RESTful Java | *Pendiente* |
+| **TI.1.4** | RESTful .NET | *Pendiente* |
+
 ## Nomenclatura
 
 - ERS: `ERS_<PROTOCOLO>_<PLATAFORMA>_SINBDD_<GRUPO>.docx`
@@ -59,4 +70,4 @@ Ver [naming-conventions](../01-architecture/naming-conventions.md).
 
 
 > [!IMPORTANT] Formato exclusivo en `01. ERS/`
-> La carpeta `01. UML/01. ERS/` de cada variante contiene **exclusivamente el archivo Word final oficial (`.docx`)**. Los archivos `.md` de redacción y plantillas no deben colocarse en esta carpeta; residen centralizados en [vault/03-deliverables](srs-template.md). Tampoco requiere `.gitkeep` al contener ya el archivo `.docx`.
+> La carpeta `01. UML/01. ERS/` de cada variante contiene **exclusivamente el archivo Word final oficial (`.docx`)**. Los archivos `.md` de redacción y plantillas no deben colocarse en esta carpeta; residen centralizados en [vault/03-deliverables](srs-template.md) y [vault/06-projects](../06-projects/index.md). Tampoco requiere `.gitkeep` al contener ya el archivo `.docx`.

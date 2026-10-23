@@ -24,6 +24,7 @@ flowchart TD
     I --> E["03 · Entregables"]
     I --> G["04 · Guías"]
     I --> R["05 · Referencia"]
+    I --> T["06 · Projects"]
 
     A --> A1["Visión general"]
     A --> A2["Estructura de carpetas"]
@@ -45,6 +46,11 @@ flowchart TD
 
     R --> R1["Glosario"]
     R --> R2["Datos académicos"]
+
+    T --> T1["TI.1.1 · SOAP Java"]
+    T --> T2["TI.1.2 · SOAP .NET"]
+    T --> T3["TI.1.3 · RESTful Java"]
+    T --> T4["TI.1.4 · RESTful .NET"]
 ```
 
 ---
@@ -66,10 +72,6 @@ flowchart TD
 - [01 · UML](03-deliverables/01-uml.md)
 - [Plantilla ERS / SRS (Documento base)](03-deliverables/srs-template.md)
 - [Variaciones del ERS por Taller (TI.1.1 a TI.1.4)](03-deliverables/srs-variations.md)
-  - [SRS TI.1.1 — SOAP Java](03-deliverables/srs-ti-1-1-soap-java.md)
-  - [SRS TI.1.2 — SOAP .NET](03-deliverables/srs-ti-1-2-soap-dotnet.md)
-  - [SRS TI.1.3 — REST Java](03-deliverables/srs-ti-1-3-rest-java.md)
-  - [SRS TI.1.4 — REST .NET](03-deliverables/srs-ti-1-4-rest-dotnet.md)
 - [02 · MER](03-deliverables/02-mer.md)
 - [03 · BDD](03-deliverables/03-bdd.md)
 - [04 · Clientes y servidor](03-deliverables/04-clients-and-server.md)
@@ -83,6 +85,13 @@ flowchart TD
 - [Glosario](05-reference/glossary.md)
 - [Datos académicos](05-reference/academic-data.md)
 
+### 06 · Projects
+- [06 · Projects](06-projects/index.md)
+  - [TI.1.1 · SOAP Java](06-projects/ti-1-1-soap-java/index.md) ([ERS](06-projects/ti-1-1-soap-java/srs.md) · [Diagramas](06-projects/ti-1-1-soap-java/diagrams.md) · [Manual Técnico](06-projects/ti-1-1-soap-java/technical-manual.md))
+  - [TI.1.2 · SOAP .NET](06-projects/ti-1-2-soap-dotnet/index.md) ([ERS](06-projects/ti-1-2-soap-dotnet/srs.md))
+  - [TI.1.3 · RESTful Java](06-projects/ti-1-3-rest-java/index.md) ([ERS](06-projects/ti-1-3-rest-java/srs.md))
+  - [TI.1.4 · RESTful .NET](06-projects/ti-1-4-rest-dotnet/index.md) ([ERS](06-projects/ti-1-4-rest-dotnet/srs.md))
+
 ---
 
 ## Estado rápido
@@ -91,7 +100,7 @@ flowchart TD
 | --- | --- |
 | README raíz | ✅ |
 | AGENTS.md | ✅ |
-| 4 variantes (carpetas) | ✅ creadas (vacías) |
+| 4 variantes (carpetas) | ✅ creadas |
 | Documentación del vault | ✅ |
 | Código del servidor/clientes | ⬜ pendiente |
 

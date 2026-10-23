@@ -404,7 +404,7 @@ Tabla 22. Convertir Temperatura
 
 #### 8.3.1 Objetivo General
 
-Para el Sistema “Servicio de Mantenimiento de Vehículos Monster” se ha identificado los siguientes requerimientos no funcionales en relación con la tecnología de la información.
+Para el Sistema “Conversión de Unidades Monster” se ha identificado los siguientes requerimientos no funcionales en relación con la tecnología de la información.
 
 Tabla 26. Requerimiento no funcional Protocolo de Arquitectura (SOAP)
 

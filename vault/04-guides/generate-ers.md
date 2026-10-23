@@ -76,10 +76,10 @@ Para cada variante se genera un documento Markdown específico en el Vault que a
 
 | Taller | Archivo en Vault (Documentación Markdown) | Entregable Compilado en Variante (`01. UML/01. ERS/`) | Stack Tecnológico |
 | :--- | :--- | :--- | :--- |
-| **TI.1.1** | [srs-ti-1-1-soap-java.md](../03-deliverables/srs-ti-1-1-soap-java.md) | `ERS_SOAP_JAVA_SINBDD_GR09.docx` | SOAP 1.2, Java 17/21 (JAX-WS, NetBeans, Tomcat) |
-| **TI.1.2** | [srs-ti-1-2-soap-dotnet.md](../03-deliverables/srs-ti-1-2-soap-dotnet.md) | `ERS_SOAP_DOTNET_SINBDD_GR09.docx` | SOAP 1.2, C# .NET 8/9 (CoreWCF, Visual Studio, Kestrel) |
-| **TI.1.3** | [srs-ti-1-3-rest-java.md](../03-deliverables/srs-ti-1-3-rest-java.md) | `ERS_RESTFUL_JAVA_SINBDD_GR09.docx` | RESTful JSON, Java 17/21 (Jakarta REST, NetBeans, Tomcat) |
-| **TI.1.4** | [srs-ti-1-4-rest-dotnet.md](../03-deliverables/srs-ti-1-4-rest-dotnet.md) | `ERS_RESTFUL_DOTNET_SINBDD_GR09.docx` | RESTful JSON, C# .NET 8/9 (ASP.NET Core Web API, Kestrel) |
+| **TI.1.1** | [srs.md](../06-projects/ti-1-1-soap-java/srs.md) | `ERS_SOAP_JAVA_SINBDD_GR09.docx` | SOAP 1.2, Java 17/21 (JAX-WS, NetBeans, Tomcat) |
+| **TI.1.2** | [srs.md](../06-projects/ti-1-2-soap-dotnet/srs.md) | `ERS_SOAP_DOTNET_SINBDD_GR09.docx` | SOAP 1.2, C# .NET 8/9 (CoreWCF, Visual Studio, Kestrel) |
+| **TI.1.3** | [srs.md](../06-projects/ti-1-3-rest-java/srs.md) | `ERS_RESTFUL_JAVA_SINBDD_GR09.docx` | RESTful JSON, Java 17/21 (Jakarta REST, NetBeans, Tomcat) |
+| **TI.1.4** | [srs.md](../06-projects/ti-1-4-rest-dotnet/srs.md) | `ERS_RESTFUL_DOTNET_SINBDD_GR09.docx` | RESTful JSON, C# .NET 8/9 (ASP.NET Core Web API, Kestrel) |
 
 > [!CAUTION] Regla de contenido en carpetas ERS
 > Las carpetas `01. UML/01. ERS/` de los proyectos deben contener **únicamente el entregable oficial en formato Word (`.docx`)**. Los archivos `.md` residen **única y exclusivamente en `vault/03-deliverables/`** para mantener limpias las carpetas del proyecto y evitar redundancia.

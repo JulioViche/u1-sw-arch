@@ -3,11 +3,11 @@ type: deliverable
 tags: [deliverable, uml, ers, srs, template, requirements]
 ---
 
-# Software Requirements Specification (SRS) - TI.1.2 (SOAP .NET)
+# Software Requirements Specification (SRS) - TI.1.4 (REST .NET)
 
 > [!NOTE]
-> Especificación de Requerimientos de Software (SRS/ERS) para la entrega **TI.1.2** (SOAP sobre .NET).
-> Caso de estudio: **Conversor de Unidades** multi-canal sin base de datos (**SINBDD**). Guía de variaciones en [srs-variations](srs-variations.md).
+> Especificación de Requerimientos de Software (SRS/ERS) para la entrega **TI.1.4** (REST sobre .NET).
+> Caso de estudio: **Conversor de Unidades** multi-canal sin base de datos (**SINBDD**). Guía de variaciones en [srs-variations](../../03-deliverables/srs-variations.md).
 
 ## PORTADA Y METADATOS INSTITUCIONALES
 
@@ -16,8 +16,8 @@ tags: [deliverable, uml, ers, srs, template, requirements]
 | **Institución** | Universidad de las Fuerzas Armadas ESPE |
 | **Carrera** | Tecnologías de la Información / Ingeniería de Software |
 | **Asignatura** | Arquitectura de Software |
-| **Tema** | ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE PARA SOA CON SOAP EN .NET SIN BDD |
-| **Tarea / Taller** | **TI.1.2** |
+| **Tema** | ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE PARA SOA CON REST EN .NET SIN BDD |
+| **Tarea / Taller** | **TI.1.4** |
 | **NRC** | 36884 |
 | **Grupo** | GR09 |
 | **Integrantes** | **Viche Castillo, Julio Enrique** |
@@ -46,7 +46,7 @@ tags: [deliverable, uml, ers, srs, template, requirements]
 - **Tabla 20.** RQF-002: Convertir Longitud
 - **Tabla 21.** RQF-003: Convertir Masa
 - **Tabla 22.** RQF-004: Convertir Temperatura
-- **Tabla 26.** RNF-001: Protocolo de Arquitectura (SOAP)
+- **Tabla 26.** RNF-001: Protocolo de Arquitectura (RESTful)
 - **Tabla 27.** RNF-002: Especificación de Software
 - **Tabla 28.** RNF-003: Entorno de Desarrollo
 - **Tabla 29.** RNF-004: Servidor de Aplicaciones
@@ -86,7 +86,7 @@ Se desea implementar un sistema de serávicios de software basado en una Arquite
 
 ## Introducción
 
-Este documento de Especificación de Requerimientos de Software ha sido cáreado siguiendo la norma IEEE-830 para la especificación de requerimientos, que forma parte de la documentación generada previo al posible desarrollo e implementación de la capa de serávicios del sistema “Conversión de Unidades Monster”. El documento detalla la arquitectura, diseño de interfaces y comportamientos funcionales necesarios para construir una solución basada en el protocolo SOAP, incluyendo los mecanismos de consumo por parte cuatro clientes diferentes y las restáricciones tecnológicas.
+Este documento de Especificación de Requerimientos de Software ha sido cáreado siguiendo la norma IEEE-830 para la especificación de requerimientos, que forma parte de la documentación generada previo al posible desarrollo e implementación de la capa de serávicios del sistema “Conversión de Unidades Monster”. El documento detalla la arquitectura, diseño de interfaces y comportamientos funcionales necesarios para construir una solución basada en el arquitectura REST, incluyendo los mecanismos de consumo por parte cuatro clientes diferentes y las restáricciones tecnológicas.
 
 ## Propósito
 
@@ -293,7 +293,7 @@ El sistema de “Conversor de Unidades Monster” no interactúa con bases de da
 
 - Intercambio de datos: La comuúnicación entre los cuatro clientes (web, móvil, escritorio, consola) y el serávidor central se rige por el estáándar SOAP.
 
-- Formato de datos: Tanto las peticiones enviadas por los clientes como las respuestáas generadas por el serávidor se estáructuran por formato XML, de acuerdo con el contrato definido en el archivo WSDL.
+- Formato de datos: Tanto las peticiones enviadas por los clientes como las respuestáas generadas por el serávidor se estáructuran por formato XML, de acuerdo con el contrato definido en el documentación de endpoints / OpenAPI.
 
 ### 8.2 Requisitos Funcionales
 
@@ -403,13 +403,13 @@ Tabla 22. Convertir Temperatura
 
 #### 8.3.1 Objetivo General
 
-Para el Sistema “Servicio de Mantenimiento de Vehículos Monster” se ha identificado los siguientes requerimientos no funcionales en relación con la tecnología de la información.
+Para el Sistema “Conversión de Unidades Monster” se ha identificado los siguientes requerimientos no funcionales en relación con la tecnología de la información.
 
-Tabla 26. Requerimiento no funcional Protocolo de Arquitectura (SOAP)
+Tabla 26. Requerimiento no funcional Protocolo de Arquitectura (RESTful)
 
-| RNF-001 | Protocolo de Arquitectura (SOAP) |
+| RNF-001 | Protocolo de Arquitectura (RESTful) |
 | --- | --- |
-| Descripción | El serávidor central debe exponer sus serávicios de conversión y autenticación estárictamente mediante el protocolo SOAP, utilizando archivos WSDL para definir el contrato del serávicio. |
+| Descripción | El serávidor central debe exponer sus serávicios de conversión y autenticación estárictamente mediante el arquitectura REST, utilizando archivos API REST para definir el contrato del serávicio. |
 | Importancia | Alta |
 | Estado | Aprobado |
 
@@ -510,7 +510,7 @@ Los equipos disponibles deben tener las siguientes características:
 
 Fiabilidad. - El sistema, ofrecerá garantía de funcionar correctamente y cumplir con los requisitos 	presentados previamente.
 
-Portabilidad. - Al tratarse de una arquitectura SOA utilizando SOAP, el sistema garantiza que cualquier cliente pueda consumir los serávicios mediante el intercambio de mensajes XML, independiente del lenguaje de programación del cliente.
+Portabilidad. - Al tratarse de una arquitectura SOA utilizando SOAP, el sistema garantiza que cualquier cliente pueda consumir los serávicios mediante el intercambio de cargas JSON, independiente del lenguaje de programación del cliente.
 
 Seguridad. – La solución abarca múltiples plataformas, el usuario final puede acceder a los serávicios de conversión desde cualquier dispositivo con conexión a la red.
 
@@ -552,7 +552,7 @@ Periféricos de entrada (teclado, ratón y touch): Necesarios para interactuar c
 
 #### 9.1.4. Interfaces de Comuúnicación
 
-Los cuatro clientes y el serávidor central de conversiones se comuúnicarán exclusivamente a través de la red utilizando el protocolo HTTP/HTTPS, intercambiando información estáructurada mediante el estáándar de mensajería SOAP y respetando el contrato definido en el archivo WSDL.
+Los cuatro clientes y el serávidor central de conversiones se comuúnicarán exclusivamente a través de la red utilizando el protocolo HTTP/HTTPS, intercambiando información estáructurada mediante el estáándar de mensajería REST / JSON y respetando el contrato definido en el documentación de endpoints / OpenAPI.
 
 #### 9.1.5. Base de Datos
 
@@ -567,7 +567,7 @@ El sistema no implementa comuúnicación con ningún motor de base de datos. Tod
 ## 11. Recomendaciones
 
 - En una segunda fase implementar nuevas magnitudes de conversión en el servidor para aprovechar la escalabilidad de la arquitectura SOA.
-- Es importante mantener un control de versionamiento en el archivo WSDL. Cualquier modificación en los parámetros del servidor requiere actualización en el código de los cuatro clientes para evitar fallos en la comunicación.
+- Es importante mantener un control de versionamiento en el documentación de endpoints / OpenAPI. Cualquier modificación en los parámetros del servidor requiere actualización en el código de los cuatro clientes para evitar fallos en la comunicación.
 
 ## 12. Bibliografía
 

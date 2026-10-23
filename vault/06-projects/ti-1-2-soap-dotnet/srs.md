@@ -3,11 +3,11 @@ type: deliverable
 tags: [deliverable, uml, ers, srs, template, requirements]
 ---
 
-# Software Requirements Specification (SRS) - TI.1.1 (SOAP Java)
+# Software Requirements Specification (SRS) - TI.1.2 (SOAP .NET)
 
 > [!NOTE]
-> Especificación de Requerimientos de Software (SRS/ERS) para la entrega **TI.1.1** (SOAP sobre Java).
-> Caso de estudio: **Conversor de Unidades** multi-canal sin base de datos (**SINBDD**). Guía de variaciones en [srs-variations](srs-variations.md).
+> Especificación de Requerimientos de Software (SRS/ERS) para la entrega **TI.1.2** (SOAP sobre .NET).
+> Caso de estudio: **Conversor de Unidades** multi-canal sin base de datos (**SINBDD**). Guía de variaciones en [srs-variations](../../03-deliverables/srs-variations.md).
 
 ## PORTADA Y METADATOS INSTITUCIONALES
 
@@ -16,8 +16,8 @@ tags: [deliverable, uml, ers, srs, template, requirements]
 | **Institución** | Universidad de las Fuerzas Armadas ESPE |
 | **Carrera** | Tecnologías de la Información / Ingeniería de Software |
 | **Asignatura** | Arquitectura de Software |
-| **Tema** | ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE PARA SOA CON SOAP EN JAVA SIN BDD |
-| **Tarea / Taller** | **TI.1.1** |
+| **Tema** | ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE PARA SOA CON SOAP EN .NET SIN BDD |
+| **Tarea / Taller** | **TI.1.2** |
 | **NRC** | 36884 |
 | **Grupo** | GR09 |
 | **Integrantes** | **Viche Castillo, Julio Enrique** |
@@ -403,7 +403,7 @@ Tabla 22. Convertir Temperatura
 
 #### 8.3.1 Objetivo General
 
-Para el Sistema “Servicio de Mantenimiento de Vehículos Monster” se ha identificado los siguientes requerimientos no funcionales en relación con la tecnología de la información.
+Para el Sistema “Conversión de Unidades Monster” se ha identificado los siguientes requerimientos no funcionales en relación con la tecnología de la información.
 
 Tabla 26. Requerimiento no funcional Protocolo de Arquitectura (SOAP)
 
