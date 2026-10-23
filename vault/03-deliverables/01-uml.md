@@ -47,9 +47,9 @@ Las representaciones visuales interactivas en sintaxis Mermaid y el análisis de
 | Proyecto | Protocolo / Plataforma | Modelos en Mermaid |
 | :--- | :--- | :--- |
 | **TI.1.1** | SOAP Java | [Diagramas TI.1.1 SOAP Java](../06-projects/ti-1-1-soap-java/diagrams.md) |
-| **TI.1.2** | SOAP .NET | *Pendiente* |
-| **TI.1.3** | RESTful Java | *Pendiente* |
-| **TI.1.4** | RESTful .NET | *Pendiente* |
+| **TI.1.2** | SOAP .NET | [Diagramas TI.1.2 SOAP .NET](../06-projects/ti-1-2-soap-dotnet/diagrams.md) |
+| **TI.1.3** | RESTful Java | [Diagramas TI.1.3 RESTful Java](../06-projects/ti-1-3-rest-java/diagrams.md) |
+| **TI.1.4** | RESTful .NET | [Diagramas TI.1.4 RESTful .NET](../06-projects/ti-1-4-rest-dotnet/diagrams.md) |
 
 ## Nomenclatura
 

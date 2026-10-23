@@ -88,9 +88,9 @@ flowchart TD
 ### 06 · Projects
 - [06 · Projects](06-projects/index.md)
   - [TI.1.1 · SOAP Java](06-projects/ti-1-1-soap-java/index.md) ([ERS](06-projects/ti-1-1-soap-java/srs.md) · [Diagramas](06-projects/ti-1-1-soap-java/diagrams.md) · [Manual Técnico](06-projects/ti-1-1-soap-java/technical-manual.md))
-  - [TI.1.2 · SOAP .NET](06-projects/ti-1-2-soap-dotnet/index.md) ([ERS](06-projects/ti-1-2-soap-dotnet/srs.md))
-  - [TI.1.3 · RESTful Java](06-projects/ti-1-3-rest-java/index.md) ([ERS](06-projects/ti-1-3-rest-java/srs.md))
-  - [TI.1.4 · RESTful .NET](06-projects/ti-1-4-rest-dotnet/index.md) ([ERS](06-projects/ti-1-4-rest-dotnet/srs.md))
+  - [TI.1.2 · SOAP .NET](06-projects/ti-1-2-soap-dotnet/index.md) ([ERS](06-projects/ti-1-2-soap-dotnet/srs.md) · [Diagramas](06-projects/ti-1-2-soap-dotnet/diagrams.md))
+  - [TI.1.3 · RESTful Java](06-projects/ti-1-3-rest-java/index.md) ([ERS](06-projects/ti-1-3-rest-java/srs.md) · [Diagramas](06-projects/ti-1-3-rest-java/diagrams.md))
+  - [TI.1.4 · RESTful .NET](06-projects/ti-1-4-rest-dotnet/index.md) ([ERS](06-projects/ti-1-4-rest-dotnet/srs.md) · [Diagramas](06-projects/ti-1-4-rest-dotnet/diagrams.md))
 
 ---
 
