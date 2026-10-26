@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Conversor de Unidades (SOAP)</string>
+    <string name="title_login">Inicio de Sesión</string>
+    <string name="subtitle_login">Autenticación requerida para acceder al Conversor SOAP (SINBDD)</string>
+    <string name="hint_usuario">Usuario (ej: MONSTER)</string>
+    <string name="hint_clave">Contraseña (ej: MONSTER9)</string>
+    <string name="btn_login">Ingresar al Conversor</string>
+    <string name="title_conversor">Conversor de Unidades</string>
+    <string name="tab_longitud">Longitud</string>
+    <string name="tab_masa">Masa</string>
+    <string name="tab_temperatura">Temperatura</string>
+    <string name="hint_valor">Valor a convertir (ej: 100.00)</string>
+    <string name="btn_calcular">Calcular Conversión SOAP</string>
+    <string name="btn_copiar">Copiar Resultado</string>
+    <string name="label_origen">De (Unidad de Origen):</string>
+    <string name="label_destino">A (Unidad de Destino):</string>
+    <string name="btn_swap_desc">Intercambiar unidades</string>
+    <string name="default_server_url">http://10.0.2.2:8080/ServidorSOAP</string>
+</resources>

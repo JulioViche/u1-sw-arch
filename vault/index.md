@@ -80,6 +80,7 @@ flowchart TD
 - [05 · Documentación](03-deliverables/05-documentation.md)
 
 ### 04 · Guías
+- [Instalación y replicabilidad del entorno](04-guides/environment-setup.md)
 - [Compilar y ejecutar](04-guides/build-and-run.md)
 - [Generar el ERS](04-guides/generate-ers.md)
 
