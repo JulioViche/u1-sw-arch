@@ -102,7 +102,7 @@ flowchart TD
 | AGENTS.md | ✅ |
 | 4 variantes (carpetas) | ✅ creadas |
 | Documentación del vault | ✅ |
-| Código del servidor/clientes | ⬜ pendiente |
+| Código del servidor | 🟡 TI.1.1 implementado (clientes y variantes pendientes) |
 
 > [!note] Caso de estudio
 > Conversor de unidades con inicio de sesión, **sin base de datos** (SINBDD). **Todo

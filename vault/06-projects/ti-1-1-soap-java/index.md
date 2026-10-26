@@ -45,11 +45,11 @@ Los siguientes archivos son las fuentes editables para compilar la documentació
 
 | Componente | Carpeta en Proyecto | Tecnología | Estado |
 | :--- | :--- | :--- | :--- |
-| **Servidor SOAP** | `04. SERVIDOR/` | Java JAX-WS / Maven | Pendiente de migración |
-| **Cliente Consola** | `04. CLICON/` | Java CLI | Pendiente de migración |
-| **Cliente Escritorio** | `04. CLIESC/` | Java Swing / JavaFX | Pendiente de migración |
-| **Cliente Móvil** | `04. CLIMOV/` | Android (Java / Gradle) | Pendiente de migración |
-| **Cliente Web** | `04. CLIWEB/` | Java JSP / Servlets | Pendiente de migración |
+| **Servidor SOAP** | `04. SERVIDOR/` | Java JAX-WS / Maven | ✅ Implementado y en ejecución (puerto 8080) |
+| **Cliente Consola** | `04. CLICON/` | Java CLI / JAX-WS / Maven | ✅ Implementado (autenticación obligatoria + conversor) |
+| **Cliente Escritorio** | `04. CLIESC/` | Java Swing / NetBeans GUI | Pendiente de implementación |
+| **Cliente Móvil** | `04. CLIMOV/` | Android (Java / Gradle) | Pendiente de implementación |
+| **Cliente Web** | `04. CLIWEB/` | Java JSP / Servlets | Pendiente de implementación |
 
 ---
 

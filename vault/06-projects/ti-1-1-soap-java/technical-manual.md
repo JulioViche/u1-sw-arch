@@ -78,6 +78,12 @@ flowchart TB
 2. **Gestión de Sesión en Memoria:** Al autenticarse satisfactoriamente, el servidor genera un identificador único de sesión (`UUID`/`GUID`) y lo registra en una colección volátil en memoria (`HashSet<String>` o `ConcurrentHashMap`). 
 3. **Protección de Servicios:** Todas las operaciones de conversión exigen la presentación del token. Si el token no se encuentra en la colección activa en memoria, la solicitud es rechazada inmediatamente con un error de autorización.
 
+### 2.3. Patrón Arquitectónico en Clientes: Modelo - Vista - Controlador (MVC)
+Todos los clientes heterogéneos se diseñan bajo la rigurosa separación de responsabilidades del patrón **MVC**:
+* **Modelo (`model`):** Representa el estado y las estructuras de datos de la aplicación ([SessionModel](file:///c:/Dev/GitHub/u1-sw-arch/TI.1.1.%20PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09/04.%20CLICON/src/main/java/ec/edu/monster/client/model/SessionModel.java), [ConversionRequest](file:///c:/Dev/GitHub/u1-sw-arch/TI.1.1.%20PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09/04.%20CLICON/src/main/java/ec/edu/monster/client/model/ConversionRequest.java), DTOs serializables de respuesta).
+* **Vista (`view`):** Responsable exclusiva de la interacción visual con el usuario (terminal de comandos en `ConsoleView`, formularios Swing en escritorio, pantallas móviles o plantillas JSP). No contiene lógica de negocio ni llamadas directas de red.
+* **Controlador (`controller`):** Intermediario activo ([AuthController](file:///c:/Dev/GitHub/u1-sw-arch/TI.1.1.%20PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09/04.%20CLICON/src/main/java/ec/edu/monster/client/controller/AuthController.java), [ConversionController](file:///c:/Dev/GitHub/u1-sw-arch/TI.1.1.%20PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09/04.%20CLICON/src/main/java/ec/edu/monster/client/controller/ConversionController.java)). Captura eventos de la vista, invoca a los proxies SOAP del paquete `ws`, actualiza el modelo y despacha los resultados a la vista.
+
 ---
 
 ## 3. Especificación de Servicios SOAP
