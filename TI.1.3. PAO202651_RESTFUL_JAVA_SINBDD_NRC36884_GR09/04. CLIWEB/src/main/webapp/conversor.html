@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Unidades RESTful - Panel Web (GR09)</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Encabezado con sesión activa -->
+    <header class="header-bar">
+        <div class="header-brand">
+            <h1>CONVERSOR DE UNIDADES (RESTFUL JAVA · SINBDD)</h1>
+            <p>ESPE · Arquitectura de Software (TI.1.3) | Autor: Julio Enrique Viche Castillo</p>
+        </div>
+        <div class="header-user">
+            <span class="badge-session">
+                <span class="status-dot">●</span> 
+                <strong id="lblUsuario">MONSTER</strong>
+                <span style="opacity: 0.8; font-size: 0.75rem;" id="lblToken">(Sesión Activa)</span>
+            </span>
+            <a href="logout" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <!-- Panel Central del Conversor -->
+    <main class="main-wrapper">
+        <div class="card-box">
+            <h2 class="card-title">Conversor de Unidades Multimagnitud</h2>
+            <p class="card-subtitle">Cálculos procesados mediante servicios web RESTful JSON protegidos por token</p>
+
+            <div id="alertBox" class="alert alert-error" style="display: none;"></div>
+
+            <!-- 1. Pestañas de Magnitud -->
+            <label class="form-label">1. Seleccione la Magnitud Física:</label>
+            <div class="segmented-group">
+                <button type="button" class="segment-btn active" id="btnLongitud" onclick="cambiarMagnitud('Longitud')">
+                    Longitud
+                </button>
+                <button type="button" class="segment-btn" id="btnMasa" onclick="cambiarMagnitud('Masa')">
+                    Masa
+                </button>
+                <button type="button" class="segment-btn" id="btnTemperatura" onclick="cambiarMagnitud('Temperatura')">
+                    Temperatura
+                </button>
+            </div>
+
+            <!-- Formulario de Conversión -->
+            <form action="convertir" method="POST" id="formConversion">
+                <input type="hidden" id="inputMagnitud" name="magnitud" value="Longitud">
+
+                <!-- 2. Valor Numérico -->
+                <div class="form-group">
+                    <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label>
+                    <input type="text" id="txtValor" name="valor" class="form-input" 
+                           autocomplete="off" inputmode="decimal" maxlength="16" pattern="^\d+(\.\d+)?$"
+                           title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)"
+                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46 && this.value.indexOf('.') === -1)"
+                           oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" 
+                           value="100.00" required>
+                </div>
+
+                <!-- 3. Unidades Origen y Destino -->
+                <label class="form-label">3. Configuración de Unidades:</label>
+                <div class="units-row">
+                    <div class="units-col">
+                        <select id="cmbOrigen" name="unidadOrigen" class="form-select"></select>
+                    </div>
+
+                    <button type="button" class="btn-swap" title="Intercambiar unidades" onclick="intercambiarUnidades()">
+                        ⇄
+                    </button>
+
+                    <div class="units-col">
+                        <select id="cmbDestino" name="unidadDestino" class="form-select"></select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 20px;">
+                    Calcular Conversión REST
+                </button>
+            </form>
+
+            <!-- 4. Tarjeta de Resultado -->
+            <div id="pnlResultado" class="result-card" style="display: none;">
+                <div class="result-value" id="lblResultadoValor">0.00</div>
+                <div class="result-detail" id="lblResultadoDetalle">Cálculo completado exitosamente</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Barra de Estado Inferior -->
+    <footer class="footer-bar">
+        <span>Servidor Backend: <code>WS_CONV_UNI_RESTFULL_JAVA</code> (Modalidad SINBDD)</span>
+        <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span>
+    </footer>
+
+    <script>
+        const CATALOGO = {
+            'Longitud': ['metro', 'centimetro', 'pie', 'yarda', 'milla'],
+            'Masa': ['gramo', 'kilogramo', 'libra', 'onza', 'quintal'],
+            'Temperatura': ['celsius', 'fahrenheit', 'kelvin', 'newton', 'reaumur']
+        };
+
+        let magnitudActual = 'Longitud';
+
+        function cambiarMagnitud(magnitud) {
+            magnitudActual = magnitud;
+            document.getElementById('inputMagnitud').value = magnitud;
+
+            ['Longitud', 'Masa', 'Temperatura'].forEach(m => {
+                const btn = document.getElementById('btn' + m);
+                if (m === magnitud) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const unidades = CATALOGO[magnitud];
+            const cmbO = document.getElementById('cmbOrigen');
+            const cmbD = document.getElementById('cmbDestino');
+
+            cmbO.innerHTML = '';
+            cmbD.innerHTML = '';
+
+            unidades.forEach((u, i) => {
+                const nombre = u.charAt(0).toUpperCase() + u.slice(1);
+                cmbO.add(new Option(nombre, u));
+                cmbD.add(new Option(nombre, u));
+            });
+
+            if (unidades.length > 1) {
+                cmbD.selectedIndex = 1;
+            }
+
+            document.getElementById('pnlResultado').style.display = 'none';
+        }
+
+        function intercambiarUnidades() {
+            const cmbO = document.getElementById('cmbOrigen');
+            const cmbD = document.getElementById('cmbDestino');
+            const tmp = cmbO.selectedIndex;
+            cmbO.selectedIndex = cmbD.selectedIndex;
+            cmbD.selectedIndex = tmp;
+        }
+
+        // Leer parámetros URL (para mensajes de servlet o login)
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('usuario')) {
+            document.getElementById('lblUsuario').textContent = params.get('usuario');
+        }
+        if (params.has('token')) {
+            document.getElementById('lblToken').textContent = '(Token: ' + params.get('token') + ')';
+        }
+        if (params.has('resultado')) {
+            const pnl = document.getElementById('pnlResultado');
+            const val = document.getElementById('lblResultadoValor');
+            const det = document.getElementById('lblResultadoDetalle');
+            val.textContent = params.get('resultado');
+            det.textContent = params.get('detalle') || 'Cálculo completado exitosamente';
+            pnl.style.display = 'block';
+        }
+        if (params.has('error')) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = params.get('error');
+            alertBox.style.display = 'block';
+        }
+
+        // Inicializar con Longitud
+        cambiarMagnitud('Longitud');
+    </script>
+</body>
+</html>

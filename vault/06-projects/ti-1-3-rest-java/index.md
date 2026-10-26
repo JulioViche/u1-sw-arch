@@ -24,7 +24,8 @@ Carpeta de trabajo y documentación maestra para la variante **RESTful en Java**
 | **Framework / Servidor** | Spring Boot / Jakarta REST (Jersey) en Tomcat embebido |
 | **Plataforma / JDK** | Java 17+ |
 | **Persistencia** | `SINBDD` (Sin Base de Datos). Credenciales fijas `MONSTER`/`MONSTER9`, tokens en memoria |
-| **Carpeta del Proyecto** | `TI.1.1. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09/` |
+| **Carpeta del Proyecto** | `TI.1.3. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09/` |
+| **Estado de Implementación** | ✅ Servidor (`04. SERVIDOR`), Consola (`04. CLICON`), Escritorio (`04. CLIESC`), Web (`04. CLIWEB`), Móvil (`04. CLIMOV`) |
 
 ---
 
