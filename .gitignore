@@ -1,4 +1,16 @@
-examples
+examples/
+
+# Maven build outputs
+**/target/
+target/
+
+# IDE / NetBeans / VS Code / IntelliJ
+nbproject/private/
+**/nbproject/private/
+.idea/
+*.iml
+.vscode/
+*.class
 
 # Obsidian: estado de la interfaz (dependiente de cada usuario)
 .obsidian/workspace.json
