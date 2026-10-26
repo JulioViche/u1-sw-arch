@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidor SOAP - Conversor de Unidades (SINBDD)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 40px 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 30px 40px;
+        }
+        h1 {
+            color: #1a365d;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+            font-size: 24px;
+        }
+        .meta {
+            background: #edf2f7;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        .endpoint-card {
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: #f8fafc;
+        }
+        .endpoint-card h3 {
+            margin-top: 0;
+            color: #2b6cb0;
+        }
+        a.btn {
+            display: inline-block;
+            background: #3182ce;
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+        a.btn:hover {
+            background: #2b6cb0;
+        }
+        code {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Servidor SOAP — Conversión de Unidades</h1>
+        <div class="meta">
+            <strong>Asignatura:</strong> Arquitectura de Software (PAO 2026-51)<br>
+            <strong>Tarea:</strong> TI.1.1 (SOAP Java SINBDD) | <strong>NRC:</strong> 36884 | <strong>Grupo:</strong> GR09<br>
+            <strong>Autor:</strong> Julio Enrique Viche Castillo<br>
+            <strong>Credenciales:</strong> Usuario <code>MONSTER</code> · Contraseña <code>MONSTER9</code>
+        </div>
+
+        <h2>Endpoints y Contratos WSDL Disponibles</h2>
+
+        <div class="endpoint-card">
+            <h3>1. Servicio de Autenticación</h3>
+            <p>Gestiona el inicio de sesión contra credenciales fijas y emisión de tokens UUID en memoria.</p>
+            <p><strong>Endpoint:</strong> <code>/ServidorSOAP/ServicioAutenticacion</code></p>
+            <a href="ServicioAutenticacion?wsdl" class="btn" target="_blank">Ver WSDL de Autenticación &rarr;</a>
+        </div>
+
+        <div class="endpoint-card">
+            <h3>2. Servicio de Conversión de Unidades</h3>
+            <p>Procesa conversiones de <strong>Longitud</strong>, <strong>Masa</strong> y <strong>Temperatura</strong> protegidas por token de sesión.</p>
+            <p><strong>Endpoint:</strong> <code>/ServidorSOAP/ServicioConversion</code></p>
+            <a href="ServicioConversion?wsdl" class="btn" target="_blank">Ver WSDL de Conversión &rarr;</a>
+        </div>
+    </div>
+</body>
+</html>
