@@ -30,6 +30,7 @@ flowchart TD
     A --> A2["Estructura de carpetas"]
     A --> A3["Convenciones de nombres"]
     A --> A4["Autenticación (login)"]
+    A --> A5["Requerimientos adicionales"]
 
     V --> V1["Matriz de variantes"]
     V --> V2["RESTful vs SOAP"]
@@ -62,6 +63,7 @@ flowchart TD
 - [Estructura de carpetas](01-architecture/folder-structure.md)
 - [Convenciones de nombres](01-architecture/naming-conventions.md)
 - [Autenticación (login)](01-architecture/authentication.md)
+- [Requerimientos adicionales (decisiones del usuario)](01-architecture/additional-requirements.md)
 
 ### 02 · Variantes
 - [Matriz de variantes](02-variants/variant-matrix.md)

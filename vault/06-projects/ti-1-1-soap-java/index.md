@@ -34,6 +34,7 @@ Carpeta de trabajo y documentación maestra para la variante **SOAP en Java** de
 Los siguientes archivos son las fuentes editables para compilar la documentación oficial:
 
 - 📄 **[srs.md](srs.md)**: Especificación de Requisitos de Software (IEEE-830). Fuente de `ERS_SOAP_JAVA_SINBDD_GR09.docx`.
+- 📌 **[additional-requirements.md](../../01-architecture/additional-requirements.md)**: Requerimientos y criterios no formales definidos por el usuario (2 decimales, catálogo estricto, UX).
 - 📐 **[diagrams.md](diagrams.md)**: Modelos UML interactivos en sintaxis Mermaid (Casos de Uso, Actividades con swimlanes, Secuencia multicapa y Arquitectura).
 - 📘 **[technical-manual.md](technical-manual.md)**: Manual técnico del sistema, arquitectura, despliegue del servidor y guía de ejecución de los 4 clientes. Fuente de `CONVUNI_SOAP_JAVA_GR09.docx`.
 - 📋 **`use-cases.md`**: Especificación formal de Casos de Uso Detallados (Login y Conversión). Fuente de `ECUD_CONVERSION_UNIDADES_GR09.pdf`.

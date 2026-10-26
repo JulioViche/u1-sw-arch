@@ -119,8 +119,16 @@ public class ConsoleView {
 
     public double pedirValorNumerico() {
         while (true) {
-            System.out.print("Ingrese el valor numérico a convertir: ");
-            String input = scanner.nextLine().trim().replace(',', '.');
+            System.out.print("Ingrese el valor numérico a convertir (solo números y '.'): ");
+            String input = scanner.nextLine().trim();
+            if (input.length() > 16) {
+                mostrarError("Longitud excedida. El valor no puede superar los 16 caracteres.");
+                continue;
+            }
+            if (!input.matches("^\\d+(\\.\\d+)?$")) {
+                mostrarError("Entrada no válida. Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).");
+                continue;
+            }
             try {
                 return Double.parseDouble(input);
             } catch (NumberFormatException e) {
@@ -134,7 +142,7 @@ public class ConsoleView {
             System.out.println("\n==========================================================");
             System.out.println("                   RESULTADO DE LA CONVERSIÓN             ");
             System.out.println("==========================================================");
-            System.out.printf("   %.4f %s  --->  %.4f %s\n",
+            System.out.printf(java.util.Locale.US, "   %.2f %s  --->  %.2f %s\n",
                     req.getValor(),
                     capitalizar(req.getUnidadOrigen()),
                     resp.getValorConvertido(),

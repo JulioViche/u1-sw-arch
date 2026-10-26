@@ -81,8 +81,12 @@
                 <!-- 2. Valor Numérico -->
                 <div class="form-group">
                     <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label>
-                    <input type="number" step="any" id="txtValor" name="valor" class="form-input" 
-                           value="<%= valorActual %>" required style="font-size: 1.15rem; font-weight: bold;">
+                    <input type="text" id="txtValor" name="valor" class="form-input" 
+                           autocomplete="off" inputmode="decimal" maxlength="16" pattern="^\d+(\.\d+)?$"
+                           title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)"
+                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46 && this.value.indexOf('.') === -1)"
+                           oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" 
+                           value="<%= String.format(java.util.Locale.US, \"%.2f\", valorActual) %>" required style="font-size: 1.15rem; font-weight: bold;">
                 </div>
 
                 <!-- 3. Unidades Origen -> Destino con Intercambio -->
@@ -112,7 +116,7 @@
                 <% if (convResp.isExito()) { %>
                     <div class="result-card">
                         <div class="result-value" id="resultadoTexto">
-                            <%= String.format("%.4f", convReq.getValor()) %> <%= convReq.getUnidadOrigen() %> = <%= String.format("%.4f", convResp.getValorConvertido()) %> <%= convReq.getUnidadDestino() %>
+                            <%= String.format(java.util.Locale.US, "%.2f", convReq.getValor()) %> <%= convReq.getUnidadOrigen() %> = <%= String.format(java.util.Locale.US, "%.2f", convResp.getValorConvertido()) %> <%= convReq.getUnidadDestino() %>
                         </div>
                         <div class="result-subtext">
                             Cálculo procesado exitosamente por el Servidor SOAP en memoria (SINBDD).

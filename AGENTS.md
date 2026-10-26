@@ -44,6 +44,9 @@ entregables**.
 9. **Todo proyecto inicia con login.** Antes de convertir, el usuario debe autenticarse con
    las credenciales **quemadas** `MONSTER` / `MONSTER9`. Ver
    [authentication](vault/01-architecture/authentication.md).
+10. **Requerimientos adicionales y formato visual:**
+    - Formateo estricto a **2 decimales** (`%.2f` / `.toFixed(2)`) con **punto decimal (`.`)** en la presentación de todos los clientes (`CLICON`, `CLIESC`, `CLIWEB`, `CLIMOV`). En la entrada solo se permiten dígitos (`0-9`) y el punto (`.`), con límite máximo de **16 caracteres** exclusivo para el campo del valor numérico a convertir.
+    - Catálogo estricto de exactamente **5 unidades por magnitud** ("ni una más, ni una menos"). Ver [additional-requirements](vault/01-architecture/additional-requirements.md).
 
 ---
 
@@ -158,7 +161,7 @@ Empieza por **[index](vault/index.md)** (índice MOC). Notas clave:
 - [overview](vault/01-architecture/overview.md)
 - [folder-structure](vault/01-architecture/folder-structure.md)
 - [naming-conventions](vault/01-architecture/naming-conventions.md)
-- [authentication](vault/01-architecture/authentication.md)
+- [authentication](vault/01-architecture/authentication.md) · [additional-requirements](vault/01-architecture/additional-requirements.md)
 - [variant-matrix](vault/02-variants/variant-matrix.md)
 - [01-uml](vault/03-deliverables/01-uml.md) · [02-mer](vault/03-deliverables/02-mer.md) ·
   [03-bdd](vault/03-deliverables/03-bdd.md) · [04-clients-and-server](vault/03-deliverables/04-clients-and-server.md) ·

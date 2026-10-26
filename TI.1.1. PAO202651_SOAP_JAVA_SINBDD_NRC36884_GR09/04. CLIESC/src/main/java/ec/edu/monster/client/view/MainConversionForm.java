@@ -32,6 +32,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import javax.swing.SwingConstants;
 
 /**
@@ -235,7 +239,7 @@ public class MainConversionForm extends JFrame {
         gbc.insets = new Insets(4, 6, 4, 6);
         tarjeta.add(lblSec2, gbc);
 
-        txtValor = new JTextField("100.0");
+        txtValor = new JTextField("100.00");
         txtValor.setFont(new Font("Segoe UI", Font.BOLD, 16));
         txtValor.setPreferredSize(new Dimension(300, 40));
         txtValor.setBorder(BorderFactory.createCompoundBorder(
@@ -244,6 +248,7 @@ public class MainConversionForm extends JFrame {
         ));
         gbc.gridy = 3;
         gbc.insets = new Insets(2, 6, 16, 6);
+        configurarFiltroNumerico(txtValor);
         tarjeta.add(txtValor, gbc);
 
         // 3. Selectores de Unidades (Origen <-> Destino) con botón de intercambio interactivo
@@ -448,7 +453,15 @@ public class MainConversionForm extends JFrame {
     private void ejecutarConversion() {
         String origen = (String) cmbOrigen.getSelectedItem();
         String destino = (String) cmbDestino.getSelectedItem();
-        String valorStr = txtValor.getText().trim().replace(',', '.');
+        String valorStr = txtValor.getText().trim();
+        if (valorStr.length() > 16) {
+            mostrarError("El valor no puede superar los 16 caracteres.");
+            return;
+        }
+        if (!valorStr.matches("^\\d+(\\.\\d+)?$")) {
+            mostrarError("Por favor, ingrese un número válido (solo números y el punto decimal '.').");
+            return;
+        }
 
         double valor;
         try {
@@ -476,7 +489,7 @@ public class MainConversionForm extends JFrame {
 
     public void mostrarResultado(ConversionRequest req, ConversionResponse resp) {
         if (resp != null && resp.isExito()) {
-            ultimoResultadoFormateado = String.format("%.4f %s = %.4f %s",
+            ultimoResultadoFormateado = String.format(java.util.Locale.US, "%.2f %s = %.2f %s",
                     req.getValor(), req.getUnidadOrigen(), resp.getValorConvertido(), req.getUnidadDestino());
 
             lblResultado.setText(ultimoResultadoFormateado);
@@ -563,5 +576,33 @@ public class MainConversionForm extends JFrame {
         public int getIconHeight() {
             return height;
         }
+    }
+
+    private void configurarFiltroNumerico(JTextField textField) {
+        ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) return;
+                String actual = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String nuevo = actual.substring(0, offset) + string + actual.substring(offset);
+                if (nuevo.length() <= 16 && esNumeroValido(nuevo)) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) text = "";
+                String actual = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String nuevo = actual.substring(0, offset) + text + actual.substring(offset + length);
+                if (nuevo.length() <= 16 && (nuevo.isEmpty() || esNumeroValido(nuevo))) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+
+            private boolean esNumeroValido(String text) {
+                return text.matches("^\\d*\\.?\\d*$");
+            }
+        });
     }
 }

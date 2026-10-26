@@ -50,7 +50,18 @@ public class ConversionServlet extends HttpServlet {
 
         double valor;
         try {
-            valor = Double.parseDouble(valorStr.trim().replace(',', '.'));
+            String valorLimpio = valorStr.trim();
+            if (valorLimpio.length() > 16) {
+                request.setAttribute("error", "El valor numérico no puede superar los 16 caracteres.");
+                request.getRequestDispatcher("conversor.jsp").forward(request, response);
+                return;
+            }
+            if (!valorLimpio.matches("^\\d+(\\.\\d+)?$")) {
+                request.setAttribute("error", "Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).");
+                request.getRequestDispatcher("conversor.jsp").forward(request, response);
+                return;
+            }
+            valor = Double.parseDouble(valorLimpio);
         } catch (NumberFormatException e) {
             request.setAttribute("error", "El valor numérico ingresado no es válido.");
             request.getRequestDispatcher("conversor.jsp").forward(request, response);
@@ -79,7 +90,7 @@ public class ConversionServlet extends HttpServlet {
             }
 
             if (convResp != null && convResp.isExito()) {
-                String params = String.format(java.util.Locale.US, "valor=%.4f&origen=%s&destino=%s&resultado=%.4f&magnitud=%s&usuario=%s&token=%s",
+                String params = String.format(java.util.Locale.US, "valor=%.2f&origen=%s&destino=%s&resultado=%.2f&magnitud=%s&usuario=%s&token=%s",
                         convReq.getValor(),
                         java.net.URLEncoder.encode(convReq.getUnidadOrigen(), java.nio.charset.StandardCharsets.UTF_8),
                         java.net.URLEncoder.encode(convReq.getUnidadDestino(), java.nio.charset.StandardCharsets.UTF_8),

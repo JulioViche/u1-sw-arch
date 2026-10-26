@@ -53,8 +53,12 @@
                 <!-- 2. Valor Numérico -->
                 <div class="form-group">
                     <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label>
-                    <input type="number" step="any" id="txtValor" name="valor" class="form-input" 
-                           value="100.0" required style="font-size: 1.15rem; font-weight: bold;">
+                    <input type="text" id="txtValor" name="valor" class="form-input" 
+                           autocomplete="off" inputmode="decimal" maxlength="16" pattern="^\d+(\.\d+)?$"
+                           title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)"
+                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46 && this.value.indexOf('.') === -1)"
+                           oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" 
+                           value="100.00" required style="font-size: 1.15rem; font-weight: bold;">
                 </div>
 
                 <!-- 3. Unidades Origen -> Destino con Intercambio -->
@@ -177,7 +181,7 @@
             if (resultado) {
                 const card = document.getElementById('cardResultado');
                 card.style.display = 'block';
-                document.getElementById('resultadoTexto').innerText = parseFloat(valor).toFixed(4) + " " + origen + " = " + parseFloat(resultado).toFixed(4) + " " + destino;
+                document.getElementById('resultadoTexto').innerText = parseFloat(valor).toFixed(2) + " " + origen + " = " + parseFloat(resultado).toFixed(2) + " " + destino;
             } else if (error) {
                 const alertBox = document.getElementById('alertBox');
                 alertBox.style.display = 'block';
