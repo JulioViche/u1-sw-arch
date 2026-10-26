@@ -47,9 +47,9 @@ Los siguientes archivos son las fuentes editables para compilar la documentació
 | :--- | :--- | :--- | :--- |
 | **Servidor SOAP** | `04. SERVIDOR/` | Java JAX-WS / Maven | ✅ Implementado y en ejecución (puerto 8080) |
 | **Cliente Consola** | `04. CLICON/` | Java CLI / JAX-WS / Maven | ✅ Implementado (autenticación obligatoria + conversor) |
-| **Cliente Escritorio** | `04. CLIESC/` | Java Swing / NetBeans GUI | Pendiente de implementación |
+| **Cliente Escritorio** | `04. CLIESC/` | Java Swing / FlatLaf / Maven | ✅ Implementado (Swing MVC: LoginForm + MainConversionForm) |
 | **Cliente Móvil** | `04. CLIMOV/` | Android (Java / Gradle) | Pendiente de implementación |
-| **Cliente Web** | `04. CLIWEB/` | Java JSP / Servlets | Pendiente de implementación |
+| **Cliente Web** | `04. CLIWEB/` | Java JSP / Servlets / Maven | ✅ Implementado (MVC: LoginServlet, ConversionServlet, conversor.jsp) |
 
 ---
 
