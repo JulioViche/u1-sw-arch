@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Unidades SOAP - Panel Web (GR09)</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Encabezado con sesión activa -->
+    <header class="header-bar">
+        <div class="header-brand">
+            <h1>CONVERSOR DE UNIDADES (SOAP JAVA · SINBDD)</h1>
+            <p>ESPE · Arquitectura de Software (TI.1.1) | Autor: Julio Enrique Viche Castillo</p>
+        </div>
+        <div class="header-user">
+            <span class="badge-session">
+                <span class="status-dot">●</span> 
+                <strong id="lblUsuario">MONSTER</strong>
+                <span style="opacity: 0.8; font-size: 0.75rem;" id="lblToken">(Sesión Activa)</span>
+            </span>
+            <a href="logout" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <!-- Panel Central del Conversor -->
+    <main class="main-wrapper">
+        <div class="card-box">
+            <h2 class="card-title">Conversor de Unidades Multimagnitud</h2>
+            <p class="card-subtitle">Cálculos procesados mediante servicios web SOAP protegidos por token</p>
+
+            <div id="alertBox" class="alert alert-error" style="display: none;"></div>
+
+            <!-- 1. Pestañas de Magnitud -->
+            <label class="form-label">1. Seleccione la Magnitud Física:</label>
+            <div class="segmented-group">
+                <button type="button" class="segment-btn active" id="btnLongitud" onclick="cambiarMagnitud('Longitud')">
+                    Longitud
+                </button>
+                <button type="button" class="segment-btn" id="btnMasa" onclick="cambiarMagnitud('Masa')">
+                    Masa
+                </button>
+                <button type="button" class="segment-btn" id="btnTemperatura" onclick="cambiarMagnitud('Temperatura')">
+                    Temperatura
+                </button>
+            </div>
+
+            <!-- Formulario de Conversión -->
+            <form action="convertir" method="POST" id="formConversion">
+                <input type="hidden" id="inputMagnitud" name="magnitud" value="Longitud">
+
+                <!-- 2. Valor Numérico -->
+                <div class="form-group">
+                    <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label>
+                    <input type="number" step="any" id="txtValor" name="valor" class="form-input" 
+                           value="100.0" required style="font-size: 1.15rem; font-weight: bold;">
+                </div>
+
+                <!-- 3. Unidades Origen -> Destino con Intercambio -->
+                <div class="conversion-units-row">
+                    <div>
+                        <label class="form-label" for="cmbOrigen">De (Unidad de Origen):</label>
+                        <select id="cmbOrigen" name="unidadOrigen" class="form-select" required></select>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn-swap" onclick="intercambiarUnidades()" title="Intercambiar unidades (Origen ⇄ Destino)">
+                            &#8644;
+                        </button>
+                    </div>
+
+                    <div>
+                        <label class="form-label" for="cmbDestino">A (Unidad de Destino):</label>
+                        <select id="cmbDestino" name="unidadDestino" class="form-select" required></select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnCalcular">Calcular Conversión SOAP</button>
+            </form>
+
+            <!-- 4. Tarjeta de Resultado Dinámica -->
+            <div class="result-card" id="cardResultado" style="display: none;">
+                <div class="result-value" id="resultadoTexto"></div>
+                <div class="result-subtext" id="resultadoSubtext">
+                    Cálculo procesado exitosamente por el Servidor SOAP en memoria (SINBDD).
+                </div>
+                <button type="button" class="btn-copy" onclick="copiarResultado()">Copiar Resultado</button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Barra de Estado Inferior -->
+    <footer class="footer-bar">
+        <span>Servicio SOAP: <code>http://localhost:8080/ServidorSOAP/ServicioConversion?wsdl</code></span>
+        <span>Arquitectura: Modelo - Vista - Controlador (HTML5 / Servlet / JAX-WS)</span>
+    </footer>
+
+    <!-- Catálogo de JavaScript para unidades dinámicas -->
+    <script>
+        const CATALOGO = {
+            'Longitud': ['Metro', 'Kilometro', 'Centimetro', 'Milimetro', 'Milla', 'Yarda', 'Pie', 'Pulgada'],
+            'Masa': ['Kilogramo', 'Gramo', 'Miligramo', 'Libra', 'Onza', 'Tonelada'],
+            'Temperatura': ['Celsius', 'Fahrenheit', 'Kelvin']
+        };
+
+        function cambiarMagnitud(magnitud) {
+            document.getElementById('inputMagnitud').value = magnitud;
+
+            // Actualizar estilo visual de los botones de pestaña
+            document.querySelectorAll('.segment-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText.trim().toLowerCase() === magnitud.toLowerCase()) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Actualizar selectores de unidades
+            const cmbOrigen = document.getElementById('cmbOrigen');
+            const cmbDestino = document.getElementById('cmbDestino');
+            cmbOrigen.innerHTML = '';
+            cmbDestino.innerHTML = '';
+
+            const unidades = CATALOGO[magnitud] || [];
+            unidades.forEach(u => {
+                const opt1 = new Option(u, u);
+                const opt2 = new Option(u, u);
+                cmbOrigen.add(opt1);
+                cmbDestino.add(opt2);
+            });
+
+            if (unidades.length > 1) {
+                cmbDestino.selectedIndex = 1;
+            }
+        }
+
+        function intercambiarUnidades() {
+            const cmbOrigen = document.getElementById('cmbOrigen');
+            const cmbDestino = document.getElementById('cmbDestino');
+            const temp = cmbOrigen.value;
+            cmbOrigen.value = cmbDestino.value;
+            cmbDestino.value = temp;
+        }
+
+        function copiarResultado() {
+            const texto = document.getElementById('resultadoTexto').innerText.trim();
+            navigator.clipboard.writeText(texto).then(() => {
+                const btn = event.target;
+                const orig = btn.innerText;
+                btn.innerText = '¡Copiado!';
+                setTimeout(() => { btn.innerText = orig; }, 1500);
+            });
+        }
+
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const user = params.get('usuario');
+            const token = params.get('token');
+            if (user) document.getElementById('lblUsuario').innerText = user;
+            if (token) document.getElementById('lblToken').innerText = '(Token: ' + token + ')';
+
+            const mag = params.get('magnitud') || 'Longitud';
+            cambiarMagnitud(mag);
+
+            const valor = params.get('valor');
+            if (valor) document.getElementById('txtValor').value = valor;
+
+            const origen = params.get('origen');
+            const destino = params.get('destino');
+            if (origen) document.getElementById('cmbOrigen').value = origen;
+            if (destino) document.getElementById('cmbDestino').value = destino;
+
+            const resultado = params.get('resultado');
+            const error = params.get('error');
+
+            if (resultado) {
+                const card = document.getElementById('cardResultado');
+                card.style.display = 'block';
+                document.getElementById('resultadoTexto').innerText = parseFloat(valor).toFixed(4) + " " + origen + " = " + parseFloat(resultado).toFixed(4) + " " + destino;
+            } else if (error) {
+                const alertBox = document.getElementById('alertBox');
+                alertBox.style.display = 'block';
+                alertBox.innerText = decodeURIComponent(error);
+            }
+        };
+    </script>
+
+</body>
+</html>

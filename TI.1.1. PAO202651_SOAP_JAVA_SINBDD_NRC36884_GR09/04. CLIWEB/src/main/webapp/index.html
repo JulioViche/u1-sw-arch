@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Sistema - Conversor de Unidades SOAP (GR09)</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Encabezado Institucional -->
+    <header class="header-bar">
+        <div class="header-brand">
+            <h1>UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE</h1>
+            <p>Arquitectura de Software (TI.1.1) · Grupo GR09 | Julio Enrique Viche Castillo</p>
+        </div>
+        <div class="header-user">
+            <span class="badge-session">
+                <span class="status-dot">●</span> Servidor SOAP: 8080
+            </span>
+        </div>
+    </header>
+
+    <!-- Contenedor del Formulario de Login -->
+    <main class="main-wrapper">
+        <div class="card-box card-login">
+            <h2 class="card-title">Iniciar Sesión</h2>
+            <p class="card-subtitle">Autenticación requerida para acceder al Conversor SOAP (SINBDD)</p>
+
+            <div id="alertBox" class="alert alert-error" style="display: none;"></div>
+            <div id="infoBox" class="alert alert-info" style="display: none;"></div>
+
+            <form action="login" method="POST">
+                <div class="form-group">
+                    <label class="form-label" for="txtUsuario">Usuario:</label>
+                    <input type="text" id="txtUsuario" name="usuario" class="form-input" 
+                           value="MONSTER" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="txtClave">Contraseña:</label>
+                    <input type="password" id="txtClave" name="clave" class="form-input" 
+                           value="MONSTER9" required>
+                </div>
+
+                <div class="alert alert-info" style="font-size: 0.8rem; padding: 8px 12px; margin-bottom: 20px;">
+                    <strong>Credenciales del curso:</strong> Usuario: <code>MONSTER</code> | Clave: <code>MONSTER9</code>
+                </div>
+
+                <button type="submit" class="btn-primary">Ingresar al Conversor</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Barra de Estado Inferior -->
+    <footer class="footer-bar">
+        <span>Servidor Backend: <code>http://localhost:8080/ServidorSOAP</code> (Modalidad SINBDD)</span>
+        <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span>
+    </footer>
+
+    <script>
+        // Leer parámetros de la URL para mostrar alertas
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get('error');
+        const mensaje = params.get('mensaje');
+
+        if (error) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.style.display = 'block';
+            if (error === 'CredencialesInvalidas' || error === 'Invalido') {
+                alertBox.innerText = 'Usuario o contraseña incorrectos. Verifique sus credenciales.';
+            } else if (error === 'SesionInvalida') {
+                alertBox.innerText = 'Su sesión ha expirado o no es válida. Inicie sesión nuevamente.';
+            } else {
+                alertBox.innerText = decodeURIComponent(error);
+            }
+        }
+
+        if (mensaje) {
+            const infoBox = document.getElementById('infoBox');
+            infoBox.style.display = 'block';
+            if (mensaje === 'SesionCerrada') {
+                infoBox.innerText = 'Sesión cerrada satisfactoriamente en el servidor SOAP.';
+            } else {
+                infoBox.innerText = decodeURIComponent(mensaje);
+            }
+        }
+    </script>
+
+</body>
+</html>
