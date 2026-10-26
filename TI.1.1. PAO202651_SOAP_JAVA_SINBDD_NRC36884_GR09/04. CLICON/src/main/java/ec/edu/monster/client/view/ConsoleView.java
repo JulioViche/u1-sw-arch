@@ -13,15 +13,15 @@ import java.util.Scanner;
 public class ConsoleView {
 
     public static final String[] UNIDADES_LONGITUD = {
-        "metro", "kilometro", "centimetro", "milimetro", "milla", "yarda", "pie", "pulgada"
+        "metro", "centimetro", "pie", "yarda", "milla"
     };
 
     public static final String[] UNIDADES_MASA = {
-        "kilogramo", "gramo", "miligramo", "libra", "onza", "tonelada"
+        "gramo", "kilogramo", "libra", "onza", "quintal"
     };
 
     public static final String[] UNIDADES_TEMPERATURA = {
-        "celsius", "fahrenheit", "kelvin"
+        "celsius", "fahrenheit", "kelvin", "newton", "reaumur"
     };
 
     private final Scanner scanner;
@@ -73,9 +73,9 @@ public class ConsoleView {
         System.out.printf(" Sesión activa: %s | Token: %s\n",
                 session.getUsuario(), session.getTokenAbreviado());
         System.out.println("----------------------------------------------------------");
-        System.out.println("  1. Conversión de Longitud (m, km, cm, mm, mi, yd, ft, in)");
-        System.out.println("  2. Conversión de Masa (kg, g, mg, lb, oz, ton)");
-        System.out.println("  3. Conversión de Temperatura (Celsius, Fahrenheit, Kelvin)");
+        System.out.println("  1. Conversión de Longitud (metro, centimetro, pie, yarda, milla)");
+        System.out.println("  2. Conversión de Masa (gramo, kilogramo, libra, onza, quintal)");
+        System.out.println("  3. Conversión de Temperatura (Celsius, Fahrenheit, Kelvin, Newton, Reaumur)");
         System.out.println("  4. Verificar estado del token de sesión");
         System.out.println("  5. Cerrar sesión y Salir");
         System.out.println("==========================================================");

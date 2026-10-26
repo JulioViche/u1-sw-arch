@@ -110,13 +110,14 @@ Todos los clientes heterogéneos se diseñan bajo la rigurosa separación de res
   * `valorConvertido` (Double): Resultado numérico calculado.
   * `mensajeError` (String): Detalle del fallo en caso de token inválido o error aritmético.
 
-### 3.3. Unidades y Fórmulas Soportadas
-* **Longitud:** Metro (base), Kilómetro, Centímetro, Milímetro, Milla, Yarda, Pie, Pulgada.
-* **Masa:** Kilogramo (base), Gramo, Miligramo, Libra, Onza, Tonelada.
-* **Temperatura:** Celsius (base), Fahrenheit, Kelvin.
-  $$\text{Fahrenheit a Celsius: } C = (F - 32) \times \frac{5}{9}$$
-  $$\text{Celsius a Fahrenheit: } F = (C \times \frac{9}{5}) + 32$$
-  $$\text{Celsius a Kelvin: } K = C + 273.15$$
+### 3.3. Unidades y Fórmulas Soportadas (Exactamente 5 por magnitud según SRS)
+* **Longitud (5 unidades):** Metro (base: 1.0 m), Centímetro (0.01 m), Pie (0.3048 m), Yarda (0.9144 m), Milla (1609.34 m).
+* **Masa (5 unidades):** Kilogramo (base: 1.0 kg), Gramo (0.001 kg), Libra (0.453592 kg), Onza (0.0283495 kg), Quintal (45.3592 kg).
+* **Temperatura (5 escalas):** Celsius (base), Fahrenheit, Kelvin, Newton, Réaumur.
+  $$\text{Fahrenheit a Celsius: } C = (F - 32) \times \frac{5}{9} \quad \Longleftrightarrow \quad F = (C \times \frac{9}{5}) + 32$$
+  $$\text{Kelvin a Celsius: } C = K - 273.15 \quad \Longleftrightarrow \quad K = C + 273.15$$
+  $$\text{Newton a Celsius: } C = N \times \frac{100}{33} \quad \Longleftrightarrow \quad N = C \times \frac{33}{100}$$
+  $$\text{Réaumur a Celsius: } C = Re \times \frac{5}{4} \quad \Longleftrightarrow \quad Re = C \times \frac{4}{5}$$
 
 ---
 

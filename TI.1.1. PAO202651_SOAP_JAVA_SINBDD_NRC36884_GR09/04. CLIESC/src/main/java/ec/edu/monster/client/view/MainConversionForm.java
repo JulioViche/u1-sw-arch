@@ -49,13 +49,13 @@ public class MainConversionForm extends JFrame {
 
     static {
         CATALOGO_UNIDADES.put("Longitud", new String[]{
-            "Metro", "Kilometro", "Centimetro", "Milimetro", "Milla", "Yarda", "Pie", "Pulgada"
+            "Metro", "Centimetro", "Pie", "Yarda", "Milla"
         });
         CATALOGO_UNIDADES.put("Masa", new String[]{
-            "Kilogramo", "Gramo", "Miligramo", "Libra", "Onza", "Tonelada"
+            "Gramo", "Kilogramo", "Libra", "Onza", "Quintal"
         });
         CATALOGO_UNIDADES.put("Temperatura", new String[]{
-            "Celsius", "Fahrenheit", "Kelvin"
+            "Celsius", "Fahrenheit", "Kelvin", "Newton", "Reaumur"
         });
     }
 
