@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class RestClient {
 
+    private static final String DEFAULT_HOTSPOT_8080 = "http://192.168.137.1:8080/ServidorREST/";
     private static final String DEFAULT_EMULATOR_8080 = "http://10.0.2.2:8080/ServidorREST/";
     private static final String FALLBACK_EMULATOR_8085 = "http://10.0.2.2:8085/ServidorREST/";
 
@@ -33,7 +34,7 @@ public class RestClient {
         if (customUrl != null && !customUrl.trim().isEmpty()) {
             this.baseUrl = normalizarUrl(customUrl);
         } else {
-            this.baseUrl = DEFAULT_EMULATOR_8080;
+            this.baseUrl = DEFAULT_HOTSPOT_8080;
         }
     }
 

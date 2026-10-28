@@ -13,27 +13,44 @@ import javax.xml.namespace.QName;
  */
 public class SoapClientManager {
 
-    private static final String DEFAULT_HOST = "localhost";
+    private static final String DEFAULT_HOST = "192.168.137.1";
     private static final int DEFAULT_PORT = 8080;
     private static final String NAMESPACE_URI = "http://ws.monster.edu.ec/";
 
+    private String host;
+    private int port;
     private String baseEndpoint;
     private IServicioAutenticacion authService;
     private IServicioConversion conversionService;
 
     public SoapClientManager() {
-        this(DEFAULT_HOST, DEFAULT_PORT);
+        this(
+            System.getProperty("server.host", System.getenv("SERVER_HOST") != null ? System.getenv("SERVER_HOST") : DEFAULT_HOST),
+            Integer.parseInt(System.getProperty("server.port", System.getenv("SERVER_PORT") != null ? System.getenv("SERVER_PORT") : String.valueOf(DEFAULT_PORT)))
+        );
     }
 
     public SoapClientManager(String host, int port) {
-        this.baseEndpoint = "http://" + host + ":" + port + "/04.%20SERVIDOR";
+        this.host = (host != null && !host.trim().isEmpty()) ? host.trim() : DEFAULT_HOST;
+        this.port = port > 0 ? port : DEFAULT_PORT;
+        this.baseEndpoint = "http://" + this.host + ":" + this.port + "/ServidorSOAP";
     }
 
     private synchronized String resolverBaseActiva() {
+        String customUrl = System.getProperty("server.url", System.getenv("SERVER_URL"));
+        if (customUrl != null && !customUrl.trim().isEmpty()) {
+            this.baseEndpoint = customUrl.trim().replaceAll("/+$", "");
+            return this.baseEndpoint;
+        }
+
         String[] candidatos = {
-            "http://localhost:8080/04.%20SERVIDOR",
-            "http://localhost:8080/04.SERVIDOR",
-            "http://localhost:8080/ServidorSOAP"
+            "http://" + host + ":" + port + "/ServidorSOAP",
+            "http://192.168.137.1:" + port + "/ServidorSOAP",
+            "http://localhost:" + port + "/ServidorSOAP",
+            "http://127.0.0.1:" + port + "/ServidorSOAP",
+            "http://" + host + ":" + port + "/04.%20SERVIDOR",
+            "http://localhost:" + port + "/04.%20SERVIDOR",
+            "http://" + host + ":" + port + "/04.SERVIDOR"
         };
 
         for (String base : candidatos) {

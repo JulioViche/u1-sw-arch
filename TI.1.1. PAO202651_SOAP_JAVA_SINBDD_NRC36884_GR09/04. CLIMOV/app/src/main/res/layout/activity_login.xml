@@ -75,29 +75,11 @@
                     android:textSize="12sp"
                     android:layout_marginTop="4dp" />
 
-                <!-- Configuración Servidor SOAP -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="URL del Servidor SOAP"
-                    app:boxStrokeColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtServerUrl"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="http://10.0.2.2:8080/ServidorSOAP"
-                        android:textSize="13sp"
-                        android:inputType="textUri" />
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <!-- Campo Usuario -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="20dp"
                     android:hint="Usuario"
                     app:boxStrokeColor="@color/primary"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -161,14 +143,6 @@
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Emulador: 10.0.2.2 | Celular Wi-Fi: IP de tu PC"
-            android:textColor="@color/text_secondary"
-            android:textSize="11sp"
-            android:layout_marginTop="14dp" />
 
     </LinearLayout>
 </ScrollView>

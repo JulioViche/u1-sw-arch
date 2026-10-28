@@ -16,12 +16,14 @@ import ec.edu.monster.client.controller.LoginController;
 import ec.edu.monster.client.model.SessionModel;
 
 /**
- * [VISTA] Actividad de inicio de sesión obligatorio para el cliente Android.
+ * [VISTA] Actividad de inicio de sesión obligatorio para el cliente Android SOAP.
  * Modalidad SINBDD: Credenciales quemadas MONSTER / MONSTER9.
+ * Servidor SOAP quemado: http://192.168.137.1:8080/ServidorSOAP
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private TextInputEditText edtServerUrl;
+    public static final String SERVER_URL = "http://192.168.137.1:8080/ServidorSOAP";
+
     private TextInputEditText edtUsuario;
     private TextInputEditText edtClave;
     private TextView txtMensajeError;
@@ -37,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
 
         controller = new LoginController();
 
-        edtServerUrl = findViewById(R.id.edtServerUrl);
         edtUsuario = findViewById(R.id.edtUsuario);
         edtClave = findViewById(R.id.edtClave);
         txtMensajeError = findViewById(R.id.txtMensajeError);
@@ -48,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void ejecutarLogin() {
-        String serverUrl = (edtServerUrl.getText() != null) ? edtServerUrl.getText().toString().trim() : "";
         String usuario = (edtUsuario.getText() != null) ? edtUsuario.getText().toString().trim() : "";
         String clave = (edtClave.getText() != null) ? edtClave.getText().toString().trim() : "";
 
@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBarLogin.setVisibility(View.VISIBLE);
         btnIngresar.setEnabled(false);
 
-        controller.procesarLogin(serverUrl, usuario, clave, new LoginController.LoginCallback() {
+        controller.procesarLogin(SERVER_URL, usuario, clave, new LoginController.LoginCallback() {
             @Override
             public void onSuccess(SessionModel session) {
                 progressBarLogin.setVisibility(View.GONE);
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(LoginActivity.this, ConversionActivity.class);
                 intent.putExtra("SESSION", session);
-                intent.putExtra("SERVER_URL", serverUrl);
+                intent.putExtra("SERVER_URL", SERVER_URL);
                 startActivity(intent);
                 finish();
             }

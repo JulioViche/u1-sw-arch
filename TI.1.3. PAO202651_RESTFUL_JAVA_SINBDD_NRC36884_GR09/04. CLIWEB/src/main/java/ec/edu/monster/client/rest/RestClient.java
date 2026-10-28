@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class RestClient {
 
-    private static final String DEFAULT_URL_8080 = "http://localhost:8080/ServidorREST/";
+    private static final String DEFAULT_URL_8080 = "http://192.168.137.1:8080/ServidorREST/";
     private static final String FALLBACK_URL_8085 = "http://localhost:8085/ServidorREST/";
 
     private final HttpClient httpClient;
@@ -59,7 +59,9 @@ public class RestClient {
         }
 
         String[] candidatos = {
+            "http://192.168.137.1:8080/ServidorREST/",
             "http://localhost:8080/ServidorREST/",
+            "http://127.0.0.1:8080/ServidorREST/",
             "http://localhost:8080/04.%20SERVIDOR/",
             "http://localhost:8080/04.SERVIDOR/",
             "http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/",

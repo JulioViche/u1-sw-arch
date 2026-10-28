@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class RestClient {
 
-    private static final String DEFAULT_URL_8080 = "http://localhost:8080/ServidorREST/";
+    private static final String DEFAULT_URL_8080 = "http://192.168.137.1:8080/ServidorREST/";
     private static final String FALLBACK_URL_8085 = "http://localhost:8085/ServidorREST/";
 
     private final HttpClient httpClient;
@@ -57,20 +57,32 @@ public class RestClient {
         if (envUrl == null) {
             envUrl = System.getProperty("api.base.url");
         }
+        if (envUrl == null) {
+            envUrl = System.getenv("SERVER_URL");
+        }
+        if (envUrl == null) {
+            envUrl = System.getProperty("server.url");
+        }
         if (envUrl != null && !envUrl.trim().isEmpty()) {
             return normalizarUrl(envUrl);
         }
 
-        // 2. Lista de candidatos de Payara Server, NetBeans y Standalone
+        String customHost = System.getProperty("server.host", System.getenv("SERVER_HOST"));
+        String customPort = System.getProperty("server.port", System.getenv("SERVER_PORT"));
+        String host = (customHost != null && !customHost.trim().isEmpty()) ? customHost.trim() : "192.168.137.1";
+        String port = (customPort != null && !customPort.trim().isEmpty()) ? customPort.trim() : "8080";
+
+        // 2. Lista de candidatos de Payara Server
         String[] candidatos = {
-            "http://localhost:8080/ServidorREST/",
-            "http://localhost:8080/04.%20SERVIDOR/",
-            "http://localhost:8080/04.SERVIDOR/",
-            "http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/",
-            "http://localhost:8085/ServidorREST/",
-            "http://localhost:8085/04.%20SERVIDOR/",
-            "http://localhost:8085/04.SERVIDOR/",
-            "http://localhost:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/"
+            "http://" + host + ":" + port + "/ServidorREST/",
+            "http://192.168.137.1:" + port + "/ServidorREST/",
+            "http://localhost:" + port + "/ServidorREST/",
+            "http://127.0.0.1:" + port + "/ServidorREST/",
+            "http://" + host + ":" + port + "/04.%20SERVIDOR/",
+            "http://localhost:" + port + "/04.%20SERVIDOR/",
+            "http://" + host + ":" + port + "/04.SERVIDOR/",
+            "http://" + host + ":" + port + "/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/",
+            "http://localhost:8085/ServidorREST/"
         };
 
         for (String candidato : candidatos) {
@@ -80,7 +92,7 @@ public class RestClient {
         }
 
         // Predeterminado
-        return DEFAULT_URL_8080;
+        return "http://" + host + ":" + port + "/ServidorREST/";
     }
 
     private boolean probarServidor(String testUrl) {

@@ -31,9 +31,10 @@ public class SoapClientManager {
 
     private synchronized String resolverBaseActiva() {
         String[] candidatos = {
+            "http://192.168.137.1:8080/ServidorSOAP",
+            "http://localhost:8080/ServidorSOAP",
             "http://localhost:8080/04.%20SERVIDOR",
-            "http://localhost:8080/04.SERVIDOR",
-            "http://localhost:8080/ServidorSOAP"
+            "http://localhost:8080/04.SERVIDOR"
         };
 
         for (String base : candidatos) {

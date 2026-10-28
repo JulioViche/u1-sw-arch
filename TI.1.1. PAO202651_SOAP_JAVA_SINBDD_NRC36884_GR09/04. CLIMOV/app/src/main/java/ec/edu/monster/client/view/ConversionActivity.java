@@ -86,7 +86,7 @@ public class ConversionActivity extends AppCompatActivity {
         session = (SessionModel) getIntent().getSerializableExtra("SESSION");
         serverUrl = getIntent().getStringExtra("SERVER_URL");
         if (serverUrl == null || serverUrl.trim().isEmpty()) {
-            serverUrl = "http://10.0.2.2:8080/ServidorSOAP";
+            serverUrl = "http://192.168.137.1:8080/ServidorSOAP";
         }
 
         controller = new ConversionController();
