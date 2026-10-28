@@ -55,7 +55,7 @@ Las representaciones visuales interactivas en sintaxis Mermaid y el análisis de
 
 - ERS: `ERS_<PROTOCOLO>_<PLATAFORMA>_SINBDD_<GRUPO>.docx`
 - Plantilla ERS: `ERS_<...>_PLANTILLA.docx`
-- ECUD: `ECUD_<PROYECTO>_<GRUPO>.pdf`
+- ECUD: `ECUD_<PROTOCOLO>_<PLATAFORMA>_SINBDD_<GRUPO>.docx` / `.pdf`
 
 Ver [naming-conventions](../01-architecture/naming-conventions.md).
 

@@ -16,3 +16,8 @@ nbproject/private/
 # Obsidian: estado de la interfaz (dependiente de cada usuario)
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
+
+# Archivos temporales de Office
+~$*
+*.tmp
+

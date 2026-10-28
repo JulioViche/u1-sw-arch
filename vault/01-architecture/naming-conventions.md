@@ -14,7 +14,7 @@ Patrones tomados de la solución de referencia en `examples/`. Sustituye `<GRUPO
 | --- | --- | --- |
 | ERS | `ERS_<PROTOCOLO>_<PLATAFORMA>_SINBDD_<GRUPO>.docx` | `ERS_SOAP_JAVA_SINBDD_GR69.docx` |
 | Plantilla ERS | `ERS_<...>_PLANTILLA.docx` | `ERS_SOAP_JAVA_SINBDD_GR69_PLANTILLA.docx` |
-| ECUD | `ECUD_<PROYECTO>_<GRUPO>.pdf` | `ECUD_CONVERSION_UNIDADES_G03.pdf` |
+| ECUD | `ECUD_<PROTOCOLO>_<PLATAFORMA>_SINBDD_<GRUPO>.docx` / `.pdf` | `ECUD_SOAP_JAVA_SINBDD_GR09.docx` |
 | Manual técnico | `CONVUNI_<PROTOCOLO>_<PLATAFORMA>_<GRUPO>.docx` | `CONVUNI_SOAP_JAVA_GR69.docx` |
 | Presentación | `CONVUNI_<PROTOCOLO>_<PLATAFORMA>_<GRUPO>.pptx` | `CONVUNI_SOAP_JAVA_GR69.pptx` |
 
