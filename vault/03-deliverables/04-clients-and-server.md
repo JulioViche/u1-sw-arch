@@ -20,10 +20,15 @@ Cinco componentes de software por variante, cada uno en su carpeta.
 | `04. CLIWEB` | Cliente web | JSP/JSF · ASP.NET |
 | `04. CLIMOV` | Cliente móvil (Android) | Android |
 
-> [!tip] Implementación en SOAP Java (GR09)
+> [!tip] Implementación en SOAP Java (TI.1.1 - GR09)
 > - **Servidor de Aplicaciones (RNF-004)**: Despliegue en Payara Server 5/6 mediante WAR (`ServidorSOAP.war`), `glassfish-web.xml`, `payara-web.xml` y `beans.xml` bajo context-root `/ServidorSOAP`.
 > - **Arquitectura Interna**: Patrón de diseño **Estrategia (Strategy Pattern)** con `IConversor<U>`, enums estricto de 5 unidades por magnitud (`UnidadLongitud`, `UnidadMasa`, `UnidadTemperatura`) y fachada `ConversionUtil`.
 > - **Doble modo de ejecución**: Standalone (`Publisher.java` vía `mvn exec:java`) y contenedor Java EE (`ServidorSOAP.war` en Payara Server).
+
+> [!tip] Implementación en RESTful Java (TI.1.3 - GR09)
+> - **Servidor de Aplicaciones (RNF-004)**: Despliegue en Payara Server 5/6 mediante WAR (`WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT.war`), `glassfish-web.xml`, `payara-web.xml` y `beans.xml`.
+> - **Arquitectura Interna**: Patrón de diseño **Strategy** con `IConversor<U>` implementado en `ConversorLongitud`, `ConversorMasa` y `ConversorTemperatura`, con enums estrictos de 5 unidades y formateo a 2 decimales.
+> - **Doble modo de ejecución**: Standalone (`ServidorRestMain.java` con Grizzly HTTP vía `mvn exec:java`) y contenedor Payara Server / GlassFish.
 
 ## Arquitectura
 

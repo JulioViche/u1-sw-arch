@@ -61,14 +61,22 @@ public class RestClient {
             return normalizarUrl(envUrl);
         }
 
-        // 2. Probar puerto 8080
-        if (probarServidor(DEFAULT_URL_8080)) {
-            return DEFAULT_URL_8080;
-        }
+        // 2. Lista de candidatos de Payara Server, NetBeans y Standalone
+        String[] candidatos = {
+            "http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/",
+            "http://localhost:8080/04.%20SERVIDOR/",
+            "http://localhost:8080/04.SERVIDOR/",
+            "http://localhost:8080/ServidorREST/",
+            "http://localhost:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/",
+            "http://localhost:8085/04.%20SERVIDOR/",
+            "http://localhost:8085/04.SERVIDOR/",
+            "http://localhost:8085/ServidorREST/"
+        };
 
-        // 3. Probar puerto 8085 (por si 8080 estaba ocupado)
-        if (probarServidor(FALLBACK_URL_8085)) {
-            return FALLBACK_URL_8085;
+        for (String candidato : candidatos) {
+            if (probarServidor(candidato)) {
+                return candidato;
+            }
         }
 
         // Predeterminado

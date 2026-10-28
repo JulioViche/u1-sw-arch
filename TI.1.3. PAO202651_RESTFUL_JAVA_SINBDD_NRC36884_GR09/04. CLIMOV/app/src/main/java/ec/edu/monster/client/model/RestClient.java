@@ -33,7 +33,7 @@ public class RestClient {
         if (customUrl != null && !customUrl.trim().isEmpty()) {
             this.baseUrl = normalizarUrl(customUrl);
         } else {
-            this.baseUrl = FALLBACK_EMULATOR_8085; // Predeterminado al puerto 8085 por colisión Docker en 8080
+            this.baseUrl = DEFAULT_EMULATOR_8080;
         }
     }
 
