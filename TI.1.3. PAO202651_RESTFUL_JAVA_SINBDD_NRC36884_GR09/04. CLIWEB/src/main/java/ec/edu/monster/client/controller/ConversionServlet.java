@@ -63,9 +63,9 @@ public class ConversionServlet extends HttpServlet {
                         URLEncoder.encode("El valor numérico no puede superar los 16 caracteres.", StandardCharsets.UTF_8));
                 return;
             }
-            if (!valorLimpio.matches("^\\d+(\\.\\d+)?$")) {
+            if (!valorLimpio.matches("^-?\\d+(\\.\\d+)?$")) {
                 response.sendRedirect(request.getContextPath() + "/conversor.html?error=" +
-                        URLEncoder.encode("Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).", StandardCharsets.UTF_8));
+                        URLEncoder.encode("Solo se permiten números, el punto decimal '.' y '-' al inicio (ejemplo: 25.5, -10 o 100).", StandardCharsets.UTF_8));
                 return;
             }
             valor = Double.parseDouble(valorLimpio);

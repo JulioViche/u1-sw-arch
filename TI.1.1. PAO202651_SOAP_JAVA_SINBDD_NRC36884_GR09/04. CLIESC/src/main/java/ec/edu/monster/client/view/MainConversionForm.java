@@ -458,8 +458,8 @@ public class MainConversionForm extends JFrame {
             mostrarError("El valor no puede superar los 16 caracteres.");
             return;
         }
-        if (!valorStr.matches("^\\d+(\\.\\d+)?$")) {
-            mostrarError("Por favor, ingrese un número válido (solo números y el punto decimal '.').");
+        if (!valorStr.matches("^-?\\d+(\\.\\d+)?$")) {
+            mostrarError("Por favor, ingrese un número válido (ejemplo: 100, -15.5 o 0.25).");
             return;
         }
 
@@ -467,7 +467,7 @@ public class MainConversionForm extends JFrame {
         try {
             valor = Double.parseDouble(valorStr);
         } catch (NumberFormatException e) {
-            mostrarError("Por favor, ingrese un número válido (ejemplo: 100 o 25.5).");
+            mostrarError("Por favor, ingrese un número válido (ejemplo: 100, -15.5 o 0.25).");
             return;
         }
 
@@ -601,7 +601,7 @@ public class MainConversionForm extends JFrame {
             }
 
             private boolean esNumeroValido(String text) {
-                return text.matches("^\\d*\\.?\\d*$");
+                return text.matches("^-?\\d*\\.?\\d*$");
             }
         });
     }

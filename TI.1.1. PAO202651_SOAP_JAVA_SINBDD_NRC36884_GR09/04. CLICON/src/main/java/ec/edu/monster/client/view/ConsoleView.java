@@ -119,20 +119,20 @@ public class ConsoleView {
 
     public double pedirValorNumerico() {
         while (true) {
-            System.out.print("Ingrese el valor numérico a convertir (solo números y '.'): ");
+            System.out.print("Ingrese el valor numérico a convertir (números, '.' y '-' al inicio): ");
             String input = scanner.nextLine().trim();
             if (input.length() > 16) {
                 mostrarError("Longitud excedida. El valor no puede superar los 16 caracteres.");
                 continue;
             }
-            if (!input.matches("^\\d+(\\.\\d+)?$")) {
-                mostrarError("Entrada no válida. Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).");
+            if (!input.matches("^-?\\d+(\\.\\d+)?$")) {
+                mostrarError("Entrada no válida. Solo se permiten números, el punto decimal '.' y '-' al inicio (ejemplo: 25.5, -10 o 100).");
                 continue;
             }
             try {
                 return Double.parseDouble(input);
             } catch (NumberFormatException e) {
-                mostrarError("Ingrese un número válido (ejemplo: 25.5 o 100).");
+                mostrarError("Ingrese un número válido (ejemplo: 25.5, -10 o 100).");
             }
         }
     }

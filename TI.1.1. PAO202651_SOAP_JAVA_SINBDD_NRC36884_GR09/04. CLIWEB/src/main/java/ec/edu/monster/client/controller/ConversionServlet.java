@@ -56,8 +56,8 @@ public class ConversionServlet extends HttpServlet {
                 request.getRequestDispatcher("conversor.jsp").forward(request, response);
                 return;
             }
-            if (!valorLimpio.matches("^\\d+(\\.\\d+)?$")) {
-                request.setAttribute("error", "Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).");
+            if (!valorLimpio.matches("^-?\\d+(\\.\\d+)?$")) {
+                request.setAttribute("error", "Solo se permiten números, el punto decimal '.' y '-' al inicio (ejemplo: 25.5, -10 o 100).");
                 request.getRequestDispatcher("conversor.jsp").forward(request, response);
                 return;
             }

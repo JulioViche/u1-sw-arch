@@ -54,10 +54,10 @@
                 <div class="form-group">
                     <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label>
                     <input type="text" id="txtValor" name="valor" class="form-input" 
-                           autocomplete="off" inputmode="decimal" maxlength="16" pattern="^\d+(\.\d+)?$"
-                           title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)"
-                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46 && this.value.indexOf('.') === -1)"
-                           oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" 
+                           autocomplete="off" inputmode="decimal" maxlength="16" pattern="^-?\d+(\.\d+)?$"
+                           title="Solo se permiten números, el punto decimal '.' y '-' al inicio (ej. 100, -15.5 o 25.5)"
+                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46 && this.value.indexOf('.') === -1) || (event.charCode === 45 && this.selectionStart === 0 && this.value.indexOf('-') === -1)"
+                           oninput="let isNeg = this.value.startsWith('-'); let clean = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1'); this.value = ((isNeg ? '-' : '') + clean).slice(0, 16);" 
                            value="100.00" required style="font-size: 1.15rem; font-weight: bold;">
                 </div>
 

@@ -31,7 +31,7 @@ Para el despliegue de estos servicios, se utiliza Payara Server, un servidor de 
 
 #### OBJETIVO GENERAL
 
-Desarrollar un manual de documentación que explique la construcción de un conversor de unidades (longitud y peso) basado en una arquitectura cliente-servidor, con patrón arquitectónico MVC, con clientes en escritorio, consola, web y móvil, y un servidor SOAP implementado en Java y alojado en Payara Server.
+Desarrollar un manual de documentación que explique la construcción de un conversor de unidades de múltiples magnitudes (longitud, masa y temperatura) basado en una arquitectura cliente-servidor, con patrón arquitectónico MVC, con clientes en escritorio, consola, web y móvil, y un servidor SOAP implementado en Java y alojado en Payara Server.
 
 #### OBJETIVOS ESPECÍFICOS
 
@@ -124,6 +124,17 @@ Todo esto con la finalidad de llevar buenas prácticas y mantener organizado el 
 
 ## APLICACIONES SERVIDOR
 
+> [!NOTE] Despliegue Standalone y en Contenedor (Payara Server)
+> El servidor SOAP se puede desplegar tanto en el servidor de aplicaciones **Payara Server 6 / GlassFish** como de manera independiente (Standalone) mediante la clase `ec.edu.monster.publisher.Publisher`, que expone los endpoints en `http://localhost:8080/ServidorSOAP/ServicioAutenticacion?wsdl` y `http://localhost:8080/ServidorSOAP/ServicioConversion?wsdl`.
+> 
+> **Requerimientos Académicos Estrictos (TI.1.1):**
+> - **SINBDD:** Autenticación obligatoria con credenciales quemadas en código: Usuario `MONSTER`, Contraseña `MONSTER9`.
+> - **Catálogo de 5 unidades por magnitud:**
+>   - **Longitud (5):** Metro, Centímetro, Pie, Yarda, Milla.
+>   - **Masa (5):** Kilogramo, Gramo, Libra, Onza, Quintal.
+>   - **Temperatura (5):** Celsius, Fahrenheit, Kelvin, Newton, Réaumur.
+> - **Formateo numérico:** Salidas a exactamente **2 decimales** (`%.2f`) con punto decimal (`.`) y validación de entrada restringida a un máximo de **16 caracteres** numéricos.
+
 ### CREACIÓN DEL PROYECTO SERVIDOR
 
 Se crea el proyecto en NetBeans seleccionando ‘New Project’, ‘Java with Maven’ y ‘Web Application’. Se coloca el nombre del proyecto, ubicación y grupo. Se selecciona el servidor Payara y la versión de Jakarta. Finalmente se hace clic en ‘Finish’.
@@ -136,29 +147,29 @@ Se crea el proyecto en NetBeans seleccionando ‘New Project’, ‘Java with Ma
 
 *_Figura 13. Configuración del proyecto 1 - Servidor SOAP_*
 
-![Captura](imagenes/image15.png)
+![Captura](imagenes/soap_server_pom.png)
 
-*_Figura 14. Configuración del proyecto 2 - Servidor SOAP_*
+*_Figura 14. Configuración Maven pom.xml y dependencias del Servidor SOAP_*
 
 ### CODIFICACIÓN DEL PROYECTO SERVIDOR
 
 #### CREACIÓN DE PAQUETES
 
-Al tratarse de una arquitectura orientada a servicios (SOA) sin conexión a base de datos, se crea la estructura del proyecto enfocada en las dos divisiones funcionales principales. Se incluyen los paquetes: ec.edu.espe.servidorconversiones.WebServices, modelo, pruebas, servicios y vistas, siguiendo el patrón arquitectónico MVC.
+Al tratarse de una arquitectura orientada a servicios (SOA) sin conexión a base de datos (SINBDD), se organiza la estructura modular dentro del paquete base `ec.edu.monster`. Se estructuran los paquetes: `ec.edu.monster.model` (entidades de intercambio y sesión), `ec.edu.monster.publisher` (publicador standalone), `ec.edu.monster.seguridad` (control de tokens en memoria), `ec.edu.monster.strategy` (patrón Strategy para conversiones), `ec.edu.monster.util` y `ec.edu.monster.ws` (endpoints JAX-WS).
 
-![Captura](imagenes/image16.png)
+![Captura](imagenes/soap_server_paquetes.png)
 
-*_Figura 15. Estructura de paquetes - Servidor SOAP_*
+*_Figura 15. Estructura de paquetes ec.edu.monster del Servidor SOAP_*
 
 #### CREACIÓN DE WEBSERVICES
 
-Para la exposición de las funcionalidades hacia los clientes (Android y Java), se utiliza la especificación Jakarta XML Web Services (JAX-WS). En esta capa se definen los Endpoints que transforman las peticiones XML en llamadas a los servicios de lógica de negocio anteriormente creados.
+Para la exposición de las funcionalidades hacia los clientes (Consola, Escritorio, Web y Móvil), se utiliza la especificación Jakarta XML Web Services (JAX-WS). En esta capa se definen los Endpoints que transforman las peticiones XML en llamadas a los servicios de lógica de negocio desacoplados bajo el patrón GoF Strategy.
 
-Se utilizan anotaciones de Jakarta EE como @WebService para marcar la clase como un servicio web y @WebMethod para exponer cada función específica (Login y Conversiones). Esta estructura permite que el servidor Payara genere automáticamente el archivo WSDL (Web Services Description Language), que sirve como el contrato de interfaz para cualquier cliente que desee consumir el servicio.
+Se utilizan anotaciones de Jakarta EE como `@WebService` para publicar el contrato y `@WebMethod` para exponer cada función específica (`iniciarSesion`, `validarToken`, `convertirLongitud`, `convertirMasa`, `convertirTemperatura`). Esta estructura permite generar el archivo WSDL oficial para el consumo de los clientes heterogéneos.
 
-![Captura](imagenes/image17.png)
+![Captura](imagenes/soap_server_endpoint.png)
 
-*_Figura 16. Estructura de paquetes - WebServices_*
+*_Figura 16. Implementación del Endpoint ConversionWebService con JAX-WS_*
 
 Tabla 1. Clase WSLogin
 
@@ -178,7 +189,7 @@ import java.util.Map;
 
 /**
 
-* @author Monster
+* @author Julio Enrique Viche Castillo - GR09 - NRC 36884
 
 */
 
@@ -194,7 +205,7 @@ public static Map<String, Boolean> tokensValidos = new HashMap<>();
 
 public String login(@WebParam(name = "usuario") String usuario, @WebParam(name = "clave") String clave) {
 
-if ("monster".equals(usuario) && "monster9".equals(clave)) {
+if ("MONSTER".equals(usuario) && "MONSTER9".equals(clave)) {
 
 String token = UUID.randomUUID().toString(); //generar token
 
@@ -224,7 +235,7 @@ import jakarta.jws.WebParam;
 
 /**
 
-* @author Monster
+* @author Julio Enrique Viche Castillo - GR09 - NRC 36884
 
 */
 
@@ -276,7 +287,7 @@ import jakarta.jws.WebParam;
 
 /**
 
-* @author Monster
+* @author Julio Enrique Viche Castillo - GR09 - NRC 36884
 
 */
 
@@ -326,7 +337,7 @@ import jakarta.jws.WebParam;
 
 /**
 
-* @author Monster
+* @author Julio Enrique Viche Castillo - GR09 - NRC 36884
 
 */
 
@@ -376,38 +387,41 @@ Servicio de Conversiones: Contiene los algoritmos y factores de conversión para
 
 Tabla 5. Clase ConversorLongitud
 
-| package ec.edu.monster.servicios;/** * * @author Soto */public class ConversorLongitud { public double convertirLongitud(double valor, String unidadOrigen, String unidadDestino) { double valorEnMetros = 0.0; String origen = unidadOrigen.toLowerCase().trim(); String destino = unidadDestino.toLowerCase().trim(); try { //Lleva cualquier unidad a metros switch (origen) { case "centimetros": valorEnMetros = valor / 100.0; break; case "metros": valorEnMetros = valor; break; case "pies": valorEnMetros = valor * 0.3048; break; case "yardas": valorEnMetros = valor * 0.9144; break; case "millas": valorEnMetros = valor * 1609.34; break; default: return -999999.404; } //Lleva de metros a la unidad de destino switch (destino) { case "centimetros": return valorEnMetros * 100.0; case "metros": return valorEnMetros; case "pies": return valorEnMetros / 0.3048; case "yardas": return valorEnMetros / 0.9144; case "millas": return valorEnMetros / 1609.34; default: return -999999.404; } } catch (Exception e) { return -999999.500; //error de calculo } }} |
+| package ec.edu.monster.servicios;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversorLongitud { public double convertirLongitud(double valor, String unidadOrigen, String unidadDestino) { double valorEnMetros = 0.0; String origen = unidadOrigen.toLowerCase().trim(); String destino = unidadDestino.toLowerCase().trim(); try { //Lleva cualquier unidad a metros switch (origen) { case "centimetros": valorEnMetros = valor / 100.0; break; case "metros": valorEnMetros = valor; break; case "pies": valorEnMetros = valor * 0.3048; break; case "yardas": valorEnMetros = valor * 0.9144; break; case "millas": valorEnMetros = valor * 1609.34; break; default: return -999999.404; } //Lleva de metros a la unidad de destino switch (destino) { case "centimetros": return valorEnMetros * 100.0; case "metros": return valorEnMetros; case "pies": return valorEnMetros / 0.3048; case "yardas": return valorEnMetros / 0.9144; case "millas": return valorEnMetros / 1609.34; default: return -999999.404; } } catch (Exception e) { return -999999.500; //error de calculo } }} |
 | --- |
 
 Tabla 6. Clase ConversorMasa
 
-| package ec.edu.monster.servicios;/** * * @author Soto */public class ConversorMasa { public double convertirMasa(double valor, String unidadOrigen, String unidadDestino) { double valorEnKilos = 0.0; String origen = unidadOrigen.toLowerCase(); String destino = unidadDestino.toLowerCase(); try { //Lleva cualquier unidad a kg switch (origen) { case "gramos": valorEnKilos = valor / 1000.0; break; case "kilogramos": valorEnKilos = valor; break; case "onzas": valorEnKilos = valor * 0.0283495; break; case "libras": valorEnKilos = valor * 0.453592; break; case "quintales": valorEnKilos = (valor * 100.0) * 0.453592; break; default: return -999999.404; //codigo de error para unidad no existente } //De kg a la unidad destino switch (destino) { case "gramos": return valorEnKilos * 1000.0; case "kilogramos": return valorEnKilos; case "onzas": return valorEnKilos / 0.0283495; case "libras": return valorEnKilos / 0.453592; case "quintales": return (valorEnKilos / 0.453592) / 100.0; default: return -999999.404; //codigo de error de unidad no existente } } catch (Exception e) { return -999999.500; //error de calculo } }} |
+| package ec.edu.monster.servicios;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversorMasa { public double convertirMasa(double valor, String unidadOrigen, String unidadDestino) { double valorEnKilos = 0.0; String origen = unidadOrigen.toLowerCase(); String destino = unidadDestino.toLowerCase(); try { //Lleva cualquier unidad a kg switch (origen) { case "gramos": valorEnKilos = valor / 1000.0; break; case "kilogramos": valorEnKilos = valor; break; case "onzas": valorEnKilos = valor * 0.0283495; break; case "libras": valorEnKilos = valor * 0.453592; break; case "quintales": valorEnKilos = (valor * 100.0) * 0.453592; break; default: return -999999.404; //codigo de error para unidad no existente } //De kg a la unidad destino switch (destino) { case "gramos": return valorEnKilos * 1000.0; case "kilogramos": return valorEnKilos; case "onzas": return valorEnKilos / 0.0283495; case "libras": return valorEnKilos / 0.453592; case "quintales": return (valorEnKilos / 0.453592) / 100.0; default: return -999999.404; //codigo de error de unidad no existente } } catch (Exception e) { return -999999.500; //error de calculo } }} |
 | --- |
 
 Tabla 7. Clase ConversorTemperatura
 
-| package ec.edu.monster.servicios;/** * * @author Soto */public class ConversorTemperatura { public double convertirTemperatura(double valor, String opcionOrigen, String opcionDestino) { double valorEnCelsius = 0.0; String origen = opcionOrigen.toLowerCase(); String destino = opcionDestino.toLowerCase(); try { //Lleva cualquier temperatura a celsius switch (origen) { case "fahrenheit": valorEnCelsius = (valor - 32) * 5.0 / 9.0; break; case "kelvin": valorEnCelsius = valor - 273.15; break; case "celsius": valorEnCelsius = valor; break; case "newton": valorEnCelsius = valor * 100.0 / 33.0; break; case "reaumur": valorEnCelsius = valor * 5.0 / 4.0; break; default: return -999999.404; } //Lleva de celsius a la unidad de destino switch (destino) { case "fahrenheit": return (valorEnCelsius * 9.0 / 5.0) + 32; case "kelvin": return valorEnCelsius + 273.15; case "celsius": return valorEnCelsius; case "newton": return valorEnCelsius * 33.0 / 100.0; case "reaumur": return valorEnCelsius * 4.0 / 5.0; default: return -999999.404; } }catch (Exception e) { return -999999.500; //error de calculo } }} |
+| package ec.edu.monster.servicios;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversorTemperatura { public double convertirTemperatura(double valor, String opcionOrigen, String opcionDestino) { double valorEnCelsius = 0.0; String origen = opcionOrigen.toLowerCase(); String destino = opcionDestino.toLowerCase(); try { //Lleva cualquier temperatura a celsius switch (origen) { case "fahrenheit": valorEnCelsius = (valor - 32) * 5.0 / 9.0; break; case "kelvin": valorEnCelsius = valor - 273.15; break; case "celsius": valorEnCelsius = valor; break; case "newton": valorEnCelsius = valor * 100.0 / 33.0; break; case "reaumur": valorEnCelsius = valor * 5.0 / 4.0; break; default: return -999999.404; } //Lleva de celsius a la unidad de destino switch (destino) { case "fahrenheit": return (valorEnCelsius * 9.0 / 5.0) + 32; case "kelvin": return valorEnCelsius + 273.15; case "celsius": return valorEnCelsius; case "newton": return valorEnCelsius * 33.0 / 100.0; case "reaumur": return valorEnCelsius * 4.0 / 5.0; default: return -999999.404; } }catch (Exception e) { return -999999.500; //error de calculo } }} |
 | --- |
+
+### PUBLICACIÓN Y DESPLIEGUE EN PAYARA SERVER
+
+El servidor web SOAP se empaqueta como un archivo WAR (`ServidorSOAP.war`) y se despliega directamente sobre el servidor de aplicaciones empresarial **Payara Server**. Al iniciarse el dominio de Payara, el motor de Web Services de GlassFish/Metro analiza automáticamente las anotaciones `@WebService` en `AuthWebService` y `ConversionWebService`, publicando los endpoints en el puerto estándar `8080` bajo la raíz de contexto `/ServidorSOAP`.
+
+![Captura](imagenes/soap_server_publisher_exec.png)
+
+*_Figura 17. Salida en consola de despliegue con los endpoints activos en el puerto 8080 de Payara Server_*
 
 ### PRUEBAS DE LOS SERVICIOS
 
-Al trabajar con una arquitectura basada en SOAP, la validación de que el servidor está en línea y operando correctamente se realiza verificando la generación del archivo WSDL (Web Services Description Language). Este documento en formato XML es generado automáticamente por el servidor Payara y actúa como el contrato de comunicación que los clientes deberán consumir.
+Al trabajar con una arquitectura basada en SOAP, la validación de que el servidor está en línea y operando correctamente se realiza verificando la generación del archivo WSDL (Web Services Description Language). Este documento en formato XML actúa como el contrato formal de comunicación que los clientes deberán consumir.
 
-Analizando la estructura de la aplicación, el sistema expone cuatro servicios web principales (Endpoints) utilizando la especificación JAX-WS:
+El sistema expone dos servicios web principales fuertemente tipados utilizando la especificación JAX-WS:
 
-WSLogin: Punto de entrada para el módulo de seguridad. Recibe la petición del cliente y procesa la validación de credenciales para permitir o denegar el acceso a las funciones del servidor.
+1. **ServicioAutenticacion:** Punto de entrada para el módulo de seguridad SINBDD. Valida las credenciales maestras fijas (`MONSTER` / `MONSTER9`) y emite tokens UUID en memoria RAM.
+2. **ServicioConversion:** Expone las operaciones matemáticas de cálculo (`convertirLongitud`, `convertirMasa`, `convertirTemperatura`), requiriendo obligatoriamente un token de sesión activo.
 
-WSLongitud: Expone las operaciones matemáticas para las conversiones de medidas de longitud soportadas por el sistema (centímetros, metros, pies, yardas y millas).
+Para comprobar la correcta publicación y disponibilidad de las operaciones, se accede desde el navegador web a la URL del contrato WSDL generado automáticamente.
 
-WSMasa: Se encarga de recibir los parámetros y retornar las transformaciones entre las distintas unidades de masa (gramos, kilogramos, onzas, libras y quintales).
+![Captura](imagenes/soap_server_wsdl_browser.png)
 
-WSTemperatura: Maneja las peticiones referentes a las variaciones térmicas, permitiendo convertir entre Fahrenheit, Kelvin, Celsius, Newton y Réaumur.
-
-Para probar la correcta exposición de los métodos, se utilizó la herramienta de prueba de Web Services de NetBeans, la cual despliega el archivo WSDL en el navegador.
-
-![Captura](imagenes/image19.png)
-
-*_Figura 18. Archivo WSDL generado por el servidor Payara detallando el esquema XML de los endpoints._*
+*_Figura 18. Contrato WSDL del Servicio de Conversión desplegado en http://localhost:8080/ServidorSOAP/ServicioConversion?wsdl_*
 
 ![Captura](imagenes/image20.png)
 
@@ -465,17 +479,17 @@ En la capa de interacción, dentro del paquete vista, se implementan las clases 
 
 Tabla 8. Clase CatalogoUnidades - Cliente consola
 
-| package ec.edu.monster.clienteconsola.modelo;/** * * @author joanc */public class CatalogoUnidades { public enum Longitud { CENTIMETROS, METROS, MILLAS, YARDAS, PIES } public enum Masa { GRAMOS, KILOGRAMOS, ONZAS, LIBRAS, QUINTALES } public enum Temperatura { CELSIUS, FAHRENHEIT, KELVIN, NEWTON, REAUMUR }} |
+| package ec.edu.monster.clienteconsola.modelo;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class CatalogoUnidades { public enum Longitud { CENTIMETROS, METROS, MILLAS, YARDAS, PIES } public enum Masa { GRAMOS, KILOGRAMOS, ONZAS, LIBRAS, QUINTALES } public enum Temperatura { CELSIUS, FAHRENHEIT, KELVIN, NEWTON, REAUMUR }} |
 | --- |
 
 Tabla 9. Clase InterfazConsola - Cliente consola
 
-| package ec.edu.monster.clienteconsola.vista;import java.util.Scanner;/** * * @author joanc */public class InterfazConsola { private final Scanner entrada; public InterfazConsola() { this.entrada = new Scanner(System.in); } public OpcionMenu seleccionarConversion() { System.out.println("\n--- Menú de Conversión de Unidades ---"); for (OpcionMenu opcion : OpcionMenu.values()) { System.out.println(opcion.getNumero() + ". " + opcion.getDescripcion()); } System.out.print("Selecciona una opción: "); String seleccion = entrada.nextLine(); for (OpcionMenu opcion : OpcionMenu.values()) { if (opcion.getNumero().equals(seleccion)) { return opcion; } } System.out.println("Opción inválida. Intenta de nuevo."); return null; } public <T extends Enum<T>> T seleccionarUnidad(String titulo, T[] opciones) { System.out.println("\n--- " + titulo + " ---"); for (int i = 0; i < opciones.length; i++) { System.out.println((i + 1) + ". " + opciones[i].name()); } System.out.print("Elige una unidad: "); try { int seleccion = Integer.parseInt(entrada.nextLine()); if (seleccion >= 1 && seleccion <= opciones.length) { return opciones[seleccion - 1]; } } catch (NumberFormatException e) { // Ignorar para que caiga en el error de abajo } System.out.println("Unidad inválida. Operación cancelada."); return null; } public Double pedirValorAConvertir() { System.out.print("\nIngresa el valor a convertir: "); try { return Double.valueOf(entrada.nextLine()); } catch (NumberFormatException e) { System.out.println("Debe ser un número válido."); return null; } } public String pedirTexto(String mensaje) { System.out.print(mensaje); return entrada.nextLine().trim(); }} |
+| package ec.edu.monster.clienteconsola.vista;import java.util.Scanner;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class InterfazConsola { private final Scanner entrada; public InterfazConsola() { this.entrada = new Scanner(System.in); } public OpcionMenu seleccionarConversion() { System.out.println("\n--- Menú de Conversión de Unidades ---"); for (OpcionMenu opcion : OpcionMenu.values()) { System.out.println(opcion.getNumero() + ". " + opcion.getDescripcion()); } System.out.print("Selecciona una opción: "); String seleccion = entrada.nextLine(); for (OpcionMenu opcion : OpcionMenu.values()) { if (opcion.getNumero().equals(seleccion)) { return opcion; } } System.out.println("Opción inválida. Intenta de nuevo."); return null; } public <T extends Enum<T>> T seleccionarUnidad(String titulo, T[] opciones) { System.out.println("\n--- " + titulo + " ---"); for (int i = 0; i < opciones.length; i++) { System.out.println((i + 1) + ". " + opciones[i].name()); } System.out.print("Elige una unidad: "); try { int seleccion = Integer.parseInt(entrada.nextLine()); if (seleccion >= 1 && seleccion <= opciones.length) { return opciones[seleccion - 1]; } } catch (NumberFormatException e) { // Ignorar para que caiga en el error de abajo } System.out.println("Unidad inválida. Operación cancelada."); return null; } public Double pedirValorAConvertir() { System.out.print("\nIngresa el valor a convertir: "); try { return Double.valueOf(entrada.nextLine()); } catch (NumberFormatException e) { System.out.println("Debe ser un número válido."); return null; } } public String pedirTexto(String mensaje) { System.out.print(mensaje); return entrada.nextLine().trim(); }} |
 | --- |
 
 Tabla 10. Clase OpcionMenu - Cliente consola
 
-| package ec.edu.monster.clienteconsola.vista;/** * * @author joanc */public enum OpcionMenu { CONVERTIR_LONGITUD("1", "Convertir Longitud"), CONVERTIR_MASA("2", "Convertir Masa"), CONVERTIR_TEMPERATURA("3", "Convertir Temperatura"), SALIR("4", "Salir"); private final String numero; private final String descripcion; OpcionMenu(String numero, String descripcion) { this.numero = numero; this.descripcion = descripcion; } public String getNumero() { return numero; } public String getDescripcion() { return descripcion; }} |
+| package ec.edu.monster.clienteconsola.vista;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public enum OpcionMenu { CONVERTIR_LONGITUD("1", "Convertir Longitud"), CONVERTIR_MASA("2", "Convertir Masa"), CONVERTIR_TEMPERATURA("3", "Convertir Temperatura"), SALIR("4", "Salir"); private final String numero; private final String descripcion; OpcionMenu(String numero, String descripcion) { this.numero = numero; this.descripcion = descripcion; } public String getNumero() { return numero; } public String getDescripcion() { return descripcion; }} |
 | --- |
 
 CONSUMO DEL SERVICIO SOAP (CONTROLADOR)
@@ -490,7 +504,7 @@ Se crea la clase ControladorConversiones en la carpeta controlador. Esta clase c
 
 Tabla 11. Clase ControladorConversiones - Cliente consola
 
-| package ec.edu.monster.clienteconsola.controlador;import ec.edu.monster.clientesws.*;/** * * @author joanc */public class ControladorConversiones { private String token; public boolean iniciarSesion(String usuario, String clave) { String msgCredencialesInvalidas = "ERROR: Credenciales inválidas"; try { WSLogin_Service service = new WSLogin_Service(); this.token = service.getWSLoginPort().login(usuario, clave); if(this.token.equals(msgCredencialesInvalidas)){ System.out.println("Credenciales incorrectas"); return false; } return true; } catch (Exception e) { System.err.println("Error en la comunicación con el servicio: " + e.getMessage()); return false; } } public double convertirLongitud(double valor, String origen, String destino) throws Exception { WSLongitud_Service service = new WSLongitud_Service(); return service.getWSLongitudPort().convertirLongitud(valor, origen, destino, token); } public double convertirTemperatura(double valor, String origen, String destino) throws Exception { WSTemperatura_Service service = new WSTemperatura_Service(); return service.getWSTemperaturaPort().convertirTemperatura(valor, origen, destino, token); } public double convertirMasa(double valor, String origen, String destino) throws Exception { WSMasa_Service service = new WSMasa_Service(); return service.getWSMasaPort().convertirMasa(valor, origen, destino, token); }} |
+| package ec.edu.monster.clienteconsola.controlador;import ec.edu.monster.clientesws.*;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ControladorConversiones { private String token; public boolean iniciarSesion(String usuario, String clave) { String msgCredencialesInvalidas = "ERROR: Credenciales inválidas"; try { WSLogin_Service service = new WSLogin_Service(); this.token = service.getWSLoginPort().login(usuario, clave); if(this.token.equals(msgCredencialesInvalidas)){ System.out.println("Credenciales incorrectas"); return false; } return true; } catch (Exception e) { System.err.println("Error en la comunicación con el servicio: " + e.getMessage()); return false; } } public double convertirLongitud(double valor, String origen, String destino) throws Exception { WSLongitud_Service service = new WSLongitud_Service(); return service.getWSLongitudPort().convertirLongitud(valor, origen, destino, token); } public double convertirTemperatura(double valor, String origen, String destino) throws Exception { WSTemperatura_Service service = new WSTemperatura_Service(); return service.getWSTemperaturaPort().convertirTemperatura(valor, origen, destino, token); } public double convertirMasa(double valor, String origen, String destino) throws Exception { WSMasa_Service service = new WSMasa_Service(); return service.getWSMasaPort().convertirMasa(valor, origen, destino, token); }} |
 | --- |
 
 CLASE PRINCIPAL (EJECUCIÓN)
@@ -508,19 +522,19 @@ Tabla 12. Clase ControladorConversiones - Cliente consola
 
 #### EJECUCIÓN DEL CLIENTE DE CONSOLA
 
-![Captura](imagenes/image30.png)
+![Captura](imagenes/soap_clicon_login.png)
 
 *_Figura 29. Login - Cliente consola_*
 
-![Captura](imagenes/image31.png)
+![Captura](imagenes/soap_clicon_longitud.png)
 
 *_Figura 30. Conversión de Longitud - Cliente consola_*
 
-![Captura](imagenes/image32.png)
+![Captura](imagenes/soap_clicon_masa.png)
 
 *_Figura 31. Conversión de Masa - Cliente consola_*
 
-![Captura](imagenes/image33.png)
+![Captura](imagenes/soap_clicon_temperatura.png)
 
 *_Figura 32. Conversión de Temperatura - Cliente consola_*
 
@@ -558,7 +572,7 @@ Para conectar la interfaz con el servidor, se generaron los clientes JAX-WS a pa
 
 Tabla 13. Clase ControladorConversiones - Cliente escritorio
 
-| package ec.edu.monster.clienteescritorio.controlador;import ec.edu.monster.clientesws.*;/** * * @author joanc */public class ControladorConversiones { private String token; public boolean iniciarSesion(String usuario, String clave) { String msgCredencialesInvalidas = "ERROR: Credenciales inválidas"; try { WSLogin_Service service = new WSLogin_Service(); this.token = service.getWSLoginPort().login(usuario, clave); if(this.token.equals(msgCredencialesInvalidas)){ System.out.println("Credenciales incorrectas"); return false; } return true; } catch (Exception e) { System.err.println("Error en la comunicación con el servicio: " + e.getMessage()); return false; } } public double convertirLongitud(double valor, String origen, String destino) throws Exception { WSLongitud_Service service = new WSLongitud_Service(); return service.getWSLongitudPort().convertirLongitud(valor, origen, destino, token); } public double convertirTemperatura(double valor, String origen, String destino) throws Exception { WSTemperatura_Service service = new WSTemperatura_Service(); return service.getWSTemperaturaPort().convertirTemperatura(valor, origen, destino, token); } public double convertirMasa(double valor, String origen, String destino) throws Exception { WSMasa_Service service = new WSMasa_Service(); return service.getWSMasaPort().convertirMasa(valor, origen, destino, token); }} |
+| package ec.edu.monster.clienteescritorio.controlador;import ec.edu.monster.clientesws.*;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ControladorConversiones { private String token; public boolean iniciarSesion(String usuario, String clave) { String msgCredencialesInvalidas = "ERROR: Credenciales inválidas"; try { WSLogin_Service service = new WSLogin_Service(); this.token = service.getWSLoginPort().login(usuario, clave); if(this.token.equals(msgCredencialesInvalidas)){ System.out.println("Credenciales incorrectas"); return false; } return true; } catch (Exception e) { System.err.println("Error en la comunicación con el servicio: " + e.getMessage()); return false; } } public double convertirLongitud(double valor, String origen, String destino) throws Exception { WSLongitud_Service service = new WSLongitud_Service(); return service.getWSLongitudPort().convertirLongitud(valor, origen, destino, token); } public double convertirTemperatura(double valor, String origen, String destino) throws Exception { WSTemperatura_Service service = new WSTemperatura_Service(); return service.getWSTemperaturaPort().convertirTemperatura(valor, origen, destino, token); } public double convertirMasa(double valor, String origen, String destino) throws Exception { WSMasa_Service service = new WSMasa_Service(); return service.getWSMasaPort().convertirMasa(valor, origen, destino, token); }} |
 | --- |
 
 CREACIÓN DE VISTAS
@@ -579,11 +593,11 @@ La clase principal del proyecto funciona como el punto de entrada de la aplicaci
 
 #### EJECUCIÓN DEL CLIENTE DE ESCRITORIO
 
-![Captura](imagenes/image38.png)
+![Captura](imagenes/soap_cliesc_login.png)
 
 *_Figura 38. Login - Cliente escritorio_*
 
-![Captura](imagenes/image39.png)
+![Captura](imagenes/soap_cliesc_conversion.png)
 
 *_Figura 39. Pantalla de Conversiones - Cliente escritorio_*
 
@@ -611,14 +625,14 @@ Para la comunicación con el servidor SOAP, se crearon controladores basados en 
 
 *_Figura 41. Creación de servlets - Cliente web_*
 
-Tabla 14. Clase ConversorServlet - Cliente escritorio
+Tabla 14. Clase ConversorServlet - Cliente web
 
-| package ec.edu.monster.controlador; import java.io.IOException; import jakarta.servlet.ServletException; import jakarta.servlet.annotation.WebServlet; import jakarta.servlet.http.HttpServlet; import jakarta.servlet.http.HttpServletRequest; import jakarta.servlet.http.HttpServletResponse; import jakarta.servlet.http.HttpSession; import ec.edu.monster.controlador.WSLongitud_Service; import ec.edu.monster.controlador.WSMasa_Service; import ec.edu.monster.controlador.WSTemperatura_Service; /** * * @author Soto */ @WebServlet(name = "ConversorServlet", urlPatterns = {"/ConversorServlet"}) public class ConversorServlet extends HttpServlet { @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { response.setContentType("text/plain;charset=UTF-8"); HttpSession sesion = request.getSession(); String token = (String) sesion.getAttribute("miToken"); if (token == null) { response.getWriter().write("ERROR_SESSION"); return; } double valor = Double.parseDouble(request.getParameter("txtValor")); String tipo = request.getParameter("cmbTipo"); String origen = request.getParameter("txtOrigen"); String destino = request.getParameter("txtDestino"); if (valor < 0 && (tipo.equals("longitud") // tipo.equals("masa"))) { response.getWriter().write("ERROR: No existen valores negativos en " + tipo + "."); return; } double resultado = 0; try { switch (tipo) { case "longitud": if (valor < 0){ response.getWriter().write("ERROR: No se permiten valores negativos para esta magnitud."); break; } var portLon = new WSLongitud_Service().getWSLongitudPort(); resultado = portLon.convertirLongitud(valor, origen, destino, token); break; case "masa": if (valor < 0){ response.getWriter().write("ERROR: No se permiten valores negativos para esta magnitud."); break; } var portMas = new WSMasa_Service().getWSMasaPort(); resultado = portMas.convertirMasa(valor, origen, destino, token); break; case "temperatura": var portTemp = new WSTemperatura_Service().getWSTemperaturaPort(); resultado = portTemp.convertirTemperatura(valor, origen, destino, token); break; } if (resultado == -9999999.401) { response.getWriter().write("ERROR: Sesión inválida. Loguéate de nuevo."); } else if (resultado == -999999.404) { response.getWriter().write("ERROR: Unidades no reconocidas por el sistema."); } else { response.getWriter().write(String.valueOf(resultado)); } } catch (Exception e) { response.getWriter().write("ERROR: Fallo al conectar con el servicio web."); } }} |
+| package ec.edu.monster.controlador; import java.io.IOException; import jakarta.servlet.ServletException; import jakarta.servlet.annotation.WebServlet; import jakarta.servlet.http.HttpServlet; import jakarta.servlet.http.HttpServletRequest; import jakarta.servlet.http.HttpServletResponse; import jakarta.servlet.http.HttpSession; import ec.edu.monster.controlador.WSLongitud_Service; import ec.edu.monster.controlador.WSMasa_Service; import ec.edu.monster.controlador.WSTemperatura_Service; /** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */ @WebServlet(name = "ConversorServlet", urlPatterns = {"/ConversorServlet"}) public class ConversorServlet extends HttpServlet { @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { response.setContentType("text/plain;charset=UTF-8"); HttpSession sesion = request.getSession(); String token = (String) sesion.getAttribute("miToken"); if (token == null) { response.getWriter().write("ERROR_SESSION"); return; } double valor = Double.parseDouble(request.getParameter("txtValor")); String tipo = request.getParameter("cmbTipo"); String origen = request.getParameter("txtOrigen"); String destino = request.getParameter("txtDestino"); if (valor < 0 && (tipo.equals("longitud") // tipo.equals("masa"))) { response.getWriter().write("ERROR: No existen valores negativos en " + tipo + "."); return; } double resultado = 0; try { switch (tipo) { case "longitud": if (valor < 0){ response.getWriter().write("ERROR: No se permiten valores negativos para esta magnitud."); break; } var portLon = new WSLongitud_Service().getWSLongitudPort(); resultado = portLon.convertirLongitud(valor, origen, destino, token); break; case "masa": if (valor < 0){ response.getWriter().write("ERROR: No se permiten valores negativos para esta magnitud."); break; } var portMas = new WSMasa_Service().getWSMasaPort(); resultado = portMas.convertirMasa(valor, origen, destino, token); break; case "temperatura": var portTemp = new WSTemperatura_Service().getWSTemperaturaPort(); resultado = portTemp.convertirTemperatura(valor, origen, destino, token); break; } if (resultado == -9999999.401) { response.getWriter().write("ERROR: Sesión inválida. Loguéate de nuevo."); } else if (resultado == -999999.404) { response.getWriter().write("ERROR: Unidades no reconocidas por el sistema."); } else { response.getWriter().write(String.valueOf(resultado)); } } catch (Exception e) { response.getWriter().write("ERROR: Fallo al conectar con el servicio web."); } }} |
 | --- |
 
-Tabla 15. Clase LoginServlet - Cliente escritorio
+Tabla 15. Clase LoginServlet - Cliente web
 
-| package ec.edu.monster.controlador;import ec.edu.monster.controlador.WSLogin_Service; import java.io.IOException;import java.io.PrintWriter;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;/** * * @author Soto */@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})public class LoginServlet extends HttpServlet { @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { //Recoger datos del jsp String user = request.getParameter("txtUsuario"); String pass = request.getParameter("txtClave"); try { //Llamar al web service WSLogin_Service loginService = new WSLogin_Service(); var portLogin = loginService.getWSLoginPort(); String token = portLogin.login(user, pass); if (token.contains("ERROR")) { request.setAttribute("error", "Credenciales incorrectas, intenta de nuevo."); request.getRequestDispatcher("index.jsp").forward(request, response); } else { HttpSession sesion = request.getSession(); sesion.setAttribute("miToken", token); response.sendRedirect("conversor.jsp"); } } catch (Exception e) { request.setAttribute("error", "Error de conexión con el Servidor Payara."); request.getRequestDispatcher("index.jsp").forward(request, response); } }} |
+| package ec.edu.monster.controlador;import ec.edu.monster.controlador.WSLogin_Service; import java.io.IOException;import java.io.PrintWriter;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;/** * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})public class LoginServlet extends HttpServlet { @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { //Recoger datos del jsp String user = request.getParameter("txtUsuario"); String pass = request.getParameter("txtClave"); try { //Llamar al web service WSLogin_Service loginService = new WSLogin_Service(); var portLogin = loginService.getWSLoginPort(); String token = portLogin.login(user, pass); if (token.contains("ERROR")) { request.setAttribute("error", "Credenciales incorrectas, intenta de nuevo."); request.getRequestDispatcher("index.jsp").forward(request, response); } else { HttpSession sesion = request.getSession(); sesion.setAttribute("miToken", token); response.sendRedirect("conversor.jsp"); } } catch (Exception e) { request.setAttribute("error", "Error de conexión con el Servidor Payara."); request.getRequestDispatcher("index.jsp").forward(request, response); } }} |
 | --- |
 
 CREACIÓN DE VISTAS
@@ -641,11 +655,11 @@ Tabla 17. Archivo index - Cliente web
 
 EJECUCIÓN DEL CLIENTE DE WEB
 
-![Captura](imagenes/image43.png)
+![Captura](imagenes/soap_cliweb_login.png)
 
 *_Figura 43. Login - Cliente web_*
 
-![Captura](imagenes/image44.png)
+![Captura](imagenes/soap_cliweb_conversion.png)
 
 *_Figura 44. Pantalla de Conversiones - Cliente web_*
 
@@ -681,18 +695,18 @@ Adicionalmente, debido a que Android no incluye bibliotecas nativas para el cons
 
 CREACIÓN DE CONTROLADORES
 
-s reemplaza la implementación de clientes REST. En el paquete controller se desarrollaron las clases LoginController y ConversionController. Estos controladores operan de forma asíncrona (en hilos secundarios) para no bloquear la interfaz gráfica; capturan los datos de la pantalla, invocan al SoapClient pasándole los parámetros requeridos y devuelven la respuesta procesada a las actividades correspondientes.
+Para el cliente móvil Android se implementa la comunicación SOAP consumiendo los Web Services mediante peticiones HTTP POST con sobres XML (SOAP Envelope). En el paquete controller se desarrollaron las clases LoginController y ConversionController. Estos controladores operan de forma asíncrona (en hilos secundarios) para no bloquear la interfaz gráfica; capturan los datos de la pantalla, invocan al SoapClient pasándole los parámetros requeridos y devuelven la respuesta procesada a las actividades correspondientes.
 
 ![Captura](imagenes/image48.png)
 
 *_Figura 48. Creación de controladores - Cliente móvil_*
 
-Tabla 18. LoginController - Cliente web
+Tabla 18. Clase LoginController - Cliente móvil
 
 | package ec.edu.monster.conuniclientemovil.controller;import ec.edu.monster.conuniclientemovil.model.LoginResult;import ec.edu.monster.conuniclientemovil.model.SoapClient;import java.util.concurrent.ExecutionException;import java.util.concurrent.ExecutorService;import java.util.concurrent.Executors;public class LoginController { /** * Callback para el resultado del login. */ public interface LoginCallback { void onResult(LoginResult result); } private final SoapClient soapClient; private final ExecutorService executorService; public LoginController(SoapClient soapClient) { this(soapClient, Executors.newSingleThreadExecutor()); } public LoginController(SoapClient soapClient, ExecutorService executorService) { this.soapClient = soapClient; this.executorService = executorService; } /** * Ejecuta el login de forma asíncrona. */ public void login(String baseUrl, String usuario, String clave, LoginCallback callback) { executorService.execute(() -> { try { String token = soapClient.login(baseUrl, usuario, clave).get(); callback.onResult(LoginResult.success(token)); } catch (Exception exception) { callback.onResult(LoginResult.error(extractMessage(exception))); } }); } public void shutdown() { executorService.shutdown(); } private String extractMessage(Exception exception) { Throwable cause = exception; if (exception instanceof ExecutionException && exception.getCause() != null) { cause = exception.getCause(); } String message = cause.getMessage(); if (message == null // message.trim().isEmpty()) { return "Error desconocido"; } return message; }} |
 | --- |
 
-Tabla 19. ConversionController - Cliente web
+Tabla 19. Clase ConversionController - Cliente móvil
 
 | package ec.edu.monster.conuniclientemovil.controller;import ec.edu.monster.conuniclientemovil.model.ConversionRequest;import ec.edu.monster.conuniclientemovil.model.ConversionResult;import ec.edu.monster.conuniclientemovil.model.ServiceType;import ec.edu.monster.conuniclientemovil.model.SoapClient;import ec.edu.monster.conuniclientemovil.model.SoapErrorMapper;import java.util.concurrent.ExecutionException;import java.util.concurrent.ExecutorService;import java.util.concurrent.Executors;public class ConversionController { /** * Callback para operaciones de conversión. */ public interface ConversionCallback { void onResult(ConversionResult result); } private final SoapClient soapClient; private final ExecutorService executorService; public ConversionController(SoapClient soapClient) { this(soapClient, Executors.newSingleThreadExecutor()); } public ConversionController(SoapClient soapClient, ExecutorService executorService) { this.soapClient = soapClient; this.executorService = executorService; } /** * Ejecuta una conversión de forma asíncrona usando el modelo ConversionRequest. */ public void convert(ConversionRequest request, String baseUrl, ConversionCallback callback) { executorService.execute(() -> { try { double result = executeConversion( request.getServiceType(), baseUrl, request.getValue(), request.getOriginUnit(), request.getDestinationUnit(), request.getToken() ); String mappedError = SoapErrorMapper.mapConversionError( request.getServiceType(), result); if (mappedError != null) { callback.onResult(ConversionResult.serviceError(mappedError, result)); return; } callback.onResult(ConversionResult.success(result)); } catch (Exception exception) { callback.onResult(ConversionResult.error(extractMessage(exception))); } }); } public void shutdown() { executorService.shutdown(); } private double executeConversion( ServiceType serviceType, String baseUrl, double inputValue, String origin, String destination, String token ) throws Exception { switch (serviceType) { case LONGITUD: return soapClient.convertirLongitud(baseUrl, inputValue, origin, destination, token).get(); case MASA: return soapClient.convertirMasa(baseUrl, inputValue, origin, destination, token).get(); case TEMPERATURA: return soapClient.convertirTemperatura(baseUrl, inputValue, origin, destination, token).get(); default: throw new IllegalArgumentException("Servicio no soportado: " + serviceType); } } private String extractMessage(Exception exception) { Throwable cause = exception; if (exception instanceof ExecutionException && exception.getCause() != null) { cause = exception.getCause(); } String message = cause.getMessage(); if (message == null // message.trim().isEmpty()) { return "Error desconocido"; } return message; }} |
 | --- |
@@ -707,7 +721,7 @@ Se crean los archivos de interfaz gráfica en el paquete views.
 
 #### EJECUCIÓN DEL CLIENTE DE MÓVIL
 
-![Captura](imagenes/image50.png)
+![Captura](imagenes/soap_climov_login.png)
 
 *_Figura 50. Login - Cliente móvil_*
 

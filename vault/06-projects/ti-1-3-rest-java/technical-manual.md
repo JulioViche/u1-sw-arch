@@ -52,84 +52,73 @@ El proyecto REST requiere JDK 17 y Maven. Verifica Java con java --version y Mav
 | Java --version |
 | --- |
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Versión de Java JDK 17 en el símbolo del sistema**
+![Captura](imagenes/image2.png)
 
-*_Figura 3. Versión de Java JDK 17 en el símbolo del sistema_*
+Figura 3. Versión de Java JDK 17 en el símbolo del sistema
 
 Para la instalación de la herramienta se accede a la página oficial de descarga de Apache https://netbeans.apache.org/front/main/download/ se selecciona la opción ‘Older Releases’, ‘Apache NetBeans 24’ y la opción para el sistema operativo.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Página oficial de descarga de Apache NetBeans**
+![Captura](imagenes/image3.png)
 
-*_Figura 4. Página oficial de descarga de Apache NetBeans_*
+Figura 4. Página oficial de descarga de Apache NetBeans
 
 Una vez seleccionada la opción para el sistema operativo, se inicia la descarga y se obtendrá el siguiente ejecutable.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Instalador Apache NetBeans 24**
+![Captura](imagenes/image4.png)
 
-*_Figura 5. Instalador Apache NetBeans 24_*
+Figura 5. Instalador Apache NetBeans 24
 
 Al ejecutar el instalador se muestra la siguiente pantalla, en el proceso de instalación se aceptan los términos y condiciones, se selecciona la ubicación de la descarga y se finaliza la instalación.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Pantalla inicial de instalación NetBeans 24**
+![Captura](imagenes/image5.png)
 
-*_Figura 6. Pantalla inicial de instalación NetBeans 24_*
+Figura 6. Pantalla inicial de instalación NetBeans 24
 
 Una vez finalizada la descarga se ejecuta la aplicación y se iniciará Apache NetBeans 24.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Aplicación Apache NetBeans 24**
+![Captura](imagenes/image6.png)
 
-*_Figura 7. Aplicación Apache NetBeans 24_*
+Figura 7. Aplicación Apache NetBeans 24
 
 #### INSTALACIÓN Y CONFIGURACIÓN DE ANDROID STUDIO
 
 Para la instalación de la herramienta se accede a la página oficial de descarga de Android Studio https://developer.android.com/studio se selecciona la opción de descarga, se aceptan términos y condiciones e iniciará la descarga.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Página oficial de descarga de Android Studio**
+![Captura](imagenes/image7.png)
 
-*_Figura 8. Página oficial de descarga de Android Studio_*
+Figura 8. Página oficial de descarga de Android Studio
 
 Al finalizar la descarga se obtendrá el instalador ejecutable.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Ejecutable Android Studio**
+![Captura](imagenes/image8.png)
 
-*_Figura 9. Ejecutable Android Studio_*
+Figura 9. Ejecutable Android Studio
 
 Al ejecutar el instalador se mostrará la siguiente pantalla:
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Pantalla inicial de instalación de Android Studio**
+![Captura](imagenes/image9.png)
 
-*_Figura 10. Pantalla inicial de instalación de Android Studio_*
+Figura 10. Pantalla inicial de instalación de Android Studio
 
 Durante la instalación se selecciona los componentes a instalar, ubicación y carpeta de inicio. Al finalizar la instalación se iniciará la configuración en donde se selecciona el Setup Standard se aceptan términos y condiciones y se inicia la descarga de componentes.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Aplicación Android Studio**
+![Captura](imagenes/image10.png)
 
-*_Figura 11. Aplicación Android Studio_*
+Figura 11. Aplicación Android Studio
 
 ### ESTRUCTURA DE PROYECTO
 
 Para la elaboración del proyecto, en primer lugar, es necesario crear una carpeta en la cual se alojarán los archivos necesarios para su funcionamiento.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de la carpeta raíz**
+![Captura](imagenes/image11.png)
 
-*_Figura 1. Creación de la carpeta raíz_*
+Figura 1. Creación de la carpeta raíz
 
 Dentro de la carpeta principal del proyecto, se debe ubicar la siguiente subestructura.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Estructura inicial del proyecto**
+![Captura](imagenes/image12.png)
 
-*_Figura 2. Estructura inicial del proyecto_*
+Figura 2. Estructura inicial del proyecto
 
 Todo esto con la finalidad de llevar buenas prácticas y mantener organizado el proyecto.
 
@@ -139,20 +128,17 @@ Todo esto con la finalidad de llevar buenas prácticas y mantener organizado el 
 
 El servidor es un proyecto Java con Maven. En NetBeans abre la carpeta 04. SERVIDOR, revisa pom.xml y ejecuta ec.edu.monster.server.ServidorRestMain mediante mvn exec:java; Maven descarga Jersey, Grizzly y Jackson según el pom.xml.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación del proyecto – SERVIDOR RESTFUL**
+![Captura](imagenes/image13.png)
 
-*_Figura 12. Creación del proyecto – SERVIDOR RESTFUL_*
+Figura 12. Creación del proyecto – SERVIDOR RESTFUL
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Configuración del proyecto 1 - SERVIDOR RESTFUL**
+![Captura](imagenes/image14.png)
 
-*_Figura 13. Configuración del proyecto 1 - SERVIDOR RESTFUL_*
+Figura 13. Configuración del proyecto 1 - SERVIDOR RESTFUL
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Configuración del proyecto 2 - SERVIDOR RESTFUL**
+![Captura](imagenes/image15.png)
 
-*_Figura 14. Configuración del proyecto 2 - SERVIDOR RESTFUL_*
+Figura 14. Configuración del proyecto 2 - SERVIDOR RESTFUL
 
 ### CODIFICACIÓN DEL PROYECTO SERVIDOR
 
@@ -160,10 +146,9 @@ El servidor es un proyecto Java con Maven. En NetBeans abre la carpeta 04. SERVI
 
 El servidor separa la configuración Jersey, los controladores REST, los modelos de intercambio y los servicios de conversión. Los paquetes reales son ec.edu.monster.config, ec.edu.monster.controlador, ec.edu.monster.modelo, ec.edu.monster.servicio y ec.edu.monster.server; no hay base de datos.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Estructura de paquetes - SERVIDOR RESTFUL**
+![Captura](imagenes/image16.png)
 
-*_Figura 15. Estructura de paquetes - SERVIDOR RESTFUL_*
+Figura 15. Estructura de paquetes - SERVIDOR RESTFUL
 
 #### CREACIÓN DE RECURSOS REST
 
@@ -171,10 +156,9 @@ AuthController expone el inicio de sesión. ConversorController publica las oper
 
 Los recursos usan @Path, @POST, @Consumes y @Produces. AuthController valida MONSTER / MONSTER9 y crea un token en memoria; ConversorController verifica el token antes de ejecutar una conversión.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Estructura de paquetes - controladores REST**
+![Captura](imagenes/image17.png)
 
-*_Figura 16. Estructura de paquetes - controladores REST_*
+Figura 16. Estructura de paquetes - controladores REST
 
 Tabla 1. Método login - AuthController.java
 
@@ -484,10 +468,9 @@ Servicio de Seguridad: Encargado de la validación de credenciales "hardcoded" y
 
 Servicio de Conversiones: Contiene los algoritmos y factores de conversión para las magnitudes de longitud, masa y temperatura. Está diseñado para ser escalable, permitiendo añadir nuevas unidades sin afectar la estructura principal.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Estructura de paquetes - servicios**
+![Captura](imagenes/image18.png)
 
-*_Figura 17. Estructura de paquetes - servicios_*
+Figura 17. Estructura de paquetes - servicios
 
 Tabla 5. Método convertirLongitud - ConversorLongitud.java
 
@@ -520,30 +503,25 @@ WSTemperatura: Maneja las peticiones referentes a las variaciones térmicas, per
 
 Consulta la ruta health y envía solicitudes JSON a auth/login y a las rutas conversor. Usa MONSTER / MONSTER9 para obtener un token y adjúntalo en las conversiones.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Rutas HTTP publicadas por Jersey sobre Grizzly para autenticación y conversiones con respuestas JSON.**
+![Captura](imagenes/image19.png)
 
-*_Figura 18. Rutas HTTP publicadas por Jersey sobre Grizzly para autenticación y conversiones con respuestas JSON._*
+Figura 18. Rutas HTTP publicadas por Jersey sobre Grizzly para autenticación y conversiones con respuestas JSON.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Prueba 1: Login.**
+![Captura](imagenes/image20.png)
 
-*_Figura 19. Prueba 1: Login._*
+Figura 19. Prueba 1: Login.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Prueba 2: Conversor de Longitud.**
+![Captura](imagenes/image21.png)
 
-*_Figura 20. Prueba 2: Conversor de Longitud._*
+Figura 20. Prueba 2: Conversor de Longitud.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Prueba 3: Conversor de masa.**
+![Captura](imagenes/image22.png)
 
-*_Figura 21. Prueba 3: Conversor de masa._*
+Figura 21. Prueba 3: Conversor de masa.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Prueba 4: Conversor de temperatura.**
+![Captura](imagenes/image23.png)
 
-*_Figura 22. Prueba 4: Conversor de temperatura._*
+Figura 22. Prueba 4: Conversor de temperatura.
 
 ## CODIFICACIÓN DE LOS CLIENTES
 
@@ -553,26 +531,23 @@ Consulta la ruta health y envía solicitudes JSON a auth/login y a las rutas con
 
 El proyecto se crea usando NetBeans seleccionando ‘Nuevo Proyecto’, ‘Java with Maven’ y ‘Java Application’.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación del proyecto - Cliente consola**
+![Captura](imagenes/image24.png)
 
-*_Figura 23. Creación del proyecto - Cliente consola_*
+Figura 23. Creación del proyecto - Cliente consola
 
 En este paso se define el nombre del proyecto y la ubicación.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Configuración del proyecto - Cliente consola**
+![Captura](imagenes/image25.png)
 
-*_Figura 24. Configuración del proyecto - Cliente consola_*
+Figura 24. Configuración del proyecto - Cliente consola
 
 #### ESTRUCTURA DEL PROYECTO
 
 Una vez creado el proyecto se crea la estructura de paquetes basada en el patrón MVC
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Estructura del proyecto - Cliente consola**
+![Captura](imagenes/image26.png)
 
-*_Figura 25. Estructura del proyecto - Cliente consola_*
+Figura 25. Estructura del proyecto - Cliente consola
 
 ### CODIFICACIÓN DEL PROYECTO CLIENTE CONSOLA
 
@@ -582,10 +557,9 @@ Dado que no se requiere persistencia local ni mapeo de entidades complejas, el m
 
 En la capa de interacción, dentro del paquete vista, se implementan las clases InterfazConsola y el enumerador OpcionMenu. Estas clases se encargan de abstraer la clase Scanner, capturar los datos por teclado de forma segura y desplegar los menús interactivos al usuario sin mezclar la lógica de negocio.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de modelos y vistas - Cliente consola**
+![Captura](imagenes/image27.png)
 
-*_Figura 26. Creación de modelos y vistas - Cliente consola_*
+Figura 26. Creación de modelos y vistas - Cliente consola
 
 Tabla 8. Clase ConversionRequest - Cliente consola
 
@@ -594,7 +568,7 @@ Tabla 8. Clase ConversionRequest - Cliente consola
 
 Tabla 9. Clase ConsoleView - Cliente consola
 
-| package ec.edu.monster.client.view;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.SessionModel;import java.util.Locale;import java.util.Scanner;/** * [VISTA] Interfaz de usuario para la consola de comandos. * Formateo estricto a 2 decimales con punto decimal (Locale.US) y límite de 16 caracteres numéricos. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConsoleView { public static final String[] UNIDADES_LONGITUD = { "metro", "centimetro", "pie", "yarda", "milla" }; public static final String[] UNIDADES_MASA = { "gramo", "kilogramo", "libra", "onza", "quintal" }; public static final String[] UNIDADES_TEMPERATURA = { "celsius", "fahrenheit", "kelvin", "newton", "reaumur" }; private final Scanner scanner; public ConsoleView() { this.scanner = new Scanner(System.in); } public void mostrarBanner() { System.out.println("=================================================================="); System.out.println(" UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE - EXTENSIÓN LATACUNGA"); System.out.println(" DEPARTAMENTO DE ENERGÍA Y MECÁNICA"); System.out.println(" ARQUITECTURA DE SOFTWARE"); System.out.println(" TAREA TI.1.3 (PAO 2026-51)"); System.out.println("------------------------------------------------------------------"); System.out.println(" CLIENTE DE CONSOLA: CONVERSOR DE UNIDADES (RESTFUL JAVA - SINBDD)"); System.out.println(" NRC: 36884 / Grupo: GR09 / Autor: Julio Enrique Viche Castillo "); System.out.println(" Patrón Arquitectónico: Modelo - Vista - Controlador (MVC)"); System.out.println("==================================================================\n"); } public String[] pedirCredenciales() { System.out.println("------------------------------------------------------------------"); System.out.println(" INICIO DE SESIÓN OBLIGATORIO (AUTENTICACIÓN) "); System.out.println("------------------------------------------------------------------"); System.out.println(" [Nota]: Credenciales del sistema:"); System.out.println(" Usuario: MONSTER / Contraseña: MONSTER9"); System.out.println("------------------------------------------------------------------"); System.out.print("Ingrese Usuario: "); String usuario = scanner.nextLine().trim(); System.out.print("Ingrese Contraseña: "); String clave = scanner.nextLine().trim(); return new String[]{usuario, clave}; } public boolean preguntarReintento() { System.out.print("\n¿Desea reintentar el inicio de sesión? (s/n): "); String resp = scanner.nextLine().trim().toLowerCase(); return resp.equals("s") // resp.equals("si") // resp.equals("y"); } public String mostrarMenuPrincipal(SessionModel session) { System.out.println("\n=========================================================="); System.out.println(" MENÚ PRINCIPAL DE CONVERSIONES REST (MVC) "); System.out.println("=========================================================="); System.out.printf(" Sesión activa: %s / Token: %s\n", session.getUsuario(), session.getTokenAbreviado()); System.out.println("----------------------------------------------------------"); System.out.println(" 1. Conversión de Longitud (metro, centimetro, pie, yarda, milla)"); System.out.println(" 2. Conversión de Masa (gramo, kilogramo, libra, onza, quintal)"); System.out.println(" 3. Conversión de Temperatura (celsius, fahrenheit, kelvin, newton, reaumur)"); System.out.println(" 4. Verificar estado del token de sesión"); System.out.println(" 5. Cerrar sesión y Salir"); System.out.println("=========================================================="); System.out.print("Seleccione una opción (1-5): "); return scanner.nextLine().trim(); } public ConversionRequest solicitarDatosConversion(String magnitud, String[] unidades) { System.out.println("\n--- [CONVERSIÓN DE " + magnitud.toUpperCase() + "] ---"); String origen = seleccionarUnidad("origen", unidades); if (origen == null) return null; String destino = seleccionarUnidad("destino", unidades); if (destino == null) return null; double valor = pedirValorNumerico(); return new ConversionRequest(magnitud, origen, destino, valor); } private String seleccionarUnidad(String tipo, String[] unidades) { System.out.println("Seleccione unidad de " + tipo + ":"); for (int i = 0; i < unidades.length; i++) { System.out.printf(" %d. %s\n", (i + 1), capitalizar(unidades[i])); } System.out.print("Elija una opción (1-" + unidades.length + "): "); String input = scanner.nextLine().trim(); try { int idx = Integer.parseInt(input) - 1; if (idx >= 0 && idx < unidades.length) { return unidades[idx]; } else { mostrarError("Opción de unidad fuera de rango."); return null; } } catch (NumberFormatException e) { mostrarError("Entrada no numérica."); return null; } } public double pedirValorNumerico() { while (true) { System.out.print("Ingrese el valor numérico a convertir (solo números y '.'): "); String input = scanner.nextLine().trim(); if (input.length() > 16) { mostrarError("Longitud excedida. El valor no puede superar los 16 caracteres."); continue; } if (!input.matches("^\\d+(\\.\\d+)?$")) { mostrarError("Entrada no válida. Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100)."); continue; } try { return Double.parseDouble(input); } catch (NumberFormatException e) { mostrarError("Ingrese un número válido (ejemplo: 25.5 o 100)."); } } } public void mostrarResultadoConversion(ConversionRequest req, ConversionResponse resp) { if (resp != null && resp.isExito()) { System.out.println("\n=========================================================="); System.out.println(" RESULTADO DE LA CONVERSIÓN "); System.out.println("=========================================================="); System.out.printf(Locale.US, " %.2f %s ---> %.2f %s\n", req.getValor(), capitalizar(req.getUnidadOrigen()), resp.getValorConvertido(), capitalizar(req.getUnidadDestino())); System.out.println("=========================================================="); } else { String err = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor"; mostrarError("En la conversión: " + err); } } public void mostrarMensaje(String mensaje) { System.out.println(mensaje); } public void mostrarExito(String mensaje) { System.out.println("\n[OK] " + mensaje); } public void mostrarError(String mensaje) { System.out.println("\n[ERROR] " + mensaje); } public void mostrarDespedida() { System.out.println("\n=========================================================="); System.out.println(" Gracias por utilizar el Conversor de Unidades RESTful (GR09)"); System.out.println("==========================================================\n"); } private String capitalizar(String str) { if (str == null // str.isEmpty()) return ""; return str.substring(0, 1).toUpperCase() + str.substring(1); }} |
+| package ec.edu.monster.client.view;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.SessionModel;import java.util.Locale;import java.util.Scanner;/** * [VISTA] Interfaz de usuario para la consola de comandos. * Formateo estricto a 2 decimales con punto decimal (Locale.US) y límite de 16 caracteres numéricos. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConsoleView { public static final String[] UNIDADES_LONGITUD = { "metro", "centimetro", "pie", "yarda", "milla" }; public static final String[] UNIDADES_MASA = { "gramo", "kilogramo", "libra", "onza", "quintal" }; public static final String[] UNIDADES_TEMPERATURA = { "celsius", "fahrenheit", "kelvin", "newton", "reaumur" }; private final Scanner scanner; public ConsoleView() { this.scanner = new Scanner(System.in); } public void mostrarBanner() { System.out.println("=================================================================="); System.out.println(" UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE - EXTENSIÓN LATACUNGA"); System.out.println(" DEPARTAMENTO DE ENERGÍA Y MECÁNICA"); System.out.println(" ARQUITECTURA DE SOFTWARE"); System.out.println(" TAREA TI.1.3 (PAO 2026-51)"); System.out.println("------------------------------------------------------------------"); System.out.println(" CLIENTE DE CONSOLA: CONVERSOR DE UNIDADES (RESTFUL JAVA - SINBDD)"); System.out.println(" NRC: 36884 / Grupo: GR09 / Autor: Julio Enrique Viche Castillo "); System.out.println(" Patrón Arquitectónico: Modelo - Vista - Controlador (MVC)"); System.out.println("==================================================================\n"); } public String[] pedirCredenciales() { System.out.println("------------------------------------------------------------------"); System.out.println(" INICIO DE SESIÓN OBLIGATORIO (AUTENTICACIÓN) "); System.out.println("------------------------------------------------------------------"); System.out.println(" [Nota]: Credenciales del sistema:"); System.out.println(" Usuario: MONSTER / Contraseña: MONSTER9"); System.out.println("------------------------------------------------------------------"); System.out.print("Ingrese Usuario: "); String usuario = scanner.nextLine().trim(); System.out.print("Ingrese Contraseña: "); String clave = scanner.nextLine().trim(); return new String[]{usuario, clave}; } public boolean preguntarReintento() { System.out.print("\n¿Desea reintentar el inicio de sesión? (s/n): "); String resp = scanner.nextLine().trim().toLowerCase(); return resp.equals("s") // resp.equals("si") // resp.equals("y"); } public String mostrarMenuPrincipal(SessionModel session) { System.out.println("\n=========================================================="); System.out.println(" MENÚ PRINCIPAL DE CONVERSIONES REST (MVC) "); System.out.println("=========================================================="); System.out.printf(" Sesión activa: %s / Token: %s\n", session.getUsuario(), session.getTokenAbreviado()); System.out.println("----------------------------------------------------------"); System.out.println(" 1. Conversión de Longitud (metro, centimetro, pie, yarda, milla)"); System.out.println(" 2. Conversión de Masa (gramo, kilogramo, libra, onza, quintal)"); System.out.println(" 3. Conversión de Temperatura (celsius, fahrenheit, kelvin, newton, reaumur)"); System.out.println(" 4. Verificar estado del token de sesión"); System.out.println(" 5. Cerrar sesión y Salir"); System.out.println("=========================================================="); System.out.print("Seleccione una opción (1-5): "); return scanner.nextLine().trim(); } public ConversionRequest solicitarDatosConversion(String magnitud, String[] unidades) { System.out.println("\n--- [CONVERSIÓN DE " + magnitud.toUpperCase() + "] ---"); String origen = seleccionarUnidad("origen", unidades); if (origen == null) return null; String destino = seleccionarUnidad("destino", unidades); if (destino == null) return null; double valor = pedirValorNumerico(); return new ConversionRequest(magnitud, origen, destino, valor); } private String seleccionarUnidad(String tipo, String[] unidades) { System.out.println("Seleccione unidad de " + tipo + ":"); for (int i = 0; i < unidades.length; i++) { System.out.printf(" %d. %s\n", (i + 1), capitalizar(unidades[i])); } System.out.print("Elija una opción (1-" + unidades.length + "): "); String input = scanner.nextLine().trim(); try { int idx = Integer.parseInt(input) - 1; if (idx >= 0 && idx < unidades.length) { return unidades[idx]; } else { mostrarError("Opción de unidad fuera de rango."); return null; } } catch (NumberFormatException e) { mostrarError("Entrada no numérica."); return null; } } public double pedirValorNumerico() { while (true) { System.out.print("Ingrese el valor numérico a convertir (solo números y '.'): "); String input = scanner.nextLine().trim(); if (input.length() > 16) { mostrarError("Longitud excedida. El valor no puede superar los 16 caracteres."); continue; } if (!input.matches("^-?\\d+(\\.\\d+)?$")) { mostrarError("Entrada no válida. Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100)."); continue; } try { return Double.parseDouble(input); } catch (NumberFormatException e) { mostrarError("Ingrese un número válido (ejemplo: 25.5 o 100)."); } } } public void mostrarResultadoConversion(ConversionRequest req, ConversionResponse resp) { if (resp != null && resp.isExito()) { System.out.println("\n=========================================================="); System.out.println(" RESULTADO DE LA CONVERSIÓN "); System.out.println("=========================================================="); System.out.printf(Locale.US, " %.2f %s ---> %.2f %s\n", req.getValor(), capitalizar(req.getUnidadOrigen()), resp.getValorConvertido(), capitalizar(req.getUnidadDestino())); System.out.println("=========================================================="); } else { String err = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor"; mostrarError("En la conversión: " + err); } } public void mostrarMensaje(String mensaje) { System.out.println(mensaje); } public void mostrarExito(String mensaje) { System.out.println("\n[OK] " + mensaje); } public void mostrarError(String mensaje) { System.out.println("\n[ERROR] " + mensaje); } public void mostrarDespedida() { System.out.println("\n=========================================================="); System.out.println(" Gracias por utilizar el Conversor de Unidades RESTful (GR09)"); System.out.println("==========================================================\n"); } private String capitalizar(String str) { if (str == null // str.isEmpty()) return ""; return str.substring(0, 1).toUpperCase() + str.substring(1); }} |
 | --- |
 
 Tabla 10. Clase RestClient - Cliente consola
@@ -606,10 +580,9 @@ CONSUMO DEL Servicio RESTful (CONTROLADOR)
 
 Los clientes Java usan RestClient para enviar solicitudes HTTP/JSON a la API. El cliente conserva la URL base y el token de sesión y procesa los modelos JSON de respuesta.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de controlador - Cliente consola**
+![Captura](imagenes/image28.png)
 
-*_Figura 27. Creación de controlador - Cliente consola_*
+Figura 27. Creación de controlador - Cliente consola
 
 ConversionController coordina la selección de magnitud y unidades con RestClient. Valida la sesión, invoca la ruta REST correspondiente y entrega el resultado a la vista.
 
@@ -622,10 +595,9 @@ CLASE PRINCIPAL (EJECUCIÓN)
 
 Finalmente, se codifica la clase ClienteConsola.java que orquesta el flujo completo de la aplicación. El sistema inicia solicitando credenciales al usuario para invocar el servicio de seguridad; únicamente si la autenticación es exitosa, se instancia la interfaz y el controlador para permitir el uso de las operaciones de conversión.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de clase principal - Cliente consola**
+![Captura](imagenes/image29.png)
 
-*_Figura 28. Creación de clase principal - Cliente consola_*
+Figura 28. Creación de clase principal - Cliente consola
 
 Tabla 12. Clase ConsoleClientApplication - Cliente consola
 
@@ -634,25 +606,21 @@ Tabla 12. Clase ConsoleClientApplication - Cliente consola
 
 #### EJECUCIÓN DEL CLIENTE DE CONSOLA
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Login - Cliente consola**
+![Captura](imagenes/image30.png)
 
-*_Figura 29. Login - Cliente consola_*
+Figura 29. Login - Cliente consola
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Conversión de Longitud - Cliente consola**
+![Captura](imagenes/image31.png)
 
-*_Figura 30. Conversión de Longitud - Cliente consola_*
+Figura 30. Conversión de Longitud - Cliente consola
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Conversión de Masa - Cliente consola**
+![Captura](imagenes/image32.png)
 
-*_Figura 31. Conversión de Masa - Cliente consola_*
+Figura 31. Conversión de Masa - Cliente consola
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Conversión de Temperatura - Cliente consola**
+![Captura](imagenes/image33.png)
 
-*_Figura 32. Conversión de Temperatura - Cliente consola_*
+Figura 32. Conversión de Temperatura - Cliente consola
 
 ### CLIENTE ESCRITORIO
 
@@ -664,10 +632,9 @@ El proyecto se crea de igual manera que el cliente de consola Java Application
 
 El cliente de escritorio con interfaz gráfica se estructuró bajo el patrón MVC. Se crearon los paquetes modelo, vista y controlador para separar el diseño visual de la lógica de consumo del servicio web.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Estructura del proyecto - Cliente escritorio**
+![Captura](imagenes/image34.png)
 
-*_Figura 33. Estructura del proyecto - Cliente escritorio_*
+Figura 33. Estructura del proyecto - Cliente escritorio
 
 ### CODIFICACIÓN DEL PROYECTO CLIENTE ESCRITORIO
 
@@ -675,19 +642,17 @@ El cliente de escritorio con interfaz gráfica se estructuró bajo el patrón MV
 
 Al no requerir base de datos, en el paquete modelo solo se manejan clases auxiliares y enumeradores. Estos sirven exclusivamente para llenar las opciones de listas desplegables en las ventanas.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de modelo - Cliente escritorio**
+![Captura](imagenes/image35.png)
 
-*_Figura 34. Creación de modelo - Cliente escritorio_*
+Figura 34. Creación de modelo - Cliente escritorio
 
 CREACIÓN DE CONTROLADOR
 
 El cliente de escritorio usa RestClient para invocar la API REST. Sus controladores reciben los datos de las ventanas, verifican la sesión y presentan la respuesta de conversión.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de servicio - Cliente consola**
+![Captura](imagenes/image36.png)
 
-*_Figura 35. Creación de servicio - Cliente consola_*
+Figura 35. Creación de servicio - Cliente consola
 
 Tabla 13. Clase ConversionController - Cliente escritorio
 
@@ -698,31 +663,27 @@ CREACIÓN DE VISTAS
 
 En el paquete vista se diseñaron las interfaces gráficas utilizando los formularios (JFrames) de NetBeans. Estas ventanas contienen los componentes visuales necesarios para interactuar con el usuario. Su función es estrictamente visual: capturan los datos de entrada y muestran los resultados obtenidos, delegando todo el procesamiento al controlador.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de vistas - Cliente escritorio**
+![Captura](imagenes/image37.png)
 
-*_Figura 36. Creación de vistas - Cliente escritorio_*
+Figura 36. Creación de vistas - Cliente escritorio
 
 CLASE PRINCIPAL (EJECUCIÓN)
 
 La clase principal del proyecto funciona como el punto de entrada de la aplicación. Su única responsabilidad es instanciar la ventana inicial del sistema (la interfaz de inicio de sesión) y hacerla visible en la pantalla para iniciar el flujo gráfico del programa.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de vistas - Cliente escritorio**
+![Captura](imagenes/image37.png)
 
-*_Figura 37. Creación de vistas - Cliente escritorio_*
+Figura 37. Creación de vistas - Cliente escritorio
 
 #### EJECUCIÓN DEL CLIENTE DE ESCRITORIO
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Login - Cliente escritorio**
+![Captura](imagenes/image38.png)
 
-*_Figura 38. Login - Cliente escritorio_*
+Figura 38. Login - Cliente escritorio
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Pantalla de Conversiones - Cliente escritorio**
+![Captura](imagenes/image39.png)
 
-*_Figura 39. Pantalla de Conversiones - Cliente escritorio_*
+Figura 39. Pantalla de Conversiones - Cliente escritorio
 
 ### CLIENTE WEB
 
@@ -734,10 +695,9 @@ El proyecto se crea de igual manera que el webservice con ‘Web Application’.
 
 El cliente web se desarrolló siguiendo el patrón MVC utilizando Servlets y HTML y JavaScript. La estructura separa la lógica de control (en el paquete controlador) de las interfaces de usuario (páginas web).
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Estructura del proyecto - Cliente web**
+![Captura](imagenes/image40.png)
 
-*_Figura 40. Estructura del proyecto - Cliente web_*
+Figura 40. Estructura del proyecto - Cliente web
 
 ### CODIFICACIÓN DEL PROYECTO CLIENTE WEB
 
@@ -745,14 +705,13 @@ CONSUMO DEL Servicio RESTful (SERVLETS)
 
 El cliente web usa LoginServlet y ConversionServlet para gestionar solicitudes del navegador y llamar a RestClient. Jetty 11 embebido escucha en el puerto 8081; las vistas son index.html y conversor.html.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de servlets - Cliente web**
+![Captura](imagenes/image41.png)
 
-*_Figura 41. Creación de servlets - Cliente web_*
+Figura 41. Creación de servlets - Cliente web
 
 Tabla 14. Clase ConversionServlet - Cliente web
 
-| package ec.edu.monster.client.controller;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.SessionModel;import ec.edu.monster.client.rest.RestClient;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;import java.io.IOException;import java.net.URLEncoder;import java.nio.charset.StandardCharsets;import java.util.Locale;/** * [CONTROLADOR] Servlet para el procesamiento de conversiones RESTful JSON. * Formateo numérico estricto a 2 decimales con punto decimal (Locale.US) * y límite de 16 caracteres. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */@WebServlet(name = "ConversionServlet", urlPatterns = {"/convertir"})public class ConversionServlet extends HttpServlet { private final RestClient restClient = new RestClient(); @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { request.setCharacterEncoding("UTF-8"); response.setCharacterEncoding("UTF-8"); HttpSession session = request.getSession(false); SessionModel sessionUser = (session != null) ? (SessionModel) session.getAttribute("sessionUser") : null; // Validación estricta de sesión activa (SINBDD) if (sessionUser == null // !sessionUser.isActivo() // sessionUser.getToken() == null) { response.sendRedirect(request.getContextPath() + "/index.html?error=SesionInvalida"); return; } String magnitud = request.getParameter("magnitud"); String unidadOrigen = request.getParameter("unidadOrigen"); String unidadDestino = request.getParameter("unidadDestino"); String valorStr = request.getParameter("valor"); if (magnitud == null // unidadOrigen == null // unidadDestino == null // valorStr == null) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Faltan parámetros obligatorios para la conversión.", StandardCharsets.UTF_8)); return; } double valor; try { String valorLimpio = valorStr.trim(); if (valorLimpio.length() > 16) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("El valor numérico no puede superar los 16 caracteres.", StandardCharsets.UTF_8)); return; } if (!valorLimpio.matches("^\\d+(\\.\\d+)?$")) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).", StandardCharsets.UTF_8)); return; } valor = Double.parseDouble(valorLimpio); } catch (NumberFormatException e) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Formato numérico no válido.", StandardCharsets.UTF_8)); return; } try { ConversionResponse resp = restClient.convertir( magnitud, unidadOrigen, unidadDestino, valor, sessionUser.getToken() ); if (resp != null && resp.isExito()) { String valorOrigenFmt = String.format(Locale.US, "%.2f", valor); String valorDestinoFmt = String.format(Locale.US, "%.2f", resp.getValorConvertido()); String resultadoTexto = valorDestinoFmt + " " + capitalizar(unidadDestino); String detalleTexto = valorOrigenFmt + " " + capitalizar(unidadOrigen) + " equivale a " + resultadoTexto; response.sendRedirect(request.getContextPath() + "/conversor.html?resultado=" + URLEncoder.encode(resultadoTexto, StandardCharsets.UTF_8) + "&detalle=" + URLEncoder.encode(detalleTexto, StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } else { String errorMsg = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor REST"; response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode(errorMsg, StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } } catch (Exception e) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Error de comunicación: " + e.getMessage(), StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } } private String capitalizar(String str) { if (str == null // str.isEmpty()) return ""; return str.substring(0, 1).toUpperCase() + str.substring(1); }} |
+| package ec.edu.monster.client.controller;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.SessionModel;import ec.edu.monster.client.rest.RestClient;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;import java.io.IOException;import java.net.URLEncoder;import java.nio.charset.StandardCharsets;import java.util.Locale;/** * [CONTROLADOR] Servlet para el procesamiento de conversiones RESTful JSON. * Formateo numérico estricto a 2 decimales con punto decimal (Locale.US) * y límite de 16 caracteres. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */@WebServlet(name = "ConversionServlet", urlPatterns = {"/convertir"})public class ConversionServlet extends HttpServlet { private final RestClient restClient = new RestClient(); @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { request.setCharacterEncoding("UTF-8"); response.setCharacterEncoding("UTF-8"); HttpSession session = request.getSession(false); SessionModel sessionUser = (session != null) ? (SessionModel) session.getAttribute("sessionUser") : null; // Validación estricta de sesión activa (SINBDD) if (sessionUser == null // !sessionUser.isActivo() // sessionUser.getToken() == null) { response.sendRedirect(request.getContextPath() + "/index.html?error=SesionInvalida"); return; } String magnitud = request.getParameter("magnitud"); String unidadOrigen = request.getParameter("unidadOrigen"); String unidadDestino = request.getParameter("unidadDestino"); String valorStr = request.getParameter("valor"); if (magnitud == null // unidadOrigen == null // unidadDestino == null // valorStr == null) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Faltan parámetros obligatorios para la conversión.", StandardCharsets.UTF_8)); return; } double valor; try { String valorLimpio = valorStr.trim(); if (valorLimpio.length() > 16) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("El valor numérico no puede superar los 16 caracteres.", StandardCharsets.UTF_8)); return; } if (!valorLimpio.matches("^-?\\d+(\\.\\d+)?$")) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).", StandardCharsets.UTF_8)); return; } valor = Double.parseDouble(valorLimpio); } catch (NumberFormatException e) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Formato numérico no válido.", StandardCharsets.UTF_8)); return; } try { ConversionResponse resp = restClient.convertir( magnitud, unidadOrigen, unidadDestino, valor, sessionUser.getToken() ); if (resp != null && resp.isExito()) { String valorOrigenFmt = String.format(Locale.US, "%.2f", valor); String valorDestinoFmt = String.format(Locale.US, "%.2f", resp.getValorConvertido()); String resultadoTexto = valorDestinoFmt + " " + capitalizar(unidadDestino); String detalleTexto = valorOrigenFmt + " " + capitalizar(unidadOrigen) + " equivale a " + resultadoTexto; response.sendRedirect(request.getContextPath() + "/conversor.html?resultado=" + URLEncoder.encode(resultadoTexto, StandardCharsets.UTF_8) + "&detalle=" + URLEncoder.encode(detalleTexto, StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } else { String errorMsg = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor REST"; response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode(errorMsg, StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } } catch (Exception e) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Error de comunicación: " + e.getMessage(), StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } } private String capitalizar(String str) { if (str == null // str.isEmpty()) return ""; return str.substring(0, 1).toUpperCase() + str.substring(1); }} |
 | --- |
 
 Tabla 15. Clase LoginServlet - Cliente web
@@ -764,14 +723,13 @@ CREACIÓN DE VISTAS
 
 Las interfaces de usuario se construyeron utilizando HTML y la tecnología HTML (páginas HTML) dentro del directorio Web Pages. Se diseñaron dos vistas principales: index.html, que actúa como la pantalla de inicio de sesión interactuando con el LoginServlet, y conversor.html, que contiene los formularios dinámicos para seleccionar las unidades de medida, capturar los valores y mostrar los resultados procesados por el ConversionServlet.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de vistas - Cliente web**
+![Captura](imagenes/image42.png)
 
-*_Figura 42. Creación de vistas - Cliente web_*
+Figura 42. Creación de vistas - Cliente web
 
 Tabla 16. Archivo conversor.html - Cliente web
 
-| <!DOCTYPE html><html lang="es"><head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Conversor de Unidades RESTful - Panel Web (GR09)</title> <link rel="stylesheet" href="css/style.css"></head><body> <!-- Encabezado con sesión activa --> <header class="header-bar"> <div class="header-brand"> <h1>CONVERSOR DE UNIDADES (RESTFUL JAVA · SINBDD)</h1> <p>ESPE · Arquitectura de Software (TI.1.3) / Autor: Julio Enrique Viche Castillo</p> </div> <div class="header-user"> <span class="badge-session"> <span class="status-dot">●</span> <strong id="lblUsuario">MONSTER</strong> <span style="opacity: 0.8; font-size: 0.75rem;" id="lblToken">(Sesión Activa)</span> </span> <a href="logout" class="btn-logout">Cerrar Sesión</a> </div> </header> <!-- Panel Central del Conversor --> <main class="main-wrapper"> <div class="card-box"> <h2 class="card-title">Conversor de Unidades Multimagnitud</h2> <p class="card-subtitle">Cálculos procesados mediante servicios web RESTful JSON protegidos por token</p> <div id="alertBox" class="alert alert-error" style="display: none;"></div> <!-- 1. Pestañas de Magnitud --> <label class="form-label">1. Seleccione la Magnitud Física:</label> <div class="segmented-group"> <button type="button" class="segment-btn active" id="btnLongitud" onclick="cambiarMagnitud('Longitud')"> Longitud </button> <button type="button" class="segment-btn" id="btnMasa" onclick="cambiarMagnitud('Masa')"> Masa </button> <button type="button" class="segment-btn" id="btnTemperatura" onclick="cambiarMagnitud('Temperatura')"> Temperatura </button> </div> <!-- Formulario de Conversión --> <form action="convertir" method="POST" id="formConversion"> <input type="hidden" id="inputMagnitud" name="magnitud" value="Longitud"> <!-- 2. Valor Numérico --> <div class="form-group"> <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label> <input type="text" id="txtValor" name="valor" class="form-input" autocomplete="off" inputmode="decimal" maxlength="16" pattern="^\d+(\.\d+)?$" title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) // (event.charCode === 46 && this.value.indexOf('.') === -1)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" value="100.00" required> </div> <!-- 3. Unidades Origen y Destino --> <label class="form-label">3. Configuración de Unidades:</label> <div class="units-row"> <div class="units-col"> <select id="cmbOrigen" name="unidadOrigen" class="form-select"></select> </div> <button type="button" class="btn-swap" title="Intercambiar unidades" onclick="intercambiarUnidades()"> ⇄ </button> <div class="units-col"> <select id="cmbDestino" name="unidadDestino" class="form-select"></select> </div> </div> <button type="submit" class="btn-primary" style="margin-top: 20px;"> Calcular Conversión REST </button> </form> <!-- 4. Tarjeta de Resultado --> <div id="pnlResultado" class="result-card" style="display: none;"> <div class="result-value" id="lblResultadoValor">0.00</div> <div class="result-detail" id="lblResultadoDetalle">Cálculo completado exitosamente</div> </div> </div> </main> <!-- Barra de Estado Inferior --> <footer class="footer-bar"> <span>Servidor Backend: <code>WS_CONV_UNI_RESTFULL_JAVA</code> (Modalidad SINBDD)</span> <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span> </footer> <script> const CATALOGO = { 'Longitud': ['metro', 'centimetro', 'pie', 'yarda', 'milla'], 'Masa': ['gramo', 'kilogramo', 'libra', 'onza', 'quintal'], 'Temperatura': ['celsius', 'fahrenheit', 'kelvin', 'newton', 'reaumur'] }; let magnitudActual = 'Longitud'; function cambiarMagnitud(magnitud) { magnitudActual = magnitud; document.getElementById('inputMagnitud').value = magnitud; ['Longitud', 'Masa', 'Temperatura'].forEach(m => { const btn = document.getElementById('btn' + m); if (m === magnitud) { btn.classList.add('active'); } else { btn.classList.remove('active'); } }); const unidades = CATALOGO[magnitud]; const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); cmbO.innerHTML = ''; cmbD.innerHTML = ''; unidades.forEach((u, i) => { const nombre = u.charAt(0).toUpperCase() + u.slice(1); cmbO.add(new Option(nombre, u)); cmbD.add(new Option(nombre, u)); }); if (unidades.length > 1) { cmbD.selectedIndex = 1; } document.getElementById('pnlResultado').style.display = 'none'; } function intercambiarUnidades() { const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); const tmp = cmbO.selectedIndex; cmbO.selectedIndex = cmbD.selectedIndex; cmbD.selectedIndex = tmp; } // Leer parámetros URL (para mensajes de servlet o login) const params = new URLSearchParams(window.location.search); if (params.has('usuario')) { document.getElementById('lblUsuario').textContent = params.get('usuario'); } if (params.has('token')) { document.getElementById('lblToken').textContent = '(Token: ' + params.get('token') + ')'; } if (params.has('resultado')) { const pnl = document.getElementById('pnlResultado'); const val = document.getElementById('lblResultadoValor'); const det = document.getElementById('lblResultadoDetalle'); val.textContent = params.get('resultado'); det.textContent = params.get('detalle') // 'Cálculo completado exitosamente'; pnl.style.display = 'block'; } if (params.has('error')) { const alertBox = document.getElementById('alertBox'); alertBox.textContent = params.get('error'); alertBox.style.display = 'block'; } // Inicializar con Longitud cambiarMagnitud('Longitud'); </script></body></html> |
+| <!DOCTYPE html><html lang="es"><head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Conversor de Unidades RESTful - Panel Web (GR09)</title> <link rel="stylesheet" href="css/style.css"></head><body> <!-- Encabezado con sesión activa --> <header class="header-bar"> <div class="header-brand"> <h1>CONVERSOR DE UNIDADES (RESTFUL JAVA · SINBDD)</h1> <p>ESPE · Arquitectura de Software (TI.1.3) / Autor: Julio Enrique Viche Castillo</p> </div> <div class="header-user"> <span class="badge-session"> <span class="status-dot">●</span> <strong id="lblUsuario">MONSTER</strong> <span style="opacity: 0.8; font-size: 0.75rem;" id="lblToken">(Sesión Activa)</span> </span> <a href="logout" class="btn-logout">Cerrar Sesión</a> </div> </header> <!-- Panel Central del Conversor --> <main class="main-wrapper"> <div class="card-box"> <h2 class="card-title">Conversor de Unidades Multimagnitud</h2> <p class="card-subtitle">Cálculos procesados mediante servicios web RESTful JSON protegidos por token</p> <div id="alertBox" class="alert alert-error" style="display: none;"></div> <!-- 1. Pestañas de Magnitud --> <label class="form-label">1. Seleccione la Magnitud Física:</label> <div class="segmented-group"> <button type="button" class="segment-btn active" id="btnLongitud" onclick="cambiarMagnitud('Longitud')"> Longitud </button> <button type="button" class="segment-btn" id="btnMasa" onclick="cambiarMagnitud('Masa')"> Masa </button> <button type="button" class="segment-btn" id="btnTemperatura" onclick="cambiarMagnitud('Temperatura')"> Temperatura </button> </div> <!-- Formulario de Conversión --> <form action="convertir" method="POST" id="formConversion"> <input type="hidden" id="inputMagnitud" name="magnitud" value="Longitud"> <!-- 2. Valor Numérico --> <div class="form-group"> <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label> <input type="text" id="txtValor" name="valor" class="form-input" autocomplete="off" inputmode="decimal" maxlength="16" pattern="^-?\d+(\.\d+)?$" title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) // (event.charCode === 46 && this.value.indexOf('.') === -1)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" value="100.00" required> </div> <!-- 3. Unidades Origen y Destino --> <label class="form-label">3. Configuración de Unidades:</label> <div class="units-row"> <div class="units-col"> <select id="cmbOrigen" name="unidadOrigen" class="form-select"></select> </div> <button type="button" class="btn-swap" title="Intercambiar unidades" onclick="intercambiarUnidades()"> ⇄ </button> <div class="units-col"> <select id="cmbDestino" name="unidadDestino" class="form-select"></select> </div> </div> <button type="submit" class="btn-primary" style="margin-top: 20px;"> Calcular Conversión REST </button> </form> <!-- 4. Tarjeta de Resultado --> <div id="pnlResultado" class="result-card" style="display: none;"> <div class="result-value" id="lblResultadoValor">0.00</div> <div class="result-detail" id="lblResultadoDetalle">Cálculo completado exitosamente</div> </div> </div> </main> <!-- Barra de Estado Inferior --> <footer class="footer-bar"> <span>Servidor Backend: <code>WS_CONV_UNI_RESTFULL_JAVA</code> (Modalidad SINBDD)</span> <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span> </footer> <script> const CATALOGO = { 'Longitud': ['metro', 'centimetro', 'pie', 'yarda', 'milla'], 'Masa': ['gramo', 'kilogramo', 'libra', 'onza', 'quintal'], 'Temperatura': ['celsius', 'fahrenheit', 'kelvin', 'newton', 'reaumur'] }; let magnitudActual = 'Longitud'; function cambiarMagnitud(magnitud) { magnitudActual = magnitud; document.getElementById('inputMagnitud').value = magnitud; ['Longitud', 'Masa', 'Temperatura'].forEach(m => { const btn = document.getElementById('btn' + m); if (m === magnitud) { btn.classList.add('active'); } else { btn.classList.remove('active'); } }); const unidades = CATALOGO[magnitud]; const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); cmbO.innerHTML = ''; cmbD.innerHTML = ''; unidades.forEach((u, i) => { const nombre = u.charAt(0).toUpperCase() + u.slice(1); cmbO.add(new Option(nombre, u)); cmbD.add(new Option(nombre, u)); }); if (unidades.length > 1) { cmbD.selectedIndex = 1; } document.getElementById('pnlResultado').style.display = 'none'; } function intercambiarUnidades() { const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); const tmp = cmbO.selectedIndex; cmbO.selectedIndex = cmbD.selectedIndex; cmbD.selectedIndex = tmp; } // Leer parámetros URL (para mensajes de servlet o login) const params = new URLSearchParams(window.location.search); if (params.has('usuario')) { document.getElementById('lblUsuario').textContent = params.get('usuario'); } if (params.has('token')) { document.getElementById('lblToken').textContent = '(Token: ' + params.get('token') + ')'; } if (params.has('resultado')) { const pnl = document.getElementById('pnlResultado'); const val = document.getElementById('lblResultadoValor'); const det = document.getElementById('lblResultadoDetalle'); val.textContent = params.get('resultado'); det.textContent = params.get('detalle') // 'Cálculo completado exitosamente'; pnl.style.display = 'block'; } if (params.has('error')) { const alertBox = document.getElementById('alertBox'); alertBox.textContent = params.get('error'); alertBox.style.display = 'block'; } // Inicializar con Longitud cambiarMagnitud('Longitud'); </script></body></html> |
 | --- |
 
 Tabla 17. Archivo index.html - Cliente web
@@ -781,15 +739,13 @@ Tabla 17. Archivo index.html - Cliente web
 
 EJECUCIÓN DEL CLIENTE DE WEB
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Login - Cliente web**
+![Captura](imagenes/image43.png)
 
-*_Figura 43. Login - Cliente web_*
+Figura 43. Login - Cliente web
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Pantalla de Conversiones - Cliente web**
+![Captura](imagenes/image44.png)
 
-*_Figura 44. Pantalla de Conversiones - Cliente web_*
+Figura 44. Pantalla de Conversiones - Cliente web
 
 ### CLIENTE MÓVIL
 
@@ -797,19 +753,17 @@ EJECUCIÓN DEL CLIENTE DE WEB
 
 El proyecto se debe crear en Android Studio. Se selecciona la opción ‘New Project’, en la pantalla siguiente ‘Empty Activity’ y finalmente se configura el proyecto con nombre, ubicación y la opción ‘Java’ en Build Configuration Laguaje. Finalizamos haciendo click en el botón ‘Finish’.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Configuración del proyecto - Cliente móvil**
+![Captura](imagenes/image45.png)
 
-*_Figura 45. Configuración del proyecto - Cliente móvil_*
+Figura 45. Configuración del proyecto - Cliente móvil
 
 #### ESTRUCTURA DEL PROYECTO
 
 El desarrollo de la aplicación móvil en Android Studio se organizó bajo el patrón arquitectónico MVC (Modelo-Vista-Controlador). Para asegurar el desacoplamiento de la lógica, la vista y el consumo de red, se estructuró el proyecto en los paquetes model, view y controller.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Estructura del proyecto - Cliente móvil**
+![Captura](imagenes/image46.png)
 
-*_Figura 46. Estructura del proyecto - Cliente móvil_*
+Figura 46. Estructura del proyecto - Cliente móvil
 
 ### CODIFICACIÓN DEL PROYECTO CLIENTE MÓVIL
 
@@ -819,19 +773,17 @@ En el paquete model se crearon las clases necesarias para el intercambio de info
 
 La aplicación Android usa RestClient, HttpURLConnection y org.json para enviar solicitudes HTTP/JSON al servidor. Los controladores procesan inicio de sesión y conversiones de forma asíncrona y actualizan las actividades.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de modelos - Cliente móvil**
+![Captura](imagenes/image47.png)
 
-*_Figura 47. Creación de modelos - Cliente móvil_*
+Figura 47. Creación de modelos - Cliente móvil
 
 CREACIÓN DE CONTROLADORES
 
 LoginController y ConversionController coordinan las actividades Android con RestClient. Ejecutan las llamadas de red fuera del hilo de interfaz y devuelven el resultado a las vistas.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de controladores - Cliente móvil**
+![Captura](imagenes/image48.png)
 
-*_Figura 48. Creación de controladores - Cliente móvil_*
+Figura 48. Creación de controladores - Cliente móvil
 
 Tabla 18. Clase LoginController - Cliente móvil
 
@@ -847,22 +799,19 @@ CREACIÓN DE VISTAS
 
 Se crean los archivos de interfaz gráfica en el paquete views.
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Creación de vistas - Cliente móvil**
+![Captura](imagenes/image49.png)
 
-*_Figura 49. Creación de vistas - Cliente móvil_*
+Figura 49. Creación de vistas - Cliente móvil
 
 #### EJECUCIÓN DEL CLIENTE DE MÓVIL
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Login - Cliente móvil**
+![Captura](imagenes/image50.png)
 
-*_Figura 50. Login - Cliente móvil_*
+Figura 50. Login - Cliente móvil
 
-> [!TIP] Captura de Pantalla Pendiente
-> **Pantalla de Conversiones - Cliente móvil**
+![Captura](imagenes/image51.png)
 
-*_Figura 51. Pantalla de Conversiones - Cliente móvil_*
+Figura 51. Pantalla de Conversiones - Cliente móvil
 
 #### CONCLUSIONES
 

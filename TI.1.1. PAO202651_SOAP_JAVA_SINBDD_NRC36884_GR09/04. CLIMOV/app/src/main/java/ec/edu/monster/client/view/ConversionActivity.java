@@ -148,7 +148,7 @@ public class ConversionActivity extends AppCompatActivity {
                 if (resultado.length() > 16) {
                     return "";
                 }
-                if (!resultado.matches("^\\d*\\.?\\d*$")) {
+                if (!resultado.matches("^-?\\d*\\.?\\d*$")) {
                     return "";
                 }
                 return null;
@@ -194,8 +194,8 @@ public class ConversionActivity extends AppCompatActivity {
             return;
         }
 
-        if (!valorStr.matches("^\\d+(\\.\\d+)?$")) {
-            mostrarError("Ingrese un número válido. Solo se permiten dígitos y un punto decimal (ej: 100.00).");
+        if (!valorStr.matches("^-?\\d+(\\.\\d+)?$")) {
+            mostrarError("Ingrese un número válido. Solo se permiten dígitos, un punto decimal y '-' al inicio (ej: -15.50 o 100.00).");
             return;
         }
 

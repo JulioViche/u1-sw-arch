@@ -45,7 +45,7 @@ entregables**.
    las credenciales **quemadas** `MONSTER` / `MONSTER9`. Ver
    [authentication](vault/01-architecture/authentication.md).
 10. **Requerimientos adicionales y formato visual:**
-    - Formateo estricto a **2 decimales** (`%.2f` / `.toFixed(2)`) con **punto decimal (`.`)** en la presentación de todos los clientes (`CLICON`, `CLIESC`, `CLIWEB`, `CLIMOV`). En la entrada solo se permiten dígitos (`0-9`) y el punto (`.`), con límite máximo de **16 caracteres** exclusivo para el campo del valor numérico a convertir.
+    - Formateo estricto a **2 decimales** (`%.2f` / `.toFixed(2)`) con **punto decimal (`.`)** en la presentación de todos los clientes (`CLICON`, `CLIESC`, `CLIWEB`, `CLIMOV`). En la entrada solo se permiten dígitos (`0-9`), el punto (`.`) y el signo negativo (`-`) únicamente al inicio de la cifra (`^-?\d+(\.\d+)?$`), con límite máximo de **16 caracteres** exclusivo para el campo del valor numérico a convertir.
     - Catálogo estricto de exactamente **5 unidades por magnitud** ("ni una más, ni una menos"). Ver [additional-requirements](vault/01-architecture/additional-requirements.md).
 
 ---
