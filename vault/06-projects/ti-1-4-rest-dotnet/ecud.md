@@ -27,5 +27,42 @@ tags: [ecud, rest, dotnet, use-cases, aspnetcore, sinbdd]
 
 ---
 
-## 2. Detalle de Fichas de Casos de Uso
+## 2. Diagrama de Casos de Uso (RESTful .NET)
+
+```mermaid
+flowchart TD
+    User(["fa:fa-user Usuario"])
+
+    subgraph REST_Server ["Servidor REST (ASP.NET Core / Kestrel)"]
+        AUTH_CTRL["AuthController (/api/auth/login)"]
+        CONV_CTRL["ConversorController (/api/conversor/*)"]
+        CU01(["CU-01: Login (POST /api/auth/login)"])
+        CU02(["CU-02: Convertir Longitud (POST)"])
+        CU03(["CU-03: Convertir Masa (POST)"])
+        CU04(["CU-04: Convertir Temperatura (POST)"])
+        CU05(["CU-05: Validar Bearer Token (RAM)"])
+        CU06(["CU-06: Validar Unidades (5 por categoría)"])
+    end
+
+    User -->|HTTP POST JSON| AUTH_CTRL
+    User -->|HTTP POST JSON| CONV_CTRL
+
+    AUTH_CTRL --> CU01
+    CONV_CTRL --> CU02
+    CONV_CTRL --> CU03
+    CONV_CTRL --> CU04
+
+    CU02 -.->|<< include >>| CU05
+    CU02 -.->|<< include >>| CU06
+    CU03 -.->|<< include >>| CU05
+    CU03 -.->|<< include >>| CU06
+    CU04 -.->|<< include >>| CU05
+    CU04 -.->|<< include >>| CU06
+    CU05 -.->|<< extend (HTTP 401) >>| CU01
+```
+
+---
+
+## 3. Detalle de Fichas de Casos de Uso
 Ver especificación completa con todas las pre/postcondiciones y flujos básicos y alternativos en [ecud](../../03-deliverables/ecud.md).
+

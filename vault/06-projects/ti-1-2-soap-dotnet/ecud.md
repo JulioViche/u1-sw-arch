@@ -27,5 +27,42 @@ tags: [ecud, soap, dotnet, use-cases, wcf, sinbdd]
 
 ---
 
-## 2. Detalle de Fichas de Casos de Uso
+## 2. Diagrama de Casos de Uso (SOAP .NET)
+
+```mermaid
+flowchart TD
+    User(["fa:fa-user Usuario"])
+
+    subgraph SOAP_Server ["Servidor SOAP WCF (.NET / CoreWCF)"]
+        WS_AUTH["ServicioAutenticacion (/ServicioAutenticacion.svc)"]
+        WS_CONV["ServicioConversion (/ServicioConversion.svc)"]
+        CU01(["CU-01: Login (MONSTER / MONSTER9)"])
+        CU02(["CU-02: Convertir Longitud"])
+        CU03(["CU-03: Convertir Masa"])
+        CU04(["CU-04: Convertir Temperatura"])
+        CU05(["CU-05: Validar Token (RAM)"])
+        CU06(["CU-06: Validar Unidades (5 por catálogo)"])
+    end
+
+    User -->|SOAP Request| WS_AUTH
+    User -->|SOAP Request| WS_CONV
+
+    WS_AUTH --> CU01
+    WS_CONV --> CU02
+    WS_CONV --> CU03
+    WS_CONV --> CU04
+
+    CU02 -.->|<< include >>| CU05
+    CU02 -.->|<< include >>| CU06
+    CU03 -.->|<< include >>| CU05
+    CU03 -.->|<< include >>| CU06
+    CU04 -.->|<< include >>| CU05
+    CU04 -.->|<< include >>| CU06
+    CU05 -.->|<< extend (error) >>| CU01
+```
+
+---
+
+## 3. Detalle de Fichas de Casos de Uso
 Ver especificación completa con todas las pre/postcondiciones y flujos básicos y alternativos en [ecud](../../03-deliverables/ecud.md).
+
