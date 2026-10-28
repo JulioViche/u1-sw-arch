@@ -31,7 +31,7 @@ Carpeta de trabajo y documentación maestra para la variante **RESTful en .NET**
 
 - 📄 **[srs.md](srs.md)**: Especificación de Requisitos de Software (IEEE-830). Fuente de `ERS_RESTFUL_DOTNET_SINBDD_GR09.docx`.
 - 📐 **[diagrams.md](diagrams.md)**: Modelos UML interactivos en sintaxis Mermaid (Casos de Uso, Actividades con swimlanes, Secuencia multicapa y Arquitectura).
-- 📘 **`technical-manual.md`**: Manual técnico del sistema, controladores Web API y guía de ejecución de clientes. Fuente de `CONVUNI_RESTFUL_DOTNET_GR09.docx`.
+- 📘 **[technical-manual.md](technical-manual.md)**: Manual técnico del sistema, controladores Web API y guía de ejecución de clientes. Fuente de `CONVUNI_RESTFUL_DOTNET_GR09.docx`.
 - 📋 **`use-cases.md`**: Especificación formal de Casos de Uso Detallados.
 - 📊 **`presentation.md`**: Guion de diapositivas para la defensa.
 
