@@ -1,4 +1,5 @@
 examples/
+repo-hermano/
 
 # Maven build outputs
 **/target/

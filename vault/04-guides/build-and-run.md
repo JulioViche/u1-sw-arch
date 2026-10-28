@@ -17,12 +17,13 @@ lo agregues a la variante.
 
 | Acción | Comando |
 | --- | --- |
-| Compilar | `mvn clean package` |
-| Ejecutar (genérico) | `mvn exec:java` |
-| Ejecutar JAR | `java -jar target/<artefacto>.jar` |
+| Compilar y empaquetar WAR | `mvn clean package` |
+| Ejecutar Servidor Standalone | `mvn exec:java` |
+| Ejecutar pruebas JUnit 5 | `mvn test` |
 
-Para servidores JAX-RS/JAX-WS suele desplegarse en un contenedor (Tomcat/Jetty). Documenta
-la URL del endpoint en el `README.txt` del servidor.
+Para el **Servidor SOAP Java**, se dispone de soporte dual:
+- **Payara Server / GlassFish (RNF-004)**: Genera `ServidorSOAP.war` configurado con `glassfish-web.xml` y `payara-web.xml` bajo el context-root `/ServidorSOAP`. Compatible con despliegue automático desde Apache NetBeans (`netbeans.hint.deploy.server=pfv5ee8`).
+- **Publisher Standalone**: Permite ejecución directa mediante `mvn exec:java` sin requerir servidor externo, exponiendo los endpoints en `http://localhost:8080/ServidorSOAP/`.
 
 ## .NET
 

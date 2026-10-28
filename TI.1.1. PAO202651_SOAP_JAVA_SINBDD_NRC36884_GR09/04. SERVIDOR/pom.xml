@@ -15,29 +15,49 @@
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        <!-- Integración automática con NetBeans para despliegue en Payara Server (RNF-004) -->
+        <netbeans.hint.deploy.server>pfv5ee8</netbeans.hint.deploy.server>
     </properties>
 
     <dependencies>
-        <!-- Jakarta XML Web Services API -->
+        <!-- Jakarta EE Web API provisto por el servidor de aplicaciones (Payara Server 5/6) -->
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-web-api</artifactId>
+            <version>10.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Jakarta XML Web Services API (provisto nativamente por Payara Server) -->
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
             <artifactId>jakarta.xml.ws-api</artifactId>
             <version>4.0.1</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Implementación Metro JAX-WS Runtime (para ejecución standalone y contenedores) -->
+        <!-- Implementación Metro JAX-WS Runtime (provisto por Payara Server y disponible en test/exec para Publisher.java) -->
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
             <version>4.0.2</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Jakarta Servlet API para Payara / GlassFish -->
+        <!-- Jakarta Servlet API para filtros y descriptores web -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <version>6.0.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Pruebas unitarias automatizadas JUnit 5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -67,6 +87,7 @@
                 <version>3.1.0</version>
                 <configuration>
                     <mainClass>ec.edu.monster.publisher.Publisher</mainClass>
+                    <classpathScope>test</classpathScope>
                 </configuration>
             </plugin>
         </plugins>

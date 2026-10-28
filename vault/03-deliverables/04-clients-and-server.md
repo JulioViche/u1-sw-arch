@@ -14,11 +14,16 @@ Cinco componentes de software por variante, cada uno en su carpeta.
 
 | Carpeta | Componente | Plataforma típica |
 | --- | --- | --- |
-| `04. SERVIDOR` | Servicio web (REST o SOAP) | Java o .NET |
+| `04. SERVIDOR` | Servicio web (REST o SOAP) | Java (Payara / GlassFish / Standalone) o .NET |
 | `04. CLICON` | Cliente de consola | Java / C# consola |
 | `04. CLIESC` | Cliente de escritorio | Swing/JavaFX · WinForms/WPF |
 | `04. CLIWEB` | Cliente web | JSP/JSF · ASP.NET |
 | `04. CLIMOV` | Cliente móvil (Android) | Android |
+
+> [!tip] Implementación en SOAP Java (GR09)
+> - **Servidor de Aplicaciones (RNF-004)**: Despliegue en Payara Server 5/6 mediante WAR (`ServidorSOAP.war`), `glassfish-web.xml`, `payara-web.xml` y `beans.xml` bajo context-root `/ServidorSOAP`.
+> - **Arquitectura Interna**: Patrón de diseño **Estrategia (Strategy Pattern)** con `IConversor<U>`, enums estricto de 5 unidades por magnitud (`UnidadLongitud`, `UnidadMasa`, `UnidadTemperatura`) y fachada `ConversionUtil`.
+> - **Doble modo de ejecución**: Standalone (`Publisher.java` vía `mvn exec:java`) y contenedor Java EE (`ServidorSOAP.war` en Payara Server).
 
 ## Arquitectura
 

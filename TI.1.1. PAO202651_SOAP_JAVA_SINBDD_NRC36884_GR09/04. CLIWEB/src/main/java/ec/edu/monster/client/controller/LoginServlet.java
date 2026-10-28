@@ -54,7 +54,15 @@ public class LoginServlet extends HttpServlet {
                         java.net.URLEncoder.encode(errorMsg, java.nio.charset.StandardCharsets.UTF_8));
             }
         } catch (Exception e) {
-            String errorMsg = "Error de comunicación con el Servidor SOAP: " + e.getMessage();
+            e.printStackTrace();
+            String detalle = e.getMessage();
+            if (detalle == null && e.getCause() != null) {
+                detalle = e.getCause().getMessage();
+            }
+            if (detalle == null || detalle.trim().isEmpty()) {
+                detalle = e.getClass().getSimpleName();
+            }
+            String errorMsg = "Error al conectar con el Servidor SOAP (" + detalle + "). Verifique que el servidor esté activo en el puerto 8080.";
             response.sendRedirect(request.getContextPath() + "/index.html?error=" + 
                     java.net.URLEncoder.encode(errorMsg, java.nio.charset.StandardCharsets.UTF_8));
         }
