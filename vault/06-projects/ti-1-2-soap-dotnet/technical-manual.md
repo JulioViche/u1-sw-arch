@@ -165,7 +165,7 @@ public static double Redondear(double valor) {
    ```
 2. **Ejecutar el Servidor SOAP:**
    ```powershell
-   cd "TI.1.1. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09\04. SERVIDOR"
+   cd "TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09\04. SERVIDOR"
    dotnet run
    ```
 3. **Validar WSDL en el navegador:**

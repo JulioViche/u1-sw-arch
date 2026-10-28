@@ -225,7 +225,7 @@ sequenceDiagram
 ## 4. Clases del Dominio (`04_CLASES`)
 
 Al tratarse de una arquitectura **SINBDD**, la solución en Java RESTful no utiliza JPA ni Hibernate. Toda la lógica de transformación y catálogo reside en memoria RAM documentada en:
-`TI.1.1. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09/01. UML/03. DIAGRAMAS UML/04_CLASES/README.txt`
+`TI.1.3. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09/01. UML/03. DIAGRAMAS UML/04_CLASES/README.txt`
 
 ---
 

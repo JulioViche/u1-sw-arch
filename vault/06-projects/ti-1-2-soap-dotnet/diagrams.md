@@ -228,7 +228,7 @@ sequenceDiagram
 ## 4. Clases del Dominio (`04_CLASES`)
 
 Al tratarse de una arquitectura **SINBDD**, la solución en .NET no utiliza Entity Framework Core ni bases de datos SQL. Las estructuras son DTOs y contratos en memoria documentados en:
-`TI.1.1. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09/01. UML/03. DIAGRAMAS UML/04_CLASES/README.txt`
+`TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09/01. UML/03. DIAGRAMAS UML/04_CLASES/README.txt`
 
 ---
 

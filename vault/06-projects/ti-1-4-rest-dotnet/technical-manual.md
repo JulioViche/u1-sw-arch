@@ -167,7 +167,7 @@ public static double Redondear(double valor) {
    ```
 2. **Iniciar el Servidor Kestrel:**
    ```powershell
-   cd "TI.1.1. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09\04. SERVIDOR"
+   cd "TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09\04. SERVIDOR"
    dotnet run
    ```
 3. **Explorar documentación Swagger en el navegador:**

@@ -9,10 +9,10 @@ Las cuatro variantes cruzan dos protocolos con dos plataformas:
 
 | Variante | Protocolo | Plataforma | Carpeta |
 | --- | --- | --- | --- |
-| RESTful + .NET | [REST](restful-vs-soap.md) | [.NET](java-vs-dotnet.md) | `TI.1.1. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09` |
-| RESTful + Java | REST | Java | `TI.1.1. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09` |
-| SOAP + .NET | SOAP | .NET | `TI.1.1. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09` |
-| SOAP + Java | SOAP | Java | `TI.1.1. PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09` |
+| SOAP + Java (TI.1.1) | SOAP | Java | `TI.1.1. PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09` |
+| SOAP + .NET (TI.1.2) | SOAP | .NET | `TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09` |
+| RESTful + Java (TI.1.3) | REST | Java | `TI.1.3. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09` |
+| RESTful + .NET (TI.1.4) | [REST](restful-vs-soap.md) | [.NET](java-vs-dotnet.md) | `TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09` |
 
 ## Diferencias por eje
 

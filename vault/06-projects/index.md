@@ -18,9 +18,9 @@ Markdown (`.md`), a partir de los cuales se compilan los archivos oficiales de e
 | Taller | Protocolo | Plataforma | Carpeta en Vault | Entrega Oficial |
 | :--- | :--- | :--- | :--- | :--- |
 | **TI.1.1** | SOAP | Java (Payara / JAX-WS) | [TI.1.1 · SOAP Java](ti-1-1-soap-java/index.md) | `TI.1.1. PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09` |
-| **TI.1.2** | SOAP | .NET (CoreWCF / ASMX) | [TI.1.2 · SOAP .NET](ti-1-2-soap-dotnet/index.md) | `TI.1.1. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09` |
-| **TI.1.3** | RESTful | Java (Jersey / Spring) | [TI.1.3 · RESTful Java](ti-1-3-rest-java/index.md) | `TI.1.1. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09` |
-| **TI.1.4** | RESTful | .NET (ASP.NET Core Web API) | [TI.1.4 · RESTful .NET](ti-1-4-rest-dotnet/index.md) | `TI.1.1. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09` |
+| **TI.1.2** | SOAP | .NET (CoreWCF / ASMX) | [TI.1.2 · SOAP .NET](ti-1-2-soap-dotnet/index.md) | `TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09` |
+| **TI.1.3** | RESTful | Java (Jersey / Spring) | [TI.1.3 · RESTful Java](ti-1-3-rest-java/index.md) | `TI.1.3. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09` |
+| **TI.1.4** | RESTful | .NET (ASP.NET Core Web API) | [TI.1.4 · RESTful .NET](ti-1-4-rest-dotnet/index.md) | `TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09` |
 
 ---
 

@@ -225,7 +225,7 @@ sequenceDiagram
 ## 4. Clases del Dominio (`04_CLASES`)
 
 Al tratarse de una arquitectura **SINBDD**, la solución en .NET RESTful no utiliza Entity Framework Core ni migraciones SQL. Todo el estado reside en colecciones en memoria documentadas en:
-`TI.1.1. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09/01. UML/03. DIAGRAMAS UML/04_CLASES/README.txt`
+`TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09/01. UML/03. DIAGRAMAS UML/04_CLASES/README.txt`
 
 ---
 

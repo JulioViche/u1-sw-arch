@@ -23,7 +23,7 @@ Carpeta de trabajo y documentación maestra para la variante **SOAP en .NET** de
 | **Estilo de Servicio** | SOAP con contratos WSDL y servicios CoreWCF / ASMX |
 | **Plataforma / SDK** | .NET 8.0 SDK / C# |
 | **Persistencia** | `SINBDD` (Sin Base de Datos). Credenciales fijas `MONSTER`/`MONSTER9`, tokens en memoria |
-| **Carpeta del Proyecto** | `TI.1.1. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09/` |
+| **Carpeta del Proyecto** | `TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09/` |
 
 ---
 

@@ -17,7 +17,8 @@ nbproject/private/
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
 
-# Archivos temporales de Office
+# Archivos temporales de Office y scripts de trabajo
 ~$*
 *.tmp
+scratch/
 
