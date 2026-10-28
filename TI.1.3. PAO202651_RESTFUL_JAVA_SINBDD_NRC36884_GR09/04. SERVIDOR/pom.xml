@@ -34,14 +34,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Jersey Container Grizzly HTTP (para ejecución standalone vía mvn exec:java) -->
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-grizzly2-http</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-
-        <!-- Jersey Container Servlet (para despliegue en WAR) -->
+        <!-- Jersey Container Servlet (para despliegue en WAR en Payara / GlassFish) -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
@@ -89,15 +82,6 @@
                 <version>3.4.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <!-- Permite ejecutar el servidor standalone mediante: mvn exec:java -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <mainClass>ec.edu.monster.server.ServidorRestMain</mainClass>
                 </configuration>
             </plugin>
         </plugins>

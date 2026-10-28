@@ -16,7 +16,6 @@
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <jetty.version>11.0.18</jetty.version>
         <netbeans.hint.deploy.server>pfv5ee8</netbeans.hint.deploy.server>
     </properties>
 
@@ -43,27 +42,6 @@
             <version>4.0.2</version>
         </dependency>
 
-        <!-- Servidor Web Embebido Jetty 11 con soporte completo para Servlets y JSP -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-annotations</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>apache-jsp</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -83,16 +61,6 @@
                 <version>3.4.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <packagingExcludes>WEB-INF/lib/jetty-*.jar,WEB-INF/lib/apache-*.jar,WEB-INF/lib/ecj-*.jar,WEB-INF/lib/asm-*.jar,WEB-INF/lib/jakarta.*.jar,WEB-INF/lib/slf4j-*.jar</packagingExcludes>
-                </configuration>
-            </plugin>
-            <!-- Permite arrancar el cliente web instantáneamente con: mvn compile exec:java -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <mainClass>ec.edu.monster.client.WebLauncher</mainClass>
                 </configuration>
             </plugin>
         </plugins>
