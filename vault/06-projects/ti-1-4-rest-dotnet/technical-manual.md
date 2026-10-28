@@ -137,6 +137,32 @@ public static double Redondear(double valor) {
 | `/api/conversor/temperatura`| `POST`| `{"token":"...","value":100.0,"from":"celsius","to":"fahrenheit"}`| `{"value":100.0,"result":212.00,"success":true}` | Conversión de temperatura |
 | `/health` | `GET` | *(Ninguna)* | `{"status":"Healthy","platform":".NET 8"}` | Estado del servicio |
 
+#### Paso 4: Pruebas y Evidencias del Servidor Web API
+
+> [!TIP] Captura de Pantalla Requerida
+> **Figura 1: Estructura de proyectos de la solución .NET en Visual Studio / VS Code**
+> `![Figura 1](imagenes/figura_01_estructura.png)`
+
+> [!TIP] Captura de Pantalla Requerida
+> **Figura 2: Interfaz interactiva Swagger UI expuesta en http://localhost:5000/swagger**
+> `![Figura 2](imagenes/figura_02_swagger_ui.png)`
+
+> [!TIP] Captura de Pantalla Requerida
+> **Figura 3: Prueba de autenticación exitosa (POST /api/auth/login) con credenciales MONSTER / MONSTER9**
+> `![Figura 3](imagenes/figura_03_login_swagger.png)`
+
+> [!TIP] Captura de Pantalla Requerida
+> **Figura 4: Prueba de conversión de Longitud (POST /api/conversor/longitud)**
+> `![Figura 4](imagenes/figura_04_conversion_longitud.png)`
+
+> [!TIP] Captura de Pantalla Requerida
+> **Figura 5: Prueba de conversión de Masa (POST /api/conversor/masa)**
+> `![Figura 5](imagenes/figura_05_conversion_masa.png)`
+
+> [!TIP] Captura de Pantalla Requerida
+> **Figura 6: Prueba de conversión de Temperatura (POST /api/conversor/temperatura)**
+> `![Figura 6](imagenes/figura_06_conversion_temperatura.png)`
+
 ---
 
 ### 4.2. Clientes Heterogéneos en .NET
@@ -144,17 +170,36 @@ public static double Redondear(double valor) {
 1. **Cliente Consola (`04. CLICON`):**
    - Interfaz CLI interactiva con `HttpClient` y menú numérico bajo arquitectura MVC.
    - Ejecución: `dotnet run --project "04. CLICON"`
+   
+   > [!TIP] Captura de Pantalla Requerida
+   > **Figura 7: Cliente Consola en ejecución (Login y Menú de Conversión)**
+   > `![Figura 7](imagenes/figura_07_cliente_consola.png)`
+
 2. **Cliente Escritorio (`04. CLIESC`):**
    - Aplicación gráfica Windows Forms / WPF.
    - Pestañas de magnitudes, combos de 5 unidades estrictas y campo numérico filtrado a 16 caracteres.
    - Ejecución: `dotnet run --project "04. CLIESC"`
+   
+   > [!TIP] Captura de Pantalla Requerida
+   > **Figura 8: Cliente de Escritorio WPF en ejecución (Pantalla de login y conversiones)**
+   > `![Figura 8](imagenes/figura_08_cliente_escritorio.png)`
+
 3. **Cliente Web (`04. CLIWEB`):**
    - Aplicación ASP.NET Core MVC con vistas Razor.
    - Formularios estilizados para autenticación y conversión en tiempo real.
    - Ejecución: `dotnet run --project "04. CLIWEB"`
+   
+   > [!TIP] Captura de Pantalla Requerida
+   > **Figura 9: Cliente Web ASP.NET Core MVC en ejecución**
+   > `![Figura 9](imagenes/figura_09_cliente_web.png)`
+
 4. **Cliente Móvil (`04. CLIMOV`):**
    - Aplicación .NET MAUI multiplataforma.
    - Configuración de red para emulador Android (`http://10.0.2.2:5000/`).
+   
+   > [!TIP] Captura de Pantalla Requerida
+   > **Figura 10: Cliente Móvil .NET MAUI en ejecución en emulador Android**
+   > `![Figura 10](imagenes/figura_10_cliente_movil.png)`
 
 ---
 

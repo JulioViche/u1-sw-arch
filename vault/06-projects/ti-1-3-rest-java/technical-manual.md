@@ -1,394 +1,893 @@
 ---
-tipo: technical-manual
-taller: TI.1.3
+tipo: manual-tecnico
 protocolo: RESTful
 plataforma: Java
-tags: [technical-manual, rest, java, payara, jersey, jax-rs, sinbdd]
+tarea: TI.1.3
+tags: [manual-tecnico, sinbdd, entrega, capturas]
 ---
 
-# MANUAL DE CONFIGURACIÓN Y DESPLIEGUE SISTEMA DE CONVERSIÓN DE UNIDADES CON RESTFUL SIN BDD EN JAVA
+# Manual Técnico - Conversor de Unidades RESTful en Java (SINBDD)
 
 **Universidad de las Fuerzas Armadas ESPE — Sede Latacunga**  
 **Departamento de Ciencias de la Computación**  
-**Carrera:** Ingeniería de Software / Tecnologías de la Información  
-**Asignatura:** Arquitectura de Software  
-**Tarea:** TI.1.3 (PAO 2026-51)  
-**NRC:** 36884 | **Grupo:** GR09  
+**Asignatura:** Arquitectura de Software | **NRC:** 36884 | **Grupo:** GR09  
 **Autor:** Julio Enrique Viche Castillo  
 **Docente:** Ing. Eduardo Mauricio Campaña Ortega, MIS.MDU.CCNA.CCIA. PhD. (c)  
-**Fecha:** 27 de Octubre de 2026  
+**Fecha:** 28 de Octubre de 2026
 
 ---
 
-## 1. INTRODUCCIÓN
+## PARTE PRÁCTICA
 
-En la ingeniería de software moderna, la interoperabilidad entre aplicaciones distribuidas y plataformas heterogéneas representa uno de los desafíos arquitectónicos más críticos. El presente manual técnico documenta el diseño, la configuración, el despliegue y la validación del **Sistema de Conversión de Unidades Heterogéneo**, implementado bajo el estilo de arquitectura de servicios web **RESTful** (Representational State Transfer) sobre la plataforma **Java** utilizando la especificación **Jakarta RESTful Web Services (JAX-RS)** con **Jersey**.
+### INTRODUCCIÓN
 
-El sistema se rige bajo la premisa operativa **SINBDD** (Sin Base de Datos), lo que implica que la persistencia, validación de credenciales fijas y el ciclo de vida de los tokens de autenticación residen de forma volátil y controlada en la memoria RAM del servidor de aplicaciones. Esta solución centralizada expone endpoints REST con cargas útiles en formato **JSON** (JavaScript Object Notation), los cuales son consumidos de manera uniforme por cuatro clientes clientes desacoplados: una aplicación de **Consola (CLI)**, una aplicación de **Escritorio gráfica (Swing MVC)**, una aplicación **Web (JSP / Servlets)** y una aplicación **Móvil (Android SDK)**.
+REST es un estilo de arquitectura que organiza la funcionalidad en recursos identificados por rutas HTTP. Este proyecto intercambia solicitudes y respuestas JSON para autenticar usuarios y convertir longitud, masa y temperatura.
 
----
+El servidor REST implementa recursos con Jakarta REST/Jersey. Los clientes envían solicitudes HTTP a rutas definidas y reciben respuestas JSON; Grizzly proporciona el servidor HTTP embebido.
 
-## 2. OBJETIVOS
+ServidorRestMain inicia Jersey sobre Grizzly en el puerto 8080 y usa 8085 si el puerto preferido está ocupado. Jackson gestiona JSON; el servicio se ejecuta desde 04. SERVIDOR con mvn exec:java.
 
-### 2.1. Objetivo General
-Diseñar, configurar, desplegar y validar un sistema distribuido de conversión de unidades de múltiples magnitudes físicas (Longitud, Masa y Temperatura) implementado como un servicio web RESTful en Java (JAX-RS / Jersey), desplegado sobre el servidor de aplicaciones empresarial Payara Server / GlassFish y consumido de forma concurrente por cuatro clientes heterogéneos bajo el patrón arquitectónico Modelo-Vista-Controlador (MVC).
+### OBJETIVOS
 
-### 2.2. Objetivos Específicos
-1. Configurar el servidor de aplicaciones **Payara Server Community 6.x / GlassFish 7.x** para alojar el componente backend empaquetado como archivo `.war`, habilitando simultáneamente un modo de ejecución standalone ligero mediante **Grizzly HTTP**.
-2. Implementar los endpoints REST de autenticación y cálculo matemático utilizando la especificación **Jakarta REST 3.1** con serialización JSON provista por **Jackson**, garantizando el soporte del filtro de intercambio de recursos de origen cruzado (**CORS**).
-3. Desarrollar e integrar el catálogo estricto de exactamente **5 unidades por magnitud** (Longitud, Masa y Temperatura) con un formateo de salida riguroso a **2 decimales** (`%.2f`) y punto decimal como separador estándar.
-4. Implementar el esquema de seguridad mediante tokens de sesión en memoria RAM, exigiendo la autenticación previa con las credenciales maestras fijas (`MONSTER` / `MONSTER9`) antes de habilitar los cómputos de conversión.
-5. Construir y validar cuatro clientes de software heterogéneos (Consola, Escritorio Swing con FlatLaf, Web JSP y Móvil Android) bajo el patrón **Modelo-Vista-Controlador (MVC)**, asegurando la auto-detección transparente de las URLs del servicio.
+#### OBJETIVO GENERAL
 
----
+Documentar la arquitectura, configuración y uso de un conversor de unidades con autenticación previa, clientes Java de consola, escritorio, web y móvil, y una API REST implementada con Jersey y Grizzly. El sistema convierte longitud, masa y temperatura y opera sin base de datos (SINBDD).
 
-## 3. MARCO TEÓRICO
+#### OBJETIVOS ESPECÍFICOS
 
-### 3.1. Servicios Web RESTful y Formato JSON
-El estilo arquitectónico REST, formulado originalmente por Roy Fielding, se fundamenta en la manipulación sin estado de recursos identificables mediante URIs (Uniform Resource Identifiers) utilizando los verbos estándar del protocolo HTTP (`GET`, `POST`, `PUT`, `DELETE`). A diferencia de los servicios basados en SOAP/XML, REST utiliza formatos de intercambio más compactos y ligeros como **JSON** (JavaScript Object Notation, RFC 8259), optimizando el ancho de banda y agilizando el procesamiento de datos tanto en clientes web como en dispositivos móviles de recursos restringidos.
+Describir las rutas /health, /auth/login y /conversor/longitud, /masa y /temperatura, los métodos HTTP utilizados y los modelos JSON de solicitud y respuesta.
 
-### 3.2. Arquitectura Orientada a Servicios (SOA) y Bajo Acoplamiento
-El sistema se fundamenta en los principios de diseño de SOA:
-- **Contrato Estándar:** Los recursos y representaciones de datos se definen explícitamente mediante esquemas JSON tipificados.
-- **Bajo Acoplamiento:** Los clientes no dependen del lenguaje ni del sistema operativo donde corre el backend; únicamente requieren capacidad para emitir solicitudes HTTP y deserializar cadenas JSON.
-- **Sin Estado (Statelessness):** Cada solicitud HTTP dirigida a un endpoint protegido debe contener en su cuerpo o encabezado la información completa de autorización (el token de sesión) para ser procesada independientemente.
+Explicar cómo los clientes Java de consola, escritorio, web y móvil envían solicitudes HTTP/JSON, realizan el inicio de sesión y usan el token antes de convertir.
 
-### 3.3. Patrón de Arquitectura Modelo - Vista - Controlador (MVC)
-Tanto en la organización interna de los clientes como en la estructuración de la capa web, se aplica la estricta separación de responsabilidades:
-- **Modelo (`model`):** Clases de dominio que contienen los datos de sesión y las estructuras de petición/respuesta (`LoginRequest`, `LoginResponse`, `ConversionRequest`, `ConversionResponse`).
-- **Vista (`view`):** Interfaces visuales responsables exclusivamente de capturar entradas del operador y renderizar datos en pantalla sin interactuar directamente con sockets o red.
-- **Controlador (`controller`):** Componente orquestador que intercepta las acciones del usuario, valida restricciones locales, delega el consumo REST al cliente HTTP y actualiza el estado de la vista.
+Explicar la organización de recursos REST, los métodos HTTP y el intercambio de modelos JSON con los clientes.
 
-### 3.4. Patrón de Diseño GoF Strategy para Conversión de Unidades
-Para evitar estructuras de control anidadas monolíticas (`if/else` o `switch` gigantes), la lógica de conversión matemática se organiza bajo el patrón de comportamiento **Strategy**:
-- Se define una interfaz genérica de cómputo `IConversor<U>` donde cada estrategia concreta (`ConversorLongitudStrategy`, `ConversorMasaStrategy`, `ConversorTemperaturaStrategy`) encapsula de forma aislada las matrices y fórmulas algebraicas hacia la unidad pivote estándar.
+### INSTALACIÓN Y CONFIGURACIÓN DE HERRAMIENTAS
 
-### 3.5. Servidor de Aplicaciones Payara Server y Ecosistema Jakarta EE
-**Payara Server Community Edition** es un servidor de aplicaciones empresarial de código abierto, derivado directo de GlassFish, certificado para especificaciones Jakarta EE. Para la variante RESTful en Java, Payara proporciona de manera nativa:
-- El contenedor de servlets compatible con Servlet 6.0 / 5.0.
-- El motor de inyección de dependencias Jakarta Contexts and Dependency Injection (CDI / `beans.xml`).
-- El soporte nativo para **Jersey**, eliminando la necesidad de empaquetar librerías externas pesadas en el archivo `.war` final y optimizando el ciclo de vida de los servicios en red.
+Para dar inicio al desarrollo de la práctica, primero se deben instalar y configurar las herramientas esenciales. Para este proyectó se utilizó Windows 11.
 
----
+#### INSTALACIÓN Y CONFIGURACIÓN DE APACHE NETBEANS 24
 
-## 4. DESARROLLO DEL APLICATIVO
+El proyecto REST requiere JDK 17 y Maven. Verifica Java con java --version y Maven con mvn --version desde PowerShell o la terminal integrada de NetBeans.
 
-### 4.1. Componente Servidor REST (`04. SERVIDOR`)
+| Java --version |
+| --- |
 
-El servidor centralizado se encuentra alojado en la carpeta `04. SERVIDOR/` y está estructurado como un proyecto Maven con empaquetado Web Application Archive (`.war`).
+> [!TIP] Captura de Pantalla Pendiente
+> **Versión de Java JDK 17 en el símbolo del sistema**
 
-```mermaid
-flowchart TD
-    subgraph ServidorREST ["04. SERVIDOR (Jakarta EE / Jersey)"]
-        direction TB
-        subgraph CapaControladores ["Capa de Controladores JAX-RS (@Path)"]
-            AC["AuthController (/auth/login)"]
-            CC["ConversorController (/conversor/*)"]
-            HC["HealthController (/health)"]
-        end
-        subgraph CapaSeguridad ["Seguridad y Filtros"]
-            CORS["CORSResponseFilter (ContainerResponseFilter)"]
-            AUTH_SERV["ServicioAuth (Gestión Tokens RAM)"]
-        end
-        subgraph CapaDominio ["Capa de Dominio y Estrategias"]
-            CL["ConversorLongitud (5 unidades)"]
-            CM["ConversorMasa (5 unidades)"]
-            CT["ConversorTemperatura (5 escalas)"]
-        end
-        MEM[("Memoria RAM (SINBDD)<br/>Credenciales: MONSTER / MONSTER9<br/>Tokens activos: ConcurrentHashMap")]
-    end
+*_Figura 3. Versión de Java JDK 17 en el símbolo del sistema_*
 
-    AC --> AUTH_SERV
-    AUTH_SERV --> MEM
-    CC --> AUTH_SERV
-    CC --> CL
-    CC --> CM
-    CC --> CT
-    CORS -.-> AC
-    CORS -.-> CC
-```
+Para la instalación de la herramienta se accede a la página oficial de descarga de Apache https://netbeans.apache.org/front/main/download/ se selecciona la opción ‘Older Releases’, ‘Apache NetBeans 24’ y la opción para el sistema operativo.
 
-#### Paso 1: Configuración del Descriptor `pom.xml`
-El archivo `pom.xml` define la versión de Java 17, las especificaciones de Jakarta REST 3.1 y Jersey 3.1.5, y establece `provided` para el API de servlets a fin de no generar conflictos de cargador de clases en Payara:
+> [!TIP] Captura de Pantalla Pendiente
+> **Página oficial de descarga de Apache NetBeans**
 
-```xml
-<groupId>ec.edu.monster</groupId>
-<artifactId>ServidorREST</artifactId>
-<version>1.0.0</version>
-<packaging>war</packaging>
-<name>Servidor REST - Conversor de Unidades (SINBDD)</name>
+*_Figura 4. Página oficial de descarga de Apache NetBeans_*
 
-<properties>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jersey.version>3.1.5</jersey.version>
-    <failOnMissingWebXml>false</failOnMissingWebXml>
-</properties>
+Una vez seleccionada la opción para el sistema operativo, se inicia la descarga y se obtendrá el siguiente ejecutable.
 
-<dependencies>
-    <!-- Jakarta RESTful Web Services API -->
-    <dependency>
-        <groupId>jakarta.ws.rs</groupId>
-        <artifactId>jakarta.ws.rs-api</artifactId>
-        <version>3.1.0</version>
-    </dependency>
-    <!-- Jakarta Servlet API (provided para Payara Server / GlassFish) -->
-    <dependency>
-        <groupId>jakarta.servlet</groupId>
-        <artifactId>jakarta.servlet-api</artifactId>
-        <version>6.0.0</version>
-        <scope>provided</scope>
-    </dependency>
-    <!-- Soporte JSON con Jackson en Jersey -->
-    <dependency>
-        <groupId>org.glassfish.jersey.media</groupId>
-        <artifactId>jersey-media-json-jackson</artifactId>
-        <version>${jersey.version}</version>
-    </dependency>
-</dependencies>
-```
+> [!TIP] Captura de Pantalla Pendiente
+> **Instalador Apache NetBeans 24**
 
-#### Paso 2: Descriptores de Despliegue en `src/main/webapp/WEB-INF/`
-Para garantizar el despliegue automático en Payara Server 6 / GlassFish 7 desde Apache NetBeans:
+*_Figura 5. Instalador Apache NetBeans 24_*
 
-1. **`web.xml`:** Mapea el contenedor de servlets de Jersey en la raíz del contexto web:
-   ```xml
-   <?xml version="1.0" encoding="UTF-8"?>
-   <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-            version="6.0">
-       <display-name>Servidor REST - Conversor de Unidades (SINBDD)</display-name>
-       <servlet>
-           <servlet-name>ec.edu.monster.config.ConvUnitApplication</servlet-name>
-           <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-           <init-param>
-               <param-name>jakarta.ws.rs.Application</param-name>
-               <param-value>ec.edu.monster.config.ConvUnitApplication</param-value>
-           </init-param>
-           <load-on-startup>1</load-on-startup>
-       </servlet>
-       <servlet-mapping>
-           <servlet-name>ec.edu.monster.config.ConvUnitApplication</servlet-name>
-           <url-pattern>/*</url-pattern>
-       </servlet-mapping>
-   </web-app>
-   ```
+Al ejecutar el instalador se muestra la siguiente pantalla, en el proceso de instalación se aceptan los términos y condiciones, se selecciona la ubicación de la descarga y se finaliza la instalación.
 
-2. **`glassfish-web.xml` / `payara-web.xml`:** Define el context root oficial de la aplicación:
-   ```xml
-   <?xml version="1.0" encoding="UTF-8"?>
-   <!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" 
-       "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
-   <glassfish-web-app>
-       <context-root>/ServidorREST</context-root>
-   </glassfish-web-app>
-   ```
+> [!TIP] Captura de Pantalla Pendiente
+> **Pantalla inicial de instalación NetBeans 24**
 
-#### Paso 3: Configuración de la Aplicación y Soporte CORS
-En `ec.edu.monster.config.ConvUnitApplication`:
-```java
-@ApplicationPath("/")
-public class ConvUnitApplication extends ResourceConfig {
-    public ConvUnitApplication() {
-        packages("ec.edu.monster.controlador", "ec.edu.monster.config");
-        register(CORSResponseFilter.class);
-    }
+*_Figura 6. Pantalla inicial de instalación NetBeans 24_*
+
+Una vez finalizada la descarga se ejecuta la aplicación y se iniciará Apache NetBeans 24.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Aplicación Apache NetBeans 24**
+
+*_Figura 7. Aplicación Apache NetBeans 24_*
+
+#### INSTALACIÓN Y CONFIGURACIÓN DE ANDROID STUDIO
+
+Para la instalación de la herramienta se accede a la página oficial de descarga de Android Studio https://developer.android.com/studio se selecciona la opción de descarga, se aceptan términos y condiciones e iniciará la descarga.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Página oficial de descarga de Android Studio**
+
+*_Figura 8. Página oficial de descarga de Android Studio_*
+
+Al finalizar la descarga se obtendrá el instalador ejecutable.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Ejecutable Android Studio**
+
+*_Figura 9. Ejecutable Android Studio_*
+
+Al ejecutar el instalador se mostrará la siguiente pantalla:
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Pantalla inicial de instalación de Android Studio**
+
+*_Figura 10. Pantalla inicial de instalación de Android Studio_*
+
+Durante la instalación se selecciona los componentes a instalar, ubicación y carpeta de inicio. Al finalizar la instalación se iniciará la configuración en donde se selecciona el Setup Standard se aceptan términos y condiciones y se inicia la descarga de componentes.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Aplicación Android Studio**
+
+*_Figura 11. Aplicación Android Studio_*
+
+### ESTRUCTURA DE PROYECTO
+
+Para la elaboración del proyecto, en primer lugar, es necesario crear una carpeta en la cual se alojarán los archivos necesarios para su funcionamiento.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de la carpeta raíz**
+
+*_Figura 1. Creación de la carpeta raíz_*
+
+Dentro de la carpeta principal del proyecto, se debe ubicar la siguiente subestructura.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Estructura inicial del proyecto**
+
+*_Figura 2. Estructura inicial del proyecto_*
+
+Todo esto con la finalidad de llevar buenas prácticas y mantener organizado el proyecto.
+
+## APLICACIONES SERVIDOR
+
+### CREACIÓN DEL PROYECTO SERVIDOR
+
+El servidor es un proyecto Java con Maven. En NetBeans abre la carpeta 04. SERVIDOR, revisa pom.xml y ejecuta ec.edu.monster.server.ServidorRestMain mediante mvn exec:java; Maven descarga Jersey, Grizzly y Jackson según el pom.xml.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación del proyecto – SERVIDOR RESTFUL**
+
+*_Figura 12. Creación del proyecto – SERVIDOR RESTFUL_*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Configuración del proyecto 1 - SERVIDOR RESTFUL**
+
+*_Figura 13. Configuración del proyecto 1 - SERVIDOR RESTFUL_*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Configuración del proyecto 2 - SERVIDOR RESTFUL**
+
+*_Figura 14. Configuración del proyecto 2 - SERVIDOR RESTFUL_*
+
+### CODIFICACIÓN DEL PROYECTO SERVIDOR
+
+#### CREACIÓN DE PAQUETES
+
+El servidor separa la configuración Jersey, los controladores REST, los modelos de intercambio y los servicios de conversión. Los paquetes reales son ec.edu.monster.config, ec.edu.monster.controlador, ec.edu.monster.modelo, ec.edu.monster.servicio y ec.edu.monster.server; no hay base de datos.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Estructura de paquetes - SERVIDOR RESTFUL**
+
+*_Figura 15. Estructura de paquetes - SERVIDOR RESTFUL_*
+
+#### CREACIÓN DE RECURSOS REST
+
+AuthController expone el inicio de sesión. ConversorController publica las operaciones HTTP de longitud, masa y temperatura; las clases de servicio realizan los cálculos y el servidor serializa las respuestas como JSON.
+
+Los recursos usan @Path, @POST, @Consumes y @Produces. AuthController valida MONSTER / MONSTER9 y crea un token en memoria; ConversorController verifica el token antes de ejecutar una conversión.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Estructura de paquetes - controladores REST**
+
+*_Figura 16. Estructura de paquetes - controladores REST_*
+
+Tabla 1. Método login - AuthController.java
+
+public Response login(Conversion modelo) {
+
+if (modelo == null) {
+
+Conversion error = new Conversion();
+
+error.setSuccess(false);
+
+error.setMessage("Cuerpo de solicitud requerido.");
+
+return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+
 }
-```
-El filtro `CORSResponseFilter` inyecta los encabezados `Access-Control-Allow-Origin: *`, `Access-Control-Allow-Methods` y `Access-Control-Allow-Headers`, garantizando que clientes basados en navegadores web (JSP / JavaScript) y emuladores móviles puedan consumir los servicios sin bloqueos de seguridad.
 
-#### Paso 4: Lógica de Autenticación en Memoria (`ServicioAuth.java`)
-Cumpliendo con la premisa `SINBDD`, las credenciales se validan de forma fija y los tokens se gestionan en memoria:
-- **Usuario Maestro:** `MONSTER`
-- **Contraseña Maestra:** `MONSTER9`
-- **Estructura de Almacenamiento:** `ConcurrentHashMap<String, Long>` donde se guarda el token (`UUID`) junto con la marca de tiempo para control de vigencia.
+String usuario = modelo.getFrom();
 
-#### Paso 5: Catálogo Estricto de Unidades (5 por magnitud) y Cómputo
-Cada magnitud cuenta con exactamente 5 unidades soportadas, calculadas hacia una unidad base intermedia:
-- **Longitud (Base: Metro):**
-  - Metro (`metro` / `m`): Factor $1.0$
-  - Centímetro (`centimetro` / `cm`): Factor $0.01$
-  - Pie (`pie` / `ft`): Factor $0.3048$
-  - Yarda (`yarda` / `yd`): Factor $0.9144$
-  - Milla (`milla` / `mi`): Factor $1609.34$
-- **Masa (Base: Kilogramo):**
-  - Kilogramo (`kilogramo` / `kg`): Factor $1.0$
-  - Gramo (`gramo` / `g`): Factor $0.001$
-  - Libra (`libra` / `lb`): Factor $0.453592$
-  - Onza (`onza` / `oz`): Factor $0.0283495$
-  - Quintal (`quintal` / `q`): Factor $45.3592$
-- **Temperatura (5 Escalas Termométricas Oficiales):**
-  - Celsius ($^\circ\text{C}$): Escala base
-  - Fahrenheit ($^\circ\text{F}$): $C = (F - 32) \times \frac{5}{9} \Longleftrightarrow F = (C \times \frac{9}{5}) + 32$
-  - Kelvin ($\text{K}$): $C = K - 273.15 \Longleftrightarrow K = C + 273.15$
-  - Newton ($^\circ\text{N}$): $C = N \times \frac{100}{33} \Longleftrightarrow N = C \times \frac{33}{100}$
-  - Réaumur ($^\circ\text{Ré}$): $C = Ré \times \frac{5}{4} \Longleftrightarrow Ré = C \times \frac{4}{5}$
+String clave = modelo.getTo();
 
-Todos los resultados numéricos se formatean obligatoriamente a **dos decimales** utilizando redondeo bancario (`RoundingMode.HALF_UP`):
-```java
-private double redondear2Decimales(double valor) {
-    return BigDecimal.valueOf(valor)
-            .setScale(2, RoundingMode.HALF_UP)
-            .doubleValue();
+String token = authService.validarLogin(usuario, clave);
+
+if (token != null) {
+
+modelo.setToken(token);
+
+modelo.setSuccess(true);
+
+modelo.setMessage("Autenticación satisfactoria. Bienvenido al sistema.");
+
+return Response.ok(modelo).build();
+
+} else {
+
+modelo.setSuccess(false);
+
+modelo.setMessage("Usuario o contraseña incorrectos. Credenciales válidas: MONSTER / MONSTER9");
+
+return Response.status(Response.Status.UNAUTHORIZED).entity(modelo).build();
+
 }
-```
 
-#### Paso 6: Especificación de Endpoints REST
+}
 
-| Endpoint | Método | Entrada (JSON) | Salida (JSON) | Descripción |
-| :--- | :--- | :--- | :--- | :--- |
-| `/auth/login` | `POST` | `{"username":"MONSTER","password":"MONSTER9"}` | `{"token":"uuid","success":true,"message":"Login exitoso"}` | Inicio de sesión y emisión de token |
-| `/conversor/longitud` | `POST` | `{"token":"...","value":100.0,"from":"metro","to":"pie"}` | `{"value":100.0,"result":328.08,"success":true,...}` | Conversión de longitud |
-| `/conversor/masa` | `POST` | `{"token":"...","value":50.0,"from":"kilogramo","to":"libra"}` | `{"value":50.0,"result":110.23,"success":true,...}` | Conversión de masa |
-| `/conversor/temperatura`| `POST`| `{"token":"...","value":100.0,"from":"celsius","to":"fahrenheit"}`| `{"value":100.0,"result":212.00,"success":true,...}` | Conversión de temperatura |
-| `/health` | `GET` | *(Ninguna)* | `{"status":"UP","service":"ServidorREST"}` | Verificación de estado del servidor |
+Tabla 2. Método convertirLongitud - ConversorController.java
 
----
+public Response convertirLongitud(Conversion modelo) {
 
-### 4.2. Cliente de Consola (`04. CLICON`)
+if (modelo == null) {
 
-El cliente de consola implementa una interfaz textual interactiva y robusta bajo el patrón MVC:
-- **`RestClient.java`:** Cliente HTTP basado en `java.net.http.HttpClient` de Java 17 con soporte para JSON mediante Jackson. Implementa un resolvedor inteligente de URLs: intenta conectarse a `http://localhost:8080/ServidorREST/` (Payara) y, si el puerto está ocupado, conmuta automáticamente a `http://localhost:8085/ServidorREST/` (Standalone), admitiendo también rutas heredadas como fallback.
-- **`ConsoleView.java`:** Despliega el banner oficial de la ESPE, solicita credenciales interactivas y ofrece un menú con opciones numéricas (1 a 5).
-- **Validaciones:** Control estricto de entrada numérica (máximo 16 caracteres, dígitos y punto decimal).
+return respuestaError(Response.Status.BAD_REQUEST, "Cuerpo de solicitud requerido.");
 
-#### Ejecución del Cliente Consola:
-- **Desde NetBeans:** Clic derecho sobre el proyecto `04. CLICON` $\rightarrow$ **Run** (o presionar `F6` gracias a `nbactions.xml`).
-- **Desde Terminal CLI:**
-  ```bash
-  cd "04. CLICON"
-  mvn clean compile exec:java
-  ```
+}
 
----
+if (!authService.esTokenValido(modelo.getToken())) {
 
-### 4.3. Cliente de Escritorio (`04. CLIESC`)
+modelo.setSuccess(false);
 
-Construido en Java Swing con el tema estético **FlatLaf Light**:
-- **Pantalla de Login (`LoginForm.java`):** Permite ingresar usuario y contraseña. Consume el endpoint `/auth/login` del servidor REST y almacena el token en el modelo `SessionModel`.
-- **Ventana Principal (`MainConversionForm.java`):**
-  - Panel superior con pestañas ejecutivas para alternar entre **Longitud**, **Masa** y **Temperatura**.
-  - Combos desplegables sincronizados con las 5 unidades estrictas de cada catálogo.
-  - Filtro documental (`DocumentFilter`) en el campo de texto que impide escribir letras o caracteres especiales, limitando la longitud máxima a 16 dígitos y admitiendo únicamente el punto (`.`).
-  - Botón de conversión y panel de resultado formateado a 2 decimales (`0.00`).
+modelo.setMessage("Sesión inválida o expirada. Debe iniciar sesión primero.");
 
-#### Ejecución del Cliente Escritorio:
-- **Desde NetBeans:** Clic derecho sobre `04. CLIESC` $\rightarrow$ **Run** (`F6`).
-- **Desde Terminal CLI:**
-  ```bash
-  cd "04. CLIESC"
-  mvn clean compile exec:java
-  ```
+return Response.status(Response.Status.UNAUTHORIZED).entity(modelo).build();
 
----
+}
 
-### 4.4. Cliente Web (`04. CLIWEB`)
+try {
 
-Desarrollado con arquitectura MVC basada en JSP (JavaServer Pages), Servlets y servidor web embebido:
-- **Servlets:**
-  - `LoginServlet.java`: Atiende peticiones `POST`, se comunica mediante `HttpClient` con el backend REST y establece la sesión HTTP (`HttpSession`).
-  - `ConversionServlet.java`: Recibe los parámetros de conversión, envía el payload JSON al servicio REST `/conversor/*` y reenvía los resultados al modelo de vista.
-- **Vistas JSP:**
-  - `login.jsp`: Interfaz web responsiva con diseño limpio y feedback visual ante errores.
-  - `conversor.jsp`: Panel de control con tarjetas estilizadas, cálculo reactivo y presentación de resultados a 2 decimales.
+double resultado = longitudService.convertirLongitud(modelo.getValue(), modelo.getFrom(), modelo.getTo());
 
-#### Ejecución del Cliente Web:
-- **Desde NetBeans:** Clic derecho sobre `04. CLIWEB` $\rightarrow$ **Run** (`F6`).
-- **URL de Acceso en Navegador:** `http://localhost:8081/ClienteWeb/`
+double resultadoRedondeado = redondear2Decimales(resultado);
 
----
+modelo.setResult(resultadoRedondeado);
 
-### 4.5. Cliente Móvil Android (`04. CLIMOV`)
+modelo.setSuccess(true);
 
-Aplicación móvil nativa para la plataforma Android desarrollada con Java y Android SDK:
-- **Compatibilidad:** `minSdk = 24` (Android 7.0), `compileSdk = 35`, `targetSdk = 35`, JDK 17 y Gradle 8.11.
-- **Comunicación REST:** Utiliza `HttpURLConnection` / `OkHttp` para despachar solicitudes JSON hacia el servidor.
-- **Configuración de IP de Conexión:**
-  - En emulador de Android Studio: Utiliza la dirección virtual de bucle invertido **`http://10.0.2.2:8080/ServidorREST/`**.
-  - En teléfono físico mediante Wi-Fi: Apunta a la dirección IP privada de la computadora anfitriona (ej. `http://192.168.1.15:8080/ServidorREST/`).
+modelo.setMessage("Conversión de longitud realizada exitosamente.");
 
-#### Ejecución del Cliente Móvil:
-1. Abrir la carpeta `04. CLIMOV/` en **Android Studio**.
-2. Esperar la sincronización de Gradle (*Gradle Sync*).
-3. Seleccionar el emulador o dispositivo físico conectado por USB y presionar el botón verde **Run ▶️** (`Shift + F10`).
+return Response.ok(modelo).build();
 
----
+} catch (IllegalArgumentException e) {
 
-## 5. GUÍA PASO A PASO PARA COMPILAR Y DESPLEGAR EL SERVIDOR
+modelo.setSuccess(false);
 
-### Opción A: Despliegue en Servidor Empresarial Payara Server 6 (Modo Oficial)
+modelo.setMessage(e.getMessage());
 
-1. **Iniciar Payara Server:**
-   - En Apache NetBeans, abrir la pestaña **Services** $\rightarrow$ **Servers** $\rightarrow$ Clic derecho en **Payara Server** $\rightarrow$ **Start**.
-   - O por terminal de comandos:
-     ```bash
-     asadmin start-domain
-     ```
-2. **Compilar el archivo WAR:**
-   ```powershell
-   cd "TI.1.3. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09\04. SERVIDOR"
-   mvn clean package
-   ```
-   El paquete se generará en: `target/ServidorREST.war`.
-3. **Desplegar en Payara:**
-   - Desde NetBeans: Clic derecho sobre el proyecto `04. SERVIDOR` $\rightarrow$ **Run** (o **Deploy**).
-   - O vía CLI:
-     ```bash
-     asadmin deploy --force target/ServidorREST.war
-     ```
-4. **Verificación en el Navegador:**
-   Abrir: `http://localhost:8080/ServidorREST/health`  
-   Debe responder el JSON: `{"status":"UP","service":"ServidorREST"}`.
+return Response.status(Response.Status.BAD_REQUEST).entity(modelo).build();
 
-### Opción B: Ejecución Standalone Ligera (Grizzly HTTP)
+}
 
-Si no se desea levantar la instancia completa de Payara, el servidor puede ejecutarse de inmediato en modo independiente:
-```powershell
-cd "TI.1.3. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09\04. SERVIDOR"
-mvn exec:java
-```
-El servidor arrancará en el puerto `8080` (con fallback automático al `8085` si el 8080 estuviera ocupado).
+}
 
----
+Tabla 3. Método convertirLongitud - ConversorLongitud.java
 
-## 6. PRUEBAS Y VALIDACIÓN DEL SISTEMA
+public double convertirLongitud(double valor, String unidadOrigen, String unidadDestino) {
 
-| ID | Caso de Prueba | Entrada | Salida Esperada | Estado |
-| :--- | :--- | :--- | :--- | :--- |
-| **CP-01** | Login con credenciales válidas | `{"username":"MONSTER", "password":"MONSTER9"}` | HTTP 200, `success=true`, Token UUID emitido | ✅ Aprobado |
-| **CP-02** | Login con contraseña incorrecta | `{"username":"MONSTER", "password":"12345"}` | HTTP 401, `success=false`, Mensaje de rechazo | ✅ Aprobado |
-| **CP-03** | Conversión sin token (No autorizado) | Token nulo o vacío enviado a `/conversor/longitud` | HTTP 401 Unauthorized | ✅ Aprobado |
-| **CP-04** | Conversión de Longitud (Metro a Pie) | `100.0` metros a `pie` (con token) | HTTP 200, Resultado: `328.08` | ✅ Aprobado |
-| **CP-05** | Conversión de Masa (Kilogramo a Libra) | `50.0` kg a `libra` (con token) | HTTP 200, Resultado: `110.23` | ✅ Aprobado |
-| **CP-06** | Conversión de Temperatura (Celsius a Fahrenheit)| `100.0` °C a `fahrenheit` (con token) | HTTP 200, Resultado: `212.00` | ✅ Aprobado |
-| **CP-07** | Validación de precisión decimal | Entrada `10` metros a yardas | Formateado estricto a 2 decimales: `10.94` | ✅ Aprobado |
-| **CP-08** | Límite de caracteres en cliente | Cadena de más de 16 caracteres numéricos | Campo bloqueado a 16 caracteres exactos | ✅ Aprobado |
+if (unidadOrigen == null || unidadDestino == null) {
 
----
+throw new IllegalArgumentException("Las unidades de origen y destino no pueden ser nulas.");
 
-## 7. CONCLUSIONES
+}
 
-1. **Ligereza e Interoperabilidad de RESTful / JSON:** A diferencia del protocolo SOAP, el uso de servicios web REST con payloads JSON reduce significativamente la sobrecarga de serialización y consumo de red, facilitando una integración mucho más ágil y nativa en clientes móviles (Android) y navegadores web.
-2. **Compatibilidad Empresarial con Payara Server:** Se comprobó que el servidor de aplicaciones Payara Server 6 aloja de forma nativa y robusta aplicaciones Jakarta REST (JAX-RS / Jersey), permitiendo que la solución cumpla estrictamente con el requisito no funcional RNF-004 de la cátedra mediante empaquetado WAR estándar.
-3. **Mantenibilidad con Patrón Strategy y MVC:** La implementación del patrón de diseño Strategy desacopló exitosamente los algoritmos matemáticos de los controladores HTTP, asegurando un catálogo estricto de 5 unidades por magnitud y permitiendo una mantenibilidad simétrica con las demás variantes del repositorio.
-4. **Cumplimiento del Esquema SINBDD:** La arquitectura en memoria RAM garantizó la autenticación mandatoria previa mediante credenciales quemadas (`MONSTER` / `MONSTER9`) y validación estricta de tokens sin requerir motores de bases de datos relacionales ni ORMs.
+String origen = normalizar(unidadOrigen);
 
----
+String destino = normalizar(unidadDestino);
 
-## 8. RECOMENDACIONES
+double valorEnMetros;
 
-1. **Gestión de Puertos en Windows:** Al ejecutar Payara Server en entornos de desarrollo donde coexisten Docker, bases de datos o clientes web embebidos, se recomienda verificar que el puerto `8080` esté liberado antes de desplegar el WAR para evitar excepciones de enlace de socket (`BindException`).
-2. **Configuración de Red en Dispositivos Físicos:** Para probar la aplicación móvil Android en un teléfono real, asegurarse de que la red Wi-Fi no tenga activada la opción de "Aislamiento de AP" (Client Isolation) en el router, de modo que el teléfono pueda comunicarse libremente con la IP privada de la computadora.
-3. **Limpieza de Despliegues Previos:** Si se realizan modificaciones en las clases de servicio, utilizar la opción `Clean and Build` de Apache NetBeans con el servidor Payara detenido para evitar bloqueos de archivos `.jar` en el sistema de archivos de Windows.
+// 1. Paso a Metros (unidad base)
 
----
+switch (origen) {
 
-## 9. REFERENCIAS BIBLIOGRÁFICAS
+case "centimetros":
 
-1. **Fielding, R. T.** (2000). *Architectural Styles and the Design of Network-based Software Architectures*. Doctoral dissertation, University of California, Irvine.
-2. **Eclipse Foundation.** (2022). *Jakarta RESTful Web Services 3.1 Specification*. https://jakarta.ee/specifications/restful-ws/3.1/
-3. **Payara Services Ltd.** (2024). *Payara Server Community Documentation*. https://docs.payara.fish/community/docs/
-4. **Gamma, E., Helm, R., Johnson, R., & Vlissides, J.** (1994). *Design Patterns: Elements of Reusable Object-Oriented Software*. Addison-Wesley.
-5. **Bray, T. (Ed.).** (2017). *The JavaScript Object Notation (JSON) Data Interchange Format*. RFC 8259, Internet Engineering Task Force (IETF).
+case "centimetro":
+
+case "cm":
+
+valorEnMetros = valor / 100.0;
+
+break;
+
+case "metros":
+
+case "metro":
+
+case "m":
+
+valorEnMetros = valor;
+
+break;
+
+case "pies":
+
+case "pie":
+
+case "ft":
+
+valorEnMetros = valor * 0.3048;
+
+break;
+
+case "yardas":
+
+case "yarda":
+
+case "yd":
+
+valorEnMetros = valor * 0.9144;
+
+break;
+
+case "millas":
+
+case "milla":
+
+case "mi":
+
+valorEnMetros = valor * 1609.34;
+
+break;
+
+default:
+
+throw new IllegalArgumentException("Unidad de origen no reconocida en catálogo de longitud: " + unidadOrigen);
+
+}
+
+// 2. Paso de Metros a Destino
+
+switch (destino) {
+
+case "centimetros":
+
+case "centimetro":
+
+case "cm":
+
+return valorEnMetros * 100.0;
+
+case "metros":
+
+case "metro":
+
+case "m":
+
+return valorEnMetros;
+
+case "pies":
+
+case "pie":
+
+case "ft":
+
+return valorEnMetros / 0.3048;
+
+case "yardas":
+
+case "yarda":
+
+case "yd":
+
+return valorEnMetros / 0.9144;
+
+case "millas":
+
+case "milla":
+
+case "mi":
+
+return valorEnMetros / 1609.34;
+
+default:
+
+throw new IllegalArgumentException("Unidad de destino no reconocida en catálogo de longitud: " + unidadDestino);
+
+}
+
+}
+
+Tabla 4. Método main - ServidorRestMain.java
+
+public static void main(String[] args) {
+
+int preferredPort = Integer.getInteger("server.port", 8080);
+
+HttpServer server = null;
+
+try {
+
+server = startServer(preferredPort);
+
+activePort = preferredPort;
+
+} catch (Exception e) {
+
+if (e.getCause() instanceof BindException || e.getMessage().contains("Address already in use")) {
+
+System.out.println("⚠️ El puerto " + preferredPort + " está ocupado. Intentando en puerto alternativo 8085...");
+
+try {
+
+server = startServer(8085);
+
+activePort = 8085;
+
+} catch (Exception ex) {
+
+System.err.println("❌ No se pudo iniciar el servidor en puerto 8085: " + ex.getMessage());
+
+return;
+
+}
+
+} else {
+
+System.err.println("❌ Error al iniciar el servidor: " + e.getMessage());
+
+e.printStackTrace();
+
+return;
+
+}
+
+}
+
+try {
+
+System.out.println("====================================================================");
+
+System.out.println("🚀 SERVIDOR RESTFUL INICIADO (TI.1.3 - SINBDD)");
+
+System.out.println(" URL Base: http://localhost:" + activePort + CONTEXT_PATH);
+
+System.out.println(" Health: http://localhost:" + activePort + CONTEXT_PATH + "health");
+
+System.out.println(" Login: http://localhost:" + activePort + CONTEXT_PATH + "auth/login");
+
+System.out.println(" Longitud: http://localhost:" + activePort + CONTEXT_PATH + "conversor/longitud");
+
+System.out.println(" Masa: http://localhost:" + activePort + CONTEXT_PATH + "conversor/masa");
+
+System.out.println(" Temperatura: http://localhost:" + activePort + CONTEXT_PATH + "conversor/temperatura");
+
+System.out.println("====================================================================");
+
+System.out.println("Credenciales quemadas: usuario 'MONSTER', contraseña 'MONSTER9'");
+
+System.out.println("Presione Ctrl+C en la consola para detener el servidor...");
+
+Thread.currentThread().join();
+
+} catch (InterruptedException e) {
+
+System.out.println("Servidor detenido.");
+
+Thread.currentThread().interrupt();
+
+}
+
+}
+
+#### CREACIÓN DE SERVICIO
+
+En esta sección se implementa la "capa de servicio", que es el cerebro de la aplicación. Aquí se separa la lógica matemática y de seguridad del protocolo de comunicación. Al no contar con una base de datos, toda la gestión de datos se realiza en memoria, optimizando la velocidad de respuesta.
+
+Servicio de Seguridad: Encargado de la validación de credenciales "hardcoded" y la generación/verificación de tokens de sesión para proteger los puntos de entrada del servidor.
+
+Servicio de Conversiones: Contiene los algoritmos y factores de conversión para las magnitudes de longitud, masa y temperatura. Está diseñado para ser escalable, permitiendo añadir nuevas unidades sin afectar la estructura principal.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Estructura de paquetes - servicios**
+
+*_Figura 17. Estructura de paquetes - servicios_*
+
+Tabla 5. Método convertirLongitud - ConversorLongitud.java
+
+| public double convertirLongitud(double valor, String unidadOrigen, String unidadDestino) { if (unidadOrigen == null // unidadDestino == null) { throw new IllegalArgumentException("Las unidades de origen y destino no pueden ser nulas."); } String origen = normalizar(unidadOrigen); String destino = normalizar(unidadDestino); double valorEnMetros; // 1. Paso a Metros (unidad base) switch (origen) { case "centimetros": case "centimetro": case "cm": valorEnMetros = valor / 100.0; break; case "metros": case "metro": case "m": valorEnMetros = valor; break; case "pies": case "pie": case "ft": valorEnMetros = valor * 0.3048; break; case "yardas": case "yarda": case "yd": valorEnMetros = valor * 0.9144; break; case "millas": case "milla": case "mi": valorEnMetros = valor * 1609.34; break; default: throw new IllegalArgumentException("Unidad de origen no reconocida en catálogo de longitud: " + unidadOrigen); } // 2. Paso de Metros a Destino switch (destino) { case "centimetros": case "centimetro": case "cm": return valorEnMetros * 100.0; case "metros": case "metro": case "m": return valorEnMetros; case "pies": case "pie": case "ft": return valorEnMetros / 0.3048; case "yardas": case "yarda": case "yd": return valorEnMetros / 0.9144; case "millas": case "milla": case "mi": return valorEnMetros / 1609.34; default: throw new IllegalArgumentException("Unidad de destino no reconocida en catálogo de longitud: " + unidadDestino); } } |
+| --- |
+
+Tabla 6. Método convertirMasa - ConversorMasa.java
+
+| public double convertirMasa(double valor, String unidadOrigen, String unidadDestino) { if (unidadOrigen == null // unidadDestino == null) { throw new IllegalArgumentException("Las unidades de origen y destino no pueden ser nulas."); } String origen = normalizar(unidadOrigen); String destino = normalizar(unidadDestino); double valorEnKilos; // 1. Paso a Kilogramos (unidad base) switch (origen) { case "gramos": case "gramo": case "g": valorEnKilos = valor / 1000.0; break; case "kilogramos": case "kilogramo": case "kilos": case "kilo": case "kg": valorEnKilos = valor; break; case "onzas": case "onza": case "oz": valorEnKilos = valor * 0.0283495; break; case "libras": case "libra": case "lb": case "lbs": valorEnKilos = valor * 0.453592; break; case "quintales": case "quintal": case "q": // 1 quintal = 100 libras valorEnKilos = (valor * 100.0) * 0.453592; break; default: throw new IllegalArgumentException("Unidad de origen no reconocida en catálogo de masa: " + unidadOrigen); } // 2. Paso de Kilogramos a Destino switch (destino) { case "gramos": case "gramo": case "g": return valorEnKilos * 1000.0; case "kilogramos": case "kilogramo": case "kilos": case "kilo": case "kg": return valorEnKilos; case "onzas": case "onza": case "oz": return valorEnKilos / 0.0283495; case "libras": case "libra": case "lb": case "lbs": return valorEnKilos / 0.453592; case "quintales": case "quintal": case "q": return (valorEnKilos / 0.453592) / 100.0; default: throw new IllegalArgumentException("Unidad de destino no reconocida en catálogo de masa: " + unidadDestino); } } |
+| --- |
+
+Tabla 7. Método convertirTemperatura - ConversorTemperatura.java
+
+| public double convertirTemperatura(double valor, String opcionOrigen, String opcionDestino) { if (opcionOrigen == null // opcionDestino == null) { throw new IllegalArgumentException("Las unidades de origen y destino no pueden ser nulas."); } String origen = normalizar(opcionOrigen); String destino = normalizar(opcionDestino); double valorEnCelsius; // 1. Paso a Celsius (unidad base de trabajo) switch (origen) { case "celsius": case "centigrados": case "c": valorEnCelsius = valor; break; case "fahrenheit": case "f": valorEnCelsius = (valor - 32.0) * 5.0 / 9.0; break; case "kelvin": case "k": valorEnCelsius = valor - 273.15; break; case "newton": case "n": valorEnCelsius = valor * 100.0 / 33.0; break; case "reaumur": case "re": valorEnCelsius = valor * 5.0 / 4.0; break; default: throw new IllegalArgumentException("Unidad de origen no reconocida en catálogo de temperatura: " + opcionOrigen); } // 2. Paso de Celsius a Destino switch (destino) { case "celsius": case "centigrados": case "c": return valorEnCelsius; case "fahrenheit": case "f": return (valorEnCelsius * 9.0 / 5.0) + 32.0; case "kelvin": case "k": return valorEnCelsius + 273.15; case "newton": case "n": return valorEnCelsius * 33.0 / 100.0; case "reaumur": case "re": return valorEnCelsius * 4.0 / 5.0; default: throw new IllegalArgumentException("Unidad de destino no reconocida en catálogo de temperatura: " + opcionDestino); } } |
+| --- |
+
+### PRUEBAS DE LOS SERVICIOS
+
+Comprueba el servidor en http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/health; usa el mismo contexto para POST auth/login y POST conversor/longitud, conversor/masa y conversor/temperatura. Si 8080 está ocupado, ServidorRestMain usa 8085.
+
+La API publica health para comprobar disponibilidad, auth/login para autenticación y conversor/longitud, conversor/masa y conversor/temperatura para las conversiones. Todas las rutas usan el contexto de aplicación indicado en ServidorRestMain.
+
+WSLogin: Punto de entrada para el módulo de seguridad. Recibe la petición del cliente y procesa la validación de credenciales para permitir o denegar el acceso a las funciones del servidor.
+
+WSLongitud: Expone las operaciones matemáticas para las conversiones de medidas de longitud soportadas por el sistema (centímetros, metros, pies, yardas y millas).
+
+WSMasa: Se encarga de recibir los parámetros y retornar las transformaciones entre las distintas unidades de masa (gramos, kilogramos, onzas, libras y quintales).
+
+WSTemperatura: Maneja las peticiones referentes a las variaciones térmicas, permitiendo convertir entre Fahrenheit, Kelvin, Celsius, Newton y Réaumur.
+
+Consulta la ruta health y envía solicitudes JSON a auth/login y a las rutas conversor. Usa MONSTER / MONSTER9 para obtener un token y adjúntalo en las conversiones.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Rutas HTTP publicadas por Jersey sobre Grizzly para autenticación y conversiones con respuestas JSON.**
+
+*_Figura 18. Rutas HTTP publicadas por Jersey sobre Grizzly para autenticación y conversiones con respuestas JSON._*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Prueba 1: Login.**
+
+*_Figura 19. Prueba 1: Login._*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Prueba 2: Conversor de Longitud.**
+
+*_Figura 20. Prueba 2: Conversor de Longitud._*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Prueba 3: Conversor de masa.**
+
+*_Figura 21. Prueba 3: Conversor de masa._*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Prueba 4: Conversor de temperatura.**
+
+*_Figura 22. Prueba 4: Conversor de temperatura._*
+
+## CODIFICACIÓN DE LOS CLIENTES
+
+### CLIENTE CONSOLA
+
+#### CREACIÓN DEL PROYECTO
+
+El proyecto se crea usando NetBeans seleccionando ‘Nuevo Proyecto’, ‘Java with Maven’ y ‘Java Application’.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación del proyecto - Cliente consola**
+
+*_Figura 23. Creación del proyecto - Cliente consola_*
+
+En este paso se define el nombre del proyecto y la ubicación.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Configuración del proyecto - Cliente consola**
+
+*_Figura 24. Configuración del proyecto - Cliente consola_*
+
+#### ESTRUCTURA DEL PROYECTO
+
+Una vez creado el proyecto se crea la estructura de paquetes basada en el patrón MVC
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Estructura del proyecto - Cliente consola**
+
+*_Figura 25. Estructura del proyecto - Cliente consola_*
+
+### CODIFICACIÓN DEL PROYECTO CLIENTE CONSOLA
+
+#### CREACIÓN DE MODELOS Y VISTAS
+
+Dado que no se requiere persistencia local ni mapeo de entidades complejas, el modelo se enfoca en la organización lógica de las opciones. Se crea la clase CatalogoUnidades dentro del paquete modelo para gestionar paramétricamente los tipos de unidades de medida disponibles.
+
+En la capa de interacción, dentro del paquete vista, se implementan las clases InterfazConsola y el enumerador OpcionMenu. Estas clases se encargan de abstraer la clase Scanner, capturar los datos por teclado de forma segura y desplegar los menús interactivos al usuario sin mezclar la lógica de negocio.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de modelos y vistas - Cliente consola**
+
+*_Figura 26. Creación de modelos y vistas - Cliente consola_*
+
+Tabla 8. Clase ConversionRequest - Cliente consola
+
+| package ec.edu.monster.client.model;import java.io.Serializable;/** * [MODELO] Solicitud de conversión creada a partir de las entradas del usuario. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversionRequest implements Serializable { private static final long serialVersionUID = 1L; private String magnitud; private String unidadOrigen; private String unidadDestino; private double valor; public ConversionRequest() { } public ConversionRequest(String magnitud, String unidadOrigen, String unidadDestino, double valor) { this.magnitud = magnitud; this.unidadOrigen = unidadOrigen; this.unidadDestino = unidadDestino; this.valor = valor; } public String getMagnitud() { return magnitud; } public void setMagnitud(String magnitud) { this.magnitud = magnitud; } public String getUnidadOrigen() { return unidadOrigen; } public void setUnidadOrigen(String unidadOrigen) { this.unidadOrigen = unidadOrigen; } public String getUnidadDestino() { return unidadDestino; } public void setUnidadDestino(String unidadDestino) { this.unidadDestino = unidadDestino; } public double getValor() { return valor; } public void setValor(double valor) { this.valor = valor; }} |
+| --- |
+
+Tabla 9. Clase ConsoleView - Cliente consola
+
+| package ec.edu.monster.client.view;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.SessionModel;import java.util.Locale;import java.util.Scanner;/** * [VISTA] Interfaz de usuario para la consola de comandos. * Formateo estricto a 2 decimales con punto decimal (Locale.US) y límite de 16 caracteres numéricos. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConsoleView { public static final String[] UNIDADES_LONGITUD = { "metro", "centimetro", "pie", "yarda", "milla" }; public static final String[] UNIDADES_MASA = { "gramo", "kilogramo", "libra", "onza", "quintal" }; public static final String[] UNIDADES_TEMPERATURA = { "celsius", "fahrenheit", "kelvin", "newton", "reaumur" }; private final Scanner scanner; public ConsoleView() { this.scanner = new Scanner(System.in); } public void mostrarBanner() { System.out.println("=================================================================="); System.out.println(" UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE - EXTENSIÓN LATACUNGA"); System.out.println(" DEPARTAMENTO DE ENERGÍA Y MECÁNICA"); System.out.println(" ARQUITECTURA DE SOFTWARE"); System.out.println(" TAREA TI.1.3 (PAO 2026-51)"); System.out.println("------------------------------------------------------------------"); System.out.println(" CLIENTE DE CONSOLA: CONVERSOR DE UNIDADES (RESTFUL JAVA - SINBDD)"); System.out.println(" NRC: 36884 / Grupo: GR09 / Autor: Julio Enrique Viche Castillo "); System.out.println(" Patrón Arquitectónico: Modelo - Vista - Controlador (MVC)"); System.out.println("==================================================================\n"); } public String[] pedirCredenciales() { System.out.println("------------------------------------------------------------------"); System.out.println(" INICIO DE SESIÓN OBLIGATORIO (AUTENTICACIÓN) "); System.out.println("------------------------------------------------------------------"); System.out.println(" [Nota]: Credenciales del sistema:"); System.out.println(" Usuario: MONSTER / Contraseña: MONSTER9"); System.out.println("------------------------------------------------------------------"); System.out.print("Ingrese Usuario: "); String usuario = scanner.nextLine().trim(); System.out.print("Ingrese Contraseña: "); String clave = scanner.nextLine().trim(); return new String[]{usuario, clave}; } public boolean preguntarReintento() { System.out.print("\n¿Desea reintentar el inicio de sesión? (s/n): "); String resp = scanner.nextLine().trim().toLowerCase(); return resp.equals("s") // resp.equals("si") // resp.equals("y"); } public String mostrarMenuPrincipal(SessionModel session) { System.out.println("\n=========================================================="); System.out.println(" MENÚ PRINCIPAL DE CONVERSIONES REST (MVC) "); System.out.println("=========================================================="); System.out.printf(" Sesión activa: %s / Token: %s\n", session.getUsuario(), session.getTokenAbreviado()); System.out.println("----------------------------------------------------------"); System.out.println(" 1. Conversión de Longitud (metro, centimetro, pie, yarda, milla)"); System.out.println(" 2. Conversión de Masa (gramo, kilogramo, libra, onza, quintal)"); System.out.println(" 3. Conversión de Temperatura (celsius, fahrenheit, kelvin, newton, reaumur)"); System.out.println(" 4. Verificar estado del token de sesión"); System.out.println(" 5. Cerrar sesión y Salir"); System.out.println("=========================================================="); System.out.print("Seleccione una opción (1-5): "); return scanner.nextLine().trim(); } public ConversionRequest solicitarDatosConversion(String magnitud, String[] unidades) { System.out.println("\n--- [CONVERSIÓN DE " + magnitud.toUpperCase() + "] ---"); String origen = seleccionarUnidad("origen", unidades); if (origen == null) return null; String destino = seleccionarUnidad("destino", unidades); if (destino == null) return null; double valor = pedirValorNumerico(); return new ConversionRequest(magnitud, origen, destino, valor); } private String seleccionarUnidad(String tipo, String[] unidades) { System.out.println("Seleccione unidad de " + tipo + ":"); for (int i = 0; i < unidades.length; i++) { System.out.printf(" %d. %s\n", (i + 1), capitalizar(unidades[i])); } System.out.print("Elija una opción (1-" + unidades.length + "): "); String input = scanner.nextLine().trim(); try { int idx = Integer.parseInt(input) - 1; if (idx >= 0 && idx < unidades.length) { return unidades[idx]; } else { mostrarError("Opción de unidad fuera de rango."); return null; } } catch (NumberFormatException e) { mostrarError("Entrada no numérica."); return null; } } public double pedirValorNumerico() { while (true) { System.out.print("Ingrese el valor numérico a convertir (solo números y '.'): "); String input = scanner.nextLine().trim(); if (input.length() > 16) { mostrarError("Longitud excedida. El valor no puede superar los 16 caracteres."); continue; } if (!input.matches("^\\d+(\\.\\d+)?$")) { mostrarError("Entrada no válida. Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100)."); continue; } try { return Double.parseDouble(input); } catch (NumberFormatException e) { mostrarError("Ingrese un número válido (ejemplo: 25.5 o 100)."); } } } public void mostrarResultadoConversion(ConversionRequest req, ConversionResponse resp) { if (resp != null && resp.isExito()) { System.out.println("\n=========================================================="); System.out.println(" RESULTADO DE LA CONVERSIÓN "); System.out.println("=========================================================="); System.out.printf(Locale.US, " %.2f %s ---> %.2f %s\n", req.getValor(), capitalizar(req.getUnidadOrigen()), resp.getValorConvertido(), capitalizar(req.getUnidadDestino())); System.out.println("=========================================================="); } else { String err = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor"; mostrarError("En la conversión: " + err); } } public void mostrarMensaje(String mensaje) { System.out.println(mensaje); } public void mostrarExito(String mensaje) { System.out.println("\n[OK] " + mensaje); } public void mostrarError(String mensaje) { System.out.println("\n[ERROR] " + mensaje); } public void mostrarDespedida() { System.out.println("\n=========================================================="); System.out.println(" Gracias por utilizar el Conversor de Unidades RESTful (GR09)"); System.out.println("==========================================================\n"); } private String capitalizar(String str) { if (str == null // str.isEmpty()) return ""; return str.substring(0, 1).toUpperCase() + str.substring(1); }} |
+| --- |
+
+Tabla 10. Clase RestClient - Cliente consola
+
+| package ec.edu.monster.client.rest;import com.fasterxml.jackson.databind.JsonNode;import com.fasterxml.jackson.databind.ObjectMapper;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.LoginResponse;import java.io.IOException;import java.net.URI;import java.net.http.HttpClient;import java.net.http.HttpRequest;import java.net.http.HttpResponse;import java.time.Duration;import java.util.HashMap;import java.util.Map;/** * Cliente HTTP RESTful con soporte de fallback dinámico de URLs y serialización JSON. * Se comunica con WS_CONV_UNI_RESTFULL_JAVA. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class RestClient { private static final String DEFAULT_URL_8080 = "http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/"; private static final String FALLBACK_URL_8085 = "http://localhost:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/"; private final HttpClient httpClient; private final ObjectMapper objectMapper; private String baseUrl; public RestClient() { this(null); } public RestClient(String customBaseUrl) { this.httpClient = HttpClient.newBuilder() .connectTimeout(Duration.ofSeconds(5)) .build(); this.objectMapper = new ObjectMapper(); if (customBaseUrl != null && !customBaseUrl.trim().isEmpty()) { this.baseUrl = normalizarUrl(customBaseUrl); } else { this.baseUrl = resolverUrlActiva(); } } private String normalizarUrl(String url) { String u = url.trim(); return u.endsWith("/") ? u : u + "/"; } private String resolverUrlActiva() { // 1. Probar variable de entorno o propiedad del sistema String envUrl = System.getenv("API_BASE_URL"); if (envUrl == null) { envUrl = System.getProperty("api.base.url"); } if (envUrl != null && !envUrl.trim().isEmpty()) { return normalizarUrl(envUrl); } // 2. Probar puerto 8080 if (probarServidor(DEFAULT_URL_8080)) { return DEFAULT_URL_8080; } // 3. Probar puerto 8085 (por si 8080 estaba ocupado) if (probarServidor(FALLBACK_URL_8085)) { return FALLBACK_URL_8085; } // Predeterminado return DEFAULT_URL_8080; } private boolean probarServidor(String testUrl) { try { HttpRequest req = HttpRequest.newBuilder() .uri(URI.create(testUrl + "health")) .timeout(Duration.ofMillis(800)) .GET() .build(); HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString()); return resp.statusCode() == 200; } catch (Exception e) { return false; } } public String getBaseUrl() { return baseUrl; } public void setBaseUrl(String baseUrl) { this.baseUrl = normalizarUrl(baseUrl); } public LoginResponse login(String usuario, String clave) { try { Map<String, Object> payload = new HashMap<>(); payload.put("from", usuario); payload.put("to", clave); String requestJson = objectMapper.writeValueAsString(payload); HttpRequest request = HttpRequest.newBuilder() .uri(URI.create(baseUrl + "auth/login")) .header("Content-Type", "application/json") .timeout(Duration.ofSeconds(10)) .POST(HttpRequest.BodyPublishers.ofString(requestJson)) .build(); HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); JsonNode root = objectMapper.readTree(response.body()); boolean success = root.path("success").asBoolean(false); String token = root.path("token").asText(null); String message = root.path("message").asText(success ? "OK" : "Error en autenticación"); return new LoginResponse(success, token, message); } catch (Exception e) { return new LoginResponse(false, null, "Error conectando con el servidor REST: " + e.getMessage()); } } public ConversionResponse convertir(String magnitud, String unidadOrigen, String unidadDestino, double valor, String token) { try { String endpoint = switch (magnitud.toLowerCase().trim()) { case "longitud" -> "conversor/longitud"; case "masa" -> "conversor/masa"; case "temperatura" -> "conversor/temperatura"; default -> throw new IllegalArgumentException("Magnitud no reconocida: " + magnitud); }; Map<String, Object> payload = new HashMap<>(); payload.put("from", unidadOrigen); payload.put("to", unidadDestino); payload.put("value", valor); payload.put("token", token); String requestJson = objectMapper.writeValueAsString(payload); HttpRequest request = HttpRequest.newBuilder() .uri(URI.create(baseUrl + endpoint)) .header("Content-Type", "application/json") .timeout(Duration.ofSeconds(10)) .POST(HttpRequest.BodyPublishers.ofString(requestJson)) .build(); HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); JsonNode root = objectMapper.readTree(response.body()); boolean success = root.path("success").asBoolean(false); double result = root.path("result").asDouble(0.0); String message = root.path("message").asText(""); if (success) { return new ConversionResponse(true, result, null); } else { return new ConversionResponse(false, 0.0, message); } } catch (Exception e) { return new ConversionResponse(false, 0.0, "Error de comunicación REST: " + e.getMessage()); } }} |
+| --- |
+
+CONSUMO DEL Servicio RESTful (CONTROLADOR)
+
+Los clientes Java usan RestClient para enviar solicitudes HTTP/JSON a la API. El cliente conserva la URL base y el token de sesión y procesa los modelos JSON de respuesta.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de controlador - Cliente consola**
+
+*_Figura 27. Creación de controlador - Cliente consola_*
+
+ConversionController coordina la selección de magnitud y unidades con RestClient. Valida la sesión, invoca la ruta REST correspondiente y entrega el resultado a la vista.
+
+Tabla 11. Clase ConversionController - Cliente consola
+
+| package ec.edu.monster.client.controller;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.SessionModel;import ec.edu.monster.client.rest.RestClient;/** * [CONTROLADOR] Orquesta la ejecución de conversiones consumiendo el servicio RESTful. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversionController { private final RestClient restClient; private final SessionModel session; public ConversionController(RestClient restClient, SessionModel session) { this.restClient = restClient; this.session = session; } public ConversionResponse ejecutarConversion(ConversionRequest req) { if (!session.isActivo() // session.getToken() == null) { return new ConversionResponse(false, 0.0, "Sesión inactiva. Debe iniciar sesión primero."); } if (req == null) { return new ConversionResponse(false, 0.0, "Parámetros de conversión inválidos."); } return restClient.convertir( req.getMagnitud(), req.getUnidadOrigen(), req.getUnidadDestino(), req.getValor(), session.getToken() ); }} |
+| --- |
+
+CLASE PRINCIPAL (EJECUCIÓN)
+
+Finalmente, se codifica la clase ClienteConsola.java que orquesta el flujo completo de la aplicación. El sistema inicia solicitando credenciales al usuario para invocar el servicio de seguridad; únicamente si la autenticación es exitosa, se instancia la interfaz y el controlador para permitir el uso de las operaciones de conversión.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de clase principal - Cliente consola**
+
+*_Figura 28. Creación de clase principal - Cliente consola_*
+
+Tabla 12. Clase ConsoleClientApplication - Cliente consola
+
+| package ec.edu.monster.client;import ec.edu.monster.client.controller.ConsoleAppController;import ec.edu.monster.client.model.SessionModel;import ec.edu.monster.client.rest.RestClient;import ec.edu.monster.client.view.ConsoleView;/** * Punto de entrada principal para el Cliente de Consola (TI.1.3 RESTful Java). * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConsoleClientApplication { public static void main(String[] args) { // Inicializar componentes MVC RestClient restClient = new RestClient(); SessionModel session = new SessionModel(); ConsoleView view = new ConsoleView(); ConsoleAppController controller = new ConsoleAppController(restClient, session, view); controller.iniciar(); }} |
+| --- |
+
+#### EJECUCIÓN DEL CLIENTE DE CONSOLA
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Login - Cliente consola**
+
+*_Figura 29. Login - Cliente consola_*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Conversión de Longitud - Cliente consola**
+
+*_Figura 30. Conversión de Longitud - Cliente consola_*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Conversión de Masa - Cliente consola**
+
+*_Figura 31. Conversión de Masa - Cliente consola_*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Conversión de Temperatura - Cliente consola**
+
+*_Figura 32. Conversión de Temperatura - Cliente consola_*
+
+### CLIENTE ESCRITORIO
+
+#### CREACIÓN DEL PROYECTO
+
+El proyecto se crea de igual manera que el cliente de consola Java Application
+
+#### ESTRUCTURA DEL PROYECTO
+
+El cliente de escritorio con interfaz gráfica se estructuró bajo el patrón MVC. Se crearon los paquetes modelo, vista y controlador para separar el diseño visual de la lógica de consumo del servicio web.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Estructura del proyecto - Cliente escritorio**
+
+*_Figura 33. Estructura del proyecto - Cliente escritorio_*
+
+### CODIFICACIÓN DEL PROYECTO CLIENTE ESCRITORIO
+
+#### CREACIÓN DE MODELOS
+
+Al no requerir base de datos, en el paquete modelo solo se manejan clases auxiliares y enumeradores. Estos sirven exclusivamente para llenar las opciones de listas desplegables en las ventanas.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de modelo - Cliente escritorio**
+
+*_Figura 34. Creación de modelo - Cliente escritorio_*
+
+CREACIÓN DE CONTROLADOR
+
+El cliente de escritorio usa RestClient para invocar la API REST. Sus controladores reciben los datos de las ventanas, verifican la sesión y presentan la respuesta de conversión.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de servicio - Cliente consola**
+
+*_Figura 35. Creación de servicio - Cliente consola_*
+
+Tabla 13. Clase ConversionController - Cliente escritorio
+
+| package ec.edu.monster.client.controller;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.SessionModel;import ec.edu.monster.client.rest.RestClient;/** * [CONTROLADOR] Ejecución de conversiones desde la interfaz de escritorio Swing. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversionController { private final RestClient restClient; private final SessionModel sessionModel; public ConversionController(RestClient restClient, SessionModel sessionModel) { this.restClient = restClient; this.sessionModel = sessionModel; } public ConversionResponse convertir(ConversionRequest req) { if (!sessionModel.isActivo() // sessionModel.getToken() == null) { return new ConversionResponse(false, 0.0, "Sesión no iniciada o token vencido."); } return restClient.convertir( req.getMagnitud(), req.getUnidadOrigen(), req.getUnidadDestino(), req.getValor(), sessionModel.getToken() ); }} |
+| --- |
+
+CREACIÓN DE VISTAS
+
+En el paquete vista se diseñaron las interfaces gráficas utilizando los formularios (JFrames) de NetBeans. Estas ventanas contienen los componentes visuales necesarios para interactuar con el usuario. Su función es estrictamente visual: capturan los datos de entrada y muestran los resultados obtenidos, delegando todo el procesamiento al controlador.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de vistas - Cliente escritorio**
+
+*_Figura 36. Creación de vistas - Cliente escritorio_*
+
+CLASE PRINCIPAL (EJECUCIÓN)
+
+La clase principal del proyecto funciona como el punto de entrada de la aplicación. Su única responsabilidad es instanciar la ventana inicial del sistema (la interfaz de inicio de sesión) y hacerla visible en la pantalla para iniciar el flujo gráfico del programa.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de vistas - Cliente escritorio**
+
+*_Figura 37. Creación de vistas - Cliente escritorio_*
+
+#### EJECUCIÓN DEL CLIENTE DE ESCRITORIO
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Login - Cliente escritorio**
+
+*_Figura 38. Login - Cliente escritorio_*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Pantalla de Conversiones - Cliente escritorio**
+
+*_Figura 39. Pantalla de Conversiones - Cliente escritorio_*
+
+### CLIENTE WEB
+
+#### CREACIÓN DEL PROYECTO
+
+El proyecto se crea de igual manera que el webservice con ‘Web Application’.
+
+#### ESTRUCTURA DEL PROYECTO
+
+El cliente web se desarrolló siguiendo el patrón MVC utilizando Servlets y HTML y JavaScript. La estructura separa la lógica de control (en el paquete controlador) de las interfaces de usuario (páginas web).
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Estructura del proyecto - Cliente web**
+
+*_Figura 40. Estructura del proyecto - Cliente web_*
+
+### CODIFICACIÓN DEL PROYECTO CLIENTE WEB
+
+CONSUMO DEL Servicio RESTful (SERVLETS)
+
+El cliente web usa LoginServlet y ConversionServlet para gestionar solicitudes del navegador y llamar a RestClient. Jetty 11 embebido escucha en el puerto 8081; las vistas son index.html y conversor.html.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de servlets - Cliente web**
+
+*_Figura 41. Creación de servlets - Cliente web_*
+
+Tabla 14. Clase ConversionServlet - Cliente web
+
+| package ec.edu.monster.client.controller;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.SessionModel;import ec.edu.monster.client.rest.RestClient;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;import java.io.IOException;import java.net.URLEncoder;import java.nio.charset.StandardCharsets;import java.util.Locale;/** * [CONTROLADOR] Servlet para el procesamiento de conversiones RESTful JSON. * Formateo numérico estricto a 2 decimales con punto decimal (Locale.US) * y límite de 16 caracteres. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */@WebServlet(name = "ConversionServlet", urlPatterns = {"/convertir"})public class ConversionServlet extends HttpServlet { private final RestClient restClient = new RestClient(); @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { request.setCharacterEncoding("UTF-8"); response.setCharacterEncoding("UTF-8"); HttpSession session = request.getSession(false); SessionModel sessionUser = (session != null) ? (SessionModel) session.getAttribute("sessionUser") : null; // Validación estricta de sesión activa (SINBDD) if (sessionUser == null // !sessionUser.isActivo() // sessionUser.getToken() == null) { response.sendRedirect(request.getContextPath() + "/index.html?error=SesionInvalida"); return; } String magnitud = request.getParameter("magnitud"); String unidadOrigen = request.getParameter("unidadOrigen"); String unidadDestino = request.getParameter("unidadDestino"); String valorStr = request.getParameter("valor"); if (magnitud == null // unidadOrigen == null // unidadDestino == null // valorStr == null) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Faltan parámetros obligatorios para la conversión.", StandardCharsets.UTF_8)); return; } double valor; try { String valorLimpio = valorStr.trim(); if (valorLimpio.length() > 16) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("El valor numérico no puede superar los 16 caracteres.", StandardCharsets.UTF_8)); return; } if (!valorLimpio.matches("^\\d+(\\.\\d+)?$")) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).", StandardCharsets.UTF_8)); return; } valor = Double.parseDouble(valorLimpio); } catch (NumberFormatException e) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Formato numérico no válido.", StandardCharsets.UTF_8)); return; } try { ConversionResponse resp = restClient.convertir( magnitud, unidadOrigen, unidadDestino, valor, sessionUser.getToken() ); if (resp != null && resp.isExito()) { String valorOrigenFmt = String.format(Locale.US, "%.2f", valor); String valorDestinoFmt = String.format(Locale.US, "%.2f", resp.getValorConvertido()); String resultadoTexto = valorDestinoFmt + " " + capitalizar(unidadDestino); String detalleTexto = valorOrigenFmt + " " + capitalizar(unidadOrigen) + " equivale a " + resultadoTexto; response.sendRedirect(request.getContextPath() + "/conversor.html?resultado=" + URLEncoder.encode(resultadoTexto, StandardCharsets.UTF_8) + "&detalle=" + URLEncoder.encode(detalleTexto, StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } else { String errorMsg = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor REST"; response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode(errorMsg, StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } } catch (Exception e) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Error de comunicación: " + e.getMessage(), StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } } private String capitalizar(String str) { if (str == null // str.isEmpty()) return ""; return str.substring(0, 1).toUpperCase() + str.substring(1); }} |
+| --- |
+
+Tabla 15. Clase LoginServlet - Cliente web
+
+| package ec.edu.monster.client.controller;import ec.edu.monster.client.model.LoginResponse;import ec.edu.monster.client.model.SessionModel;import ec.edu.monster.client.rest.RestClient;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;import java.io.IOException;import java.net.URLEncoder;import java.nio.charset.StandardCharsets;/** * [CONTROLADOR] Servlet para el procesamiento del inicio de sesión RESTful. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})public class LoginServlet extends HttpServlet { private final RestClient restClient = new RestClient(); @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { request.setCharacterEncoding("UTF-8"); response.setCharacterEncoding("UTF-8"); String usuario = request.getParameter("usuario"); String clave = request.getParameter("clave"); if (usuario == null // usuario.trim().isEmpty() // clave == null // clave.trim().isEmpty()) { response.sendRedirect(request.getContextPath() + "/index.html?error=" + URLEncoder.encode("Por favor, complete todos los campos de acceso.", StandardCharsets.UTF_8)); return; } try { LoginResponse loginResp = restClient.login(usuario.trim(), clave.trim()); if (loginResp != null && loginResp.isExito()) { HttpSession session = request.getSession(true); SessionModel sessionModel = new SessionModel(usuario.trim(), loginResp.getToken()); session.setAttribute("sessionUser", sessionModel); response.sendRedirect(request.getContextPath() + "/conversor.html?usuario=" + URLEncoder.encode(usuario.trim(), StandardCharsets.UTF_8) + "&token=" + sessionModel.getTokenAbreviado()); } else { String errorMsg = (loginResp != null) ? loginResp.getMensaje() : "Credenciales inválidas."; response.sendRedirect(request.getContextPath() + "/index.html?error=" + URLEncoder.encode(errorMsg, StandardCharsets.UTF_8)); } } catch (Exception e) { String errorMsg = "Error de comunicación con el Servidor REST: " + e.getMessage(); response.sendRedirect(request.getContextPath() + "/index.html?error=" + URLEncoder.encode(errorMsg, StandardCharsets.UTF_8)); } }} |
+| --- |
+
+CREACIÓN DE VISTAS
+
+Las interfaces de usuario se construyeron utilizando HTML y la tecnología HTML (páginas HTML) dentro del directorio Web Pages. Se diseñaron dos vistas principales: index.html, que actúa como la pantalla de inicio de sesión interactuando con el LoginServlet, y conversor.html, que contiene los formularios dinámicos para seleccionar las unidades de medida, capturar los valores y mostrar los resultados procesados por el ConversionServlet.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de vistas - Cliente web**
+
+*_Figura 42. Creación de vistas - Cliente web_*
+
+Tabla 16. Archivo conversor.html - Cliente web
+
+| <!DOCTYPE html><html lang="es"><head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Conversor de Unidades RESTful - Panel Web (GR09)</title> <link rel="stylesheet" href="css/style.css"></head><body> <!-- Encabezado con sesión activa --> <header class="header-bar"> <div class="header-brand"> <h1>CONVERSOR DE UNIDADES (RESTFUL JAVA · SINBDD)</h1> <p>ESPE · Arquitectura de Software (TI.1.3) / Autor: Julio Enrique Viche Castillo</p> </div> <div class="header-user"> <span class="badge-session"> <span class="status-dot">●</span> <strong id="lblUsuario">MONSTER</strong> <span style="opacity: 0.8; font-size: 0.75rem;" id="lblToken">(Sesión Activa)</span> </span> <a href="logout" class="btn-logout">Cerrar Sesión</a> </div> </header> <!-- Panel Central del Conversor --> <main class="main-wrapper"> <div class="card-box"> <h2 class="card-title">Conversor de Unidades Multimagnitud</h2> <p class="card-subtitle">Cálculos procesados mediante servicios web RESTful JSON protegidos por token</p> <div id="alertBox" class="alert alert-error" style="display: none;"></div> <!-- 1. Pestañas de Magnitud --> <label class="form-label">1. Seleccione la Magnitud Física:</label> <div class="segmented-group"> <button type="button" class="segment-btn active" id="btnLongitud" onclick="cambiarMagnitud('Longitud')"> Longitud </button> <button type="button" class="segment-btn" id="btnMasa" onclick="cambiarMagnitud('Masa')"> Masa </button> <button type="button" class="segment-btn" id="btnTemperatura" onclick="cambiarMagnitud('Temperatura')"> Temperatura </button> </div> <!-- Formulario de Conversión --> <form action="convertir" method="POST" id="formConversion"> <input type="hidden" id="inputMagnitud" name="magnitud" value="Longitud"> <!-- 2. Valor Numérico --> <div class="form-group"> <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label> <input type="text" id="txtValor" name="valor" class="form-input" autocomplete="off" inputmode="decimal" maxlength="16" pattern="^\d+(\.\d+)?$" title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) // (event.charCode === 46 && this.value.indexOf('.') === -1)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" value="100.00" required> </div> <!-- 3. Unidades Origen y Destino --> <label class="form-label">3. Configuración de Unidades:</label> <div class="units-row"> <div class="units-col"> <select id="cmbOrigen" name="unidadOrigen" class="form-select"></select> </div> <button type="button" class="btn-swap" title="Intercambiar unidades" onclick="intercambiarUnidades()"> ⇄ </button> <div class="units-col"> <select id="cmbDestino" name="unidadDestino" class="form-select"></select> </div> </div> <button type="submit" class="btn-primary" style="margin-top: 20px;"> Calcular Conversión REST </button> </form> <!-- 4. Tarjeta de Resultado --> <div id="pnlResultado" class="result-card" style="display: none;"> <div class="result-value" id="lblResultadoValor">0.00</div> <div class="result-detail" id="lblResultadoDetalle">Cálculo completado exitosamente</div> </div> </div> </main> <!-- Barra de Estado Inferior --> <footer class="footer-bar"> <span>Servidor Backend: <code>WS_CONV_UNI_RESTFULL_JAVA</code> (Modalidad SINBDD)</span> <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span> </footer> <script> const CATALOGO = { 'Longitud': ['metro', 'centimetro', 'pie', 'yarda', 'milla'], 'Masa': ['gramo', 'kilogramo', 'libra', 'onza', 'quintal'], 'Temperatura': ['celsius', 'fahrenheit', 'kelvin', 'newton', 'reaumur'] }; let magnitudActual = 'Longitud'; function cambiarMagnitud(magnitud) { magnitudActual = magnitud; document.getElementById('inputMagnitud').value = magnitud; ['Longitud', 'Masa', 'Temperatura'].forEach(m => { const btn = document.getElementById('btn' + m); if (m === magnitud) { btn.classList.add('active'); } else { btn.classList.remove('active'); } }); const unidades = CATALOGO[magnitud]; const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); cmbO.innerHTML = ''; cmbD.innerHTML = ''; unidades.forEach((u, i) => { const nombre = u.charAt(0).toUpperCase() + u.slice(1); cmbO.add(new Option(nombre, u)); cmbD.add(new Option(nombre, u)); }); if (unidades.length > 1) { cmbD.selectedIndex = 1; } document.getElementById('pnlResultado').style.display = 'none'; } function intercambiarUnidades() { const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); const tmp = cmbO.selectedIndex; cmbO.selectedIndex = cmbD.selectedIndex; cmbD.selectedIndex = tmp; } // Leer parámetros URL (para mensajes de servlet o login) const params = new URLSearchParams(window.location.search); if (params.has('usuario')) { document.getElementById('lblUsuario').textContent = params.get('usuario'); } if (params.has('token')) { document.getElementById('lblToken').textContent = '(Token: ' + params.get('token') + ')'; } if (params.has('resultado')) { const pnl = document.getElementById('pnlResultado'); const val = document.getElementById('lblResultadoValor'); const det = document.getElementById('lblResultadoDetalle'); val.textContent = params.get('resultado'); det.textContent = params.get('detalle') // 'Cálculo completado exitosamente'; pnl.style.display = 'block'; } if (params.has('error')) { const alertBox = document.getElementById('alertBox'); alertBox.textContent = params.get('error'); alertBox.style.display = 'block'; } // Inicializar con Longitud cambiarMagnitud('Longitud'); </script></body></html> |
+| --- |
+
+Tabla 17. Archivo index.html - Cliente web
+
+| <!DOCTYPE html><html lang="es"><head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Acceso al Sistema - Conversor de Unidades RESTful (GR09)</title> <link rel="stylesheet" href="css/style.css"></head><body> <!-- Encabezado Institucional --> <header class="header-bar"> <div class="header-brand"> <h1>UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE</h1> <p>Arquitectura de Software (TI.1.3) · Grupo GR09 / Julio Enrique Viche Castillo</p> </div> <div class="header-user"> <span class="badge-session"> <span class="status-dot">●</span> Servidor RESTful JSON </span> </div> </header> <!-- Contenedor del Formulario de Login --> <main class="main-wrapper"> <div class="card-box card-login"> <h2 class="card-title">Iniciar Sesión</h2> <p class="card-subtitle">Autenticación requerida para acceder al Conversor REST (SINBDD)</p> <div id="alertBox" class="alert alert-error" style="display: none;"></div> <div id="infoBox" class="alert alert-info" style="display: none;"></div> <form action="login" method="POST"> <div class="form-group"> <label class="form-label" for="txtUsuario">Usuario:</label> <input type="text" id="txtUsuario" name="usuario" class="form-input" value="MONSTER" required autofocus> </div> <div class="form-group"> <label class="form-label" for="txtClave">Contraseña:</label> <input type="password" id="txtClave" name="clave" class="form-input" value="MONSTER9" required> </div> <div class="alert alert-info" style="font-size: 0.8rem; padding: 8px 12px; margin-bottom: 20px;"> <strong>Credenciales del curso:</strong> Usuario: <code>MONSTER</code> / Clave: <code>MONSTER9</code> </div> <button type="submit" class="btn-primary">Ingresar al Conversor</button> </form> </div> </main> <!-- Barra de Estado Inferior --> <footer class="footer-bar"> <span>Servidor Backend: <code>WS_CONV_UNI_RESTFULL_JAVA</code> (Modalidad SINBDD)</span> <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span> </footer> <script> const params = new URLSearchParams(window.location.search); if (params.has('error')) { const alertBox = document.getElementById('alertBox'); let err = params.get('error'); if (err === 'SesionInvalida') err = 'Su sesión ha expirado o es inválida. Inicie sesión nuevamente.'; alertBox.textContent = err; alertBox.style.display = 'block'; } if (params.has('msg')) { const infoBox = document.getElementById('infoBox'); infoBox.textContent = params.get('msg'); infoBox.style.display = 'block'; } </script></body></html> |
+| --- |
+
+EJECUCIÓN DEL CLIENTE DE WEB
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Login - Cliente web**
+
+*_Figura 43. Login - Cliente web_*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Pantalla de Conversiones - Cliente web**
+
+*_Figura 44. Pantalla de Conversiones - Cliente web_*
+
+### CLIENTE MÓVIL
+
+#### CREACIÓN DEL PROYECTO
+
+El proyecto se debe crear en Android Studio. Se selecciona la opción ‘New Project’, en la pantalla siguiente ‘Empty Activity’ y finalmente se configura el proyecto con nombre, ubicación y la opción ‘Java’ en Build Configuration Laguaje. Finalizamos haciendo click en el botón ‘Finish’.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Configuración del proyecto - Cliente móvil**
+
+*_Figura 45. Configuración del proyecto - Cliente móvil_*
+
+#### ESTRUCTURA DEL PROYECTO
+
+El desarrollo de la aplicación móvil en Android Studio se organizó bajo el patrón arquitectónico MVC (Modelo-Vista-Controlador). Para asegurar el desacoplamiento de la lógica, la vista y el consumo de red, se estructuró el proyecto en los paquetes model, view y controller.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Estructura del proyecto - Cliente móvil**
+
+*_Figura 46. Estructura del proyecto - Cliente móvil_*
+
+### CODIFICACIÓN DEL PROYECTO CLIENTE MÓVIL
+
+#### CREACIÓN DE MODELOS
+
+En el paquete model se crearon las clases necesarias para el intercambio de información: ConversionRequest, ConversionResult, LoginResult y la enumeración ServiceType.
+
+La aplicación Android usa RestClient, HttpURLConnection y org.json para enviar solicitudes HTTP/JSON al servidor. Los controladores procesan inicio de sesión y conversiones de forma asíncrona y actualizan las actividades.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de modelos - Cliente móvil**
+
+*_Figura 47. Creación de modelos - Cliente móvil_*
+
+CREACIÓN DE CONTROLADORES
+
+LoginController y ConversionController coordinan las actividades Android con RestClient. Ejecutan las llamadas de red fuera del hilo de interfaz y devuelven el resultado a las vistas.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de controladores - Cliente móvil**
+
+*_Figura 48. Creación de controladores - Cliente móvil_*
+
+Tabla 18. Clase LoginController - Cliente móvil
+
+| package ec.edu.monster.client.controller;import android.os.Handler;import android.os.Looper;import ec.edu.monster.client.model.LoginResponse;import ec.edu.monster.client.model.RestClient;import ec.edu.monster.client.model.SessionModel;/** * [CONTROLADOR] Gestiona el flujo de autenticación para la vista móvil RESTful. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class LoginController { public interface LoginCallback { void onSuccess(SessionModel session, String resolvedBaseUrl); void onError(String mensaje); } private final RestClient restClient; private final Handler mainHandler; public LoginController() { this.restClient = new RestClient(); this.mainHandler = new Handler(Looper.getMainLooper()); } public void procesarLogin(String baseUrl, String usuario, String clave, LoginCallback callback) { new Thread(() -> { try { if (baseUrl != null && !baseUrl.trim().isEmpty()) { restClient.setBaseUrl(baseUrl); } LoginResponse resp = restClient.login(usuario, clave); mainHandler.post(() -> { if (resp != null && resp.isExito() && resp.getToken() != null) { SessionModel session = new SessionModel(usuario, resp.getToken()); callback.onSuccess(session, restClient.getBaseUrl()); } else { String err = (resp != null && resp.getMensaje() != null) ? resp.getMensaje() : "Error al iniciar sesión."; callback.onError(err); } }); } catch (Exception e) { mainHandler.post(() -> callback.onError("Error de conexión: " + e.getMessage())); } }).start(); }} |
+| --- |
+
+Tabla 19. Clase ConversionController - Cliente móvil
+
+| package ec.edu.monster.client.controller;import android.os.Handler;import android.os.Looper;import ec.edu.monster.client.model.ConversionRequest;import ec.edu.monster.client.model.ConversionResponse;import ec.edu.monster.client.model.RestClient;/** * [CONTROLADOR] Gestiona el despacho de conversiones de unidades RESTful. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversionController { public interface ConversionCallback { void onSuccess(ConversionResponse response); void onError(String mensaje); } private final RestClient restClient; private final Handler mainHandler; public ConversionController() { this.restClient = new RestClient(); this.mainHandler = new Handler(Looper.getMainLooper()); } public void procesarConversion(String baseUrl, String token, ConversionRequest req, ConversionCallback callback) { new Thread(() -> { try { if (baseUrl != null && !baseUrl.trim().isEmpty()) { restClient.setBaseUrl(baseUrl); } ConversionResponse resp = restClient.convertir(req, token); mainHandler.post(() -> { if (resp != null && resp.isExito()) { callback.onSuccess(resp); } else { String err = (resp != null && resp.getMensajeError() != null) ? resp.getMensajeError() : "Error al procesar la conversión."; callback.onError(err); } }); } catch (Exception e) { mainHandler.post(() -> callback.onError("Error de red: " + e.getMessage())); } }).start(); }} |
+| --- |
+
+CREACIÓN DE VISTAS
+
+Se crean los archivos de interfaz gráfica en el paquete views.
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Creación de vistas - Cliente móvil**
+
+*_Figura 49. Creación de vistas - Cliente móvil_*
+
+#### EJECUCIÓN DEL CLIENTE DE MÓVIL
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Login - Cliente móvil**
+
+*_Figura 50. Login - Cliente móvil_*
+
+> [!TIP] Captura de Pantalla Pendiente
+> **Pantalla de Conversiones - Cliente móvil**
+
+*_Figura 51. Pantalla de Conversiones - Cliente móvil_*
+
+#### CONCLUSIONES
+
+El proyecto integra Java, Jakarta REST con Jersey, Grizzly y clientes HTTP/JSON. La configuración de NetBeans, Maven y Android Studio permite ejecutar el servidor y los clientes con una arquitectura RESTful y sin base de datos.
+
+La implementación de los módulos de seguridad y conversiones evidenció la importancia de separar correctamente la lógica de negocio y la capa de exposición del servicio web. A pesar de no contar con conexión a una base de datos, el uso de DTOs, validaciones en memoria y manejo de sesiones simuladas dio como resultado soluciones mantenibles, escalables y con un nivel adecuado de desacoplamiento.
+
+Los clientes de consola, escritorio, web con HTML/Servlets y móvil Android consumen la API REST. Envían solicitudes HTTP con JSON, obtienen un token en auth/login y lo incluyen en las conversiones de longitud, masa y temperatura.
+
+La solución organiza la API en recursos Jakarta REST implementados con Jersey y ejecutados sobre Grizzly. Los clientes Java consumen rutas HTTP con JSON y completan el flujo desde la autenticación hasta las conversiones, sin una base de datos.
+
+#### RECOMENDACIONES
+
+Mantener la estructura modular de los clientes y el patrón MVC en las interfaces para facilitar su evolución. Los recursos REST del servidor deben conservar responsabilidades claras para autenticación y conversiones.
+
+Implementar respuestas HTTP de error con mensajes JSON claros cuando el cliente envíe unidades no soportadas o datos inválidos; esto facilitará el diagnóstico de solicitudes REST.
+
+Añadir validaciones más estrictas en los servicios, especialmente en el control del tiempo de vida de las sesiones del usuario y en el bloqueo de peticiones con valores numéricos inválidos (como medidas de masa negativas).
+
+Como mejora futura, se puede integrar un sistema de logs en Grizzly para registrar solicitudes HTTP, códigos de respuesta y errores de conversión, facilitando el diagnóstico de la API REST.
+
+Implementar mecanismos de caché o estructuras de datos optimizadas en memoria para los catálogos de unidades, en caso de que el sistema escale a un volumen masivo de peticiones concurrentes.
+
+Desarrollar pruebas unitarias en la capa de servicios para asegurar la exactitud de las fórmulas matemáticas utilizadas en las transformaciones de temperatura, longitud y masa ante futuras modificaciones.
+
+Mejorar la interfaz de usuario en los clientes web y móvil incorporando retroalimentación visual más precisa, controles de validación en los formularios y manejo asíncrono avanzado para no bloquear las pantallas durante la espera de respuesta del servidor.
+
+Documentar las rutas HTTP, sus métodos, los campos JSON de solicitud y respuesta y los códigos de estado para que otros clientes puedan consumir la API REST.

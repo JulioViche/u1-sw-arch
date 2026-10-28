@@ -1,293 +1,744 @@
 ---
-tipo: technical-manual
-taller: TI.1.1
+tipo: manual-tecnico
 protocolo: SOAP
 plataforma: Java
-tags: [technical-manual, soap, java, payara, jax-ws, sinbdd]
+tarea: TI.1.1
+tags: [manual-tecnico, sinbdd, entrega, capturas]
 ---
 
-# MANUAL DE CONFIGURACIÓN Y DESPLIEGUE SISTEMA DE CONVERSIÓN DE UNIDADES CON SOAP SIN BDD EN JAVA
+# Manual Técnico - Conversor de Unidades SOAP en Java (SINBDD)
 
 **Universidad de las Fuerzas Armadas ESPE — Sede Latacunga**  
 **Departamento de Ciencias de la Computación**  
-**Carrera:** Ingeniería de Software / Tecnologías de la Información  
-**Asignatura:** Arquitectura de Software  
-**Tarea:** TI.1.1 (PAO 2026-51)  
-**NRC:** 36884 | **Grupo:** GR09  
+**Asignatura:** Arquitectura de Software | **NRC:** 36884 | **Grupo:** GR09  
 **Autor:** Julio Enrique Viche Castillo  
 **Docente:** Ing. Eduardo Mauricio Campaña Ortega, MIS.MDU.CCNA.CCIA. PhD. (c)  
-**Fecha:** 27 de Octubre de 2026  
+**Fecha:** 28 de Octubre de 2026
 
 ---
 
-## 1. INTRODUCCIÓN
+## PARTE PRÁCTICA
 
-En la arquitectura de sistemas empresariales, la interoperabilidad y el acoplamiento estricto basado en contratos constituyen pilares fundamentales para garantizar la confiabilidad en el intercambio de información. El presente manual técnico documenta el diseño, la configuración, el despliegue y la validación del **Sistema de Conversión de Unidades Heterogéneo**, implementado bajo el estándar de servicios web **SOAP** (Simple Object Access Protocol) en la plataforma **Java** (Jakarta EE / JAX-WS).
+### INTRODUCCIÓN
 
-El sistema opera bajo la modalidad arquitectónica **SINBDD** (Sin Base de Datos), donde los datos de autenticación maestros (`MONSTER` / `MONSTER9`) se encuentran fijados en la lógica del servidor y los tokens de sesión activos se administran de forma volátil y concurrente en la memoria RAM del servidor de aplicaciones. Esta solución expone contratos formales tipificados en **WSDL** (Web Services Description Language), los cuales son consumidos de forma transparente por cuatro clientes heterogéneos bajo el patrón arquitectónico **Modelo-Vista-Controlador (MVC)**: Consola de comandos (CLI), Escritorio (Java Swing con FlatLaf), Web (JSP y Servlets con servidor embebido) y Móvil (Android SDK).
+Un Web Service SOAP es una interfaz de comunicación basada en protocolos estandarizados que permite el intercambio de información estructurada entre sistemas computacionales. A diferencia de otros enfoques, SOAP se fundamenta estrictamente en el uso de XML como lenguaje para el envío de mensajes y depende de un contrato formal conocido como WSDL (Web Services Description Language), que define las operaciones, parámetros y tipos de datos disponibles. Esta arquitectura es esencial en entornos empresariales donde la seguridad, la transaccionalidad y el cumplimiento estricto de protocolos son prioritarios.
 
----
+En el desarrollo de servicios SOAP con Java, la lógica suele organizarse mediante la exposición de Endpoints (puntos de acceso). A diferencia del patrón MVC tradicional de aplicaciones web, SOAP se centra en la Orientación a Servicios (SOA), donde el servidor actúa como un proveedor de funciones específicas que el cliente consume tras conocer la definición del servicio. El intercambio de datos en la red se realiza a través del protocolo HTTP.
 
-## 2. OBJETIVOS
+Para el despliegue de estos servicios, se utiliza Payara Server, un servidor de aplicaciones de alto rendimiento derivado de GlassFish. Payara es un contenedor compatible con Jakarta EE que incluye soporte nativo para la especificación JAX-WS (Java API for XML Web Services). Esto permite gestionar servicios web complejos con herramientas avanzadas de administración, monitoreo y escalabilidad, asegurando una integración fluida en ecosistemas empresariales heterogéneos.
 
-### 2.1. Objetivo General
-Diseñar, configurar, desplegar y validar un sistema distribuido de conversión de unidades de múltiples magnitudes (Longitud, Masa y Temperatura) implementado como un servicio web SOAP en Java (JAX-WS), alojado en el servidor de aplicaciones empresarial Payara Server / GlassFish y consumido por cuatro clientes heterogéneos desacoplados bajo el patrón arquitectónico Modelo-Vista-Controlador (MVC).
+### OBJETIVOS
 
-### 2.2. Objetivos Específicos
-1. Configurar y desplegar el servicio web centralizado sobre el servidor de aplicaciones **Payara Server Community 6.x / GlassFish 7.x** mediante empaquetado WAR, manteniendo compatibilidad de ejecución standalone ligera vía `Publisher.java`.
-2. Implementar los contratos WSDL para los servicios de autenticación (`ServicioAutenticacion`) y conversión matemática (`ServicioConversion`), garantizando la validación de encabezados SOAP (`SOAPHeader`) y parámetros seguros.
-3. Incorporar el catálogo estricto de exactamente **5 unidades por magnitud** (Longitud, Masa y Temperatura) bajo el patrón de diseño **GoF Strategy**, formateando rigurosamente todas las respuestas a **2 decimales** (`%.2f`) con punto decimal.
-4. Implementar el esquema de autorización mandatoria basado en tokens UUID en memoria RAM, restringiendo el cómputo de conversiones a usuarios previamente autenticados con las credenciales quemadas (`MONSTER` / `MONSTER9`).
-5. Desarrollar y verificar cuatro clientes independientes (Consola, Escritorio Swing, Web JSP y Móvil Android con ksoap2) con capacidad de auto-detección dinámica de los endpoints del servidor.
+#### OBJETIVO GENERAL
 
----
+Desarrollar un manual de documentación que explique la construcción de un conversor de unidades (longitud y peso) basado en una arquitectura cliente-servidor, con patrón arquitectónico MVC, con clientes en escritorio, consola, web y móvil, y un servidor SOAP implementado en Java y alojado en Payara Server.
 
-## 3. MARCO TEÓRICO
+#### OBJETIVOS ESPECÍFICOS
 
-### 3.1. Servicios Web SOAP y Contratos WSDL
-El protocolo **SOAP** (Simple Object Access Protocol) es un estándar de mensajería basado en XML diseñado para el intercambio estructurado de información en entornos distribuidos y heterogéneos. Sus principales componentes son:
-- **SOAP Envelope (Sobre):** Elemento raíz que encapsula el mensaje XML completo.
-- **SOAP Header (Encabezado):** Sección opcional utilizada para transmitir información de control, metadatos y tokens de autorización (`ws:token`).
-- **SOAP Body (Cuerpo):** Contiene la llamada al método o los datos de respuesta de la operación.
-- **WSDL (Web Services Description Language):** Documento formal en XML que define la interfaz pública, tipos de datos (`XSD`), operaciones y ubicación de red del servicio.
+Describir detalladamente el diseño e implementación del servicio SOAP utilizando la especificación JAX-WS integrada en un servidor Payara, incluyendo la generación automática del contrato WSDL.
 
-### 3.2. Arquitectura Orientada a Servicios (SOA)
-El sistema adopta los principios fundamentales de SOA:
-- **Contrato Formal:** El WSDL actúa como un acuerdo inmutable entre el servidor y los clientes.
-- **Abstracción:** Los clientes desconocen los detalles internos de implementación del servidor.
-- **Reutilización:** Múltiples aplicaciones cliente consumen los mismos endpoints de cálculo centralizado.
+Proporcionar guías para el desarrollo de aplicaciones cliente en múltiples plataformas (escritorio, consola, web y móvil), detallando el proceso de consumo del servicio y comunicación con el servidor.
 
-### 3.3. Patrón de Arquitectura Modelo - Vista - Controlador (MVC)
-Se implementa una rigurosa separación de capas en cada uno de los cuatro clientes:
-- **Modelo (`model`):** Contiene el estado de sesión (`SessionModel`), tokens y estructuras de petición/respuesta (`ConversionRequest`, `ConversionResponse`).
-- **Vista (`view`):** Interfaces que presentan la información al usuario (terminal de comandos en `ConsoleView`, formularios Swing en `LoginForm` / `MainConversionForm`, vistas JSP o interfaces móviles).
-- **Controlador (`controller`):** Componente orquestador (`AuthController`, `ConversionController`) que gestiona eventos de la vista, coordina el consumo SOAP a través de proxies dinámicos y actualiza la interfaz.
+Explicar los fundamentos de la arquitectura SOA y las ventajas de utilizar un servidor Payara, destacando su capacidad para gestionar la interoperabilidad, la seguridad y el intercambio de datos estructurados entre sistemas heterogéneos.
 
-### 3.4. Patrón de Diseño GoF Strategy
-Para procesar las conversiones de unidades sin estructuras condicionales frágiles, se implementa el patrón **Strategy**:
-- **Interfaz `IConversor<U>`:** Define el contrato formal para el cómputo de conversiones entre unidades de una misma magnitud.
-- **Estrategias Concretas:** `ConversorLongitudStrategy`, `ConversorMasaStrategy` y `ConversorTemperaturaStrategy`, cada una implementando los factores algebraicos hacia una unidad base intermedia.
+### INSTALACIÓN Y CONFIGURACIÓN DE HERRAMIENTAS
 
-### 3.5. Servidor de Aplicaciones Payara Server y JAX-WS
-**Payara Server** es un servidor de aplicaciones empresarial certificado para Jakarta EE. Su motor nativo de servicios web (Metro / JAX-WS) permite publicar clases anotadas con `@WebService` directamente desde el archivo `.war` desplegado en el contexto web, gestionando automáticamente la generación del WSDL y el despacho concurrente de peticiones XML.
+Para dar inicio al desarrollo de la práctica, primero se deben instalar y configurar las herramientas esenciales. Para este proyectó se utilizó Windows 11.
 
----
+#### INSTALACIÓN Y CONFIGURACIÓN DE APACHE NETBEANS 24
 
-## 4. DESARROLLO DEL APLICATIVO
+Previo a este proceso se supone la instalación y configuración de Java, en este proyecto se utilizó JDK 21 descargado desde la página oficial de Oracle https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html y agregada a las variables de entorno. Se verifica la instalación ejecutando el siguiente comando en el símbolo del sistema o Powershell:
 
-### 4.1. Componente Servidor SOAP (`04. SERVIDOR`)
+| Java --version |
+| --- |
 
-Ubicado en `04. SERVIDOR/`, empaquetado como Maven WAR (`ServidorSOAP.war`).
+![Captura](imagenes/image2.png)
 
-```mermaid
-flowchart TD
-    subgraph ServidorSOAP ["04. SERVIDOR (Jakarta EE / JAX-WS)"]
-        direction TB
-        subgraph WebServices ["Servicios Web (@WebService)"]
-            WS_AUTH["AuthWebService (/ServicioAutenticacion)"]
-            WS_CONV["ConversionWebService (/ServicioConversion)"]
-        end
-        subgraph Seguridad ["Seguridad y Filtros"]
-            FC["FiltroCors (jakarta.servlet.Filter)"]
-            MEM[("Memoria RAM (SINBDD)<br/>Credenciales: MONSTER / MONSTER9<br/>Tokens activos: Set&lt;String&gt;")]
-        end
-        subgraph DominioStrategy ["Patrón GoF Strategy"]
-            ICONV["IConversor&lt;U&gt;"]
-            STR_LON["ConversorLongitudStrategy"]
-            STR_MAS["ConversorMasaStrategy"]
-            STR_TEM["ConversorTemperaturaStrategy"]
-            FACADE["ConversionUtil (Fachada)"]
-        end
-    end
+*_Figura 3. Versión de Java JDK 17 en el símbolo del sistema_*
 
-    WS_AUTH --> MEM
-    WS_CONV --> MEM
-    WS_CONV --> FACADE
-    FACADE --> STR_LON
-    FACADE --> STR_MAS
-    FACADE --> STR_TEM
-    STR_LON -.-> ICONV
-    STR_MAS -.-> ICONV
-    STR_TEM -.-> ICONV
-    FC -.-> WS_AUTH
-    FC -.-> WS_CONV
-```
+Para la instalación de la herramienta se accede a la página oficial de descarga de Apache https://netbeans.apache.org/front/main/download/ se selecciona la opción ‘Older Releases’, ‘Apache NetBeans 24’ y la opción para el sistema operativo.
 
-#### Paso 1: Configuración de Dependencias (`pom.xml`)
-Se establecen las librerías `jakarta.xml.ws-api` y `jaxws-rt` bajo el ámbito `<scope>provided</scope>` para Payara Server, y se configura el plugin `exec-maven-plugin` para permitir ejecución standalone alternativa:
+![Captura](imagenes/image3.png)
 
-```xml
-<groupId>ec.edu.monster</groupId>
-<artifactId>ServidorSOAP</artifactId>
-<version>1.0.0</version>
-<packaging>war</packaging>
+*_Figura 4. Página oficial de descarga de Apache NetBeans_*
 
-<properties>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <netbeans.hint.deploy.server>pfv5ee8</netbeans.hint.deploy.server>
-</properties>
+Una vez seleccionada la opción para el sistema operativo, se inicia la descarga y se obtendrá el siguiente ejecutable.
 
-<dependencies>
-    <!-- Jakarta XML Web Services API (provided para Payara Server) -->
-    <dependency>
-        <groupId>jakarta.xml.ws</groupId>
-        <artifactId>jakarta.xml.ws-api</artifactId>
-        <version>4.0.1</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-```
+![Captura](imagenes/image4.png)
 
-#### Paso 2: Descriptores de Despliegue en `src/main/webapp/WEB-INF/`
-1. **`glassfish-web.xml` / `payara-web.xml`:** Establece el contexto `/ServidorSOAP`:
-   ```xml
-   <?xml version="1.0" encoding="UTF-8"?>
-   <!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" 
-       "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
-   <glassfish-web-app>
-       <context-root>/ServidorSOAP</context-root>
-   </glassfish-web-app>
-   ```
-2. **`beans.xml`:** Activa CDI con `bean-discovery-mode="annotated"`.
-3. **`web.xml`:** Configura el filtro CORS para permitir encabezados y peticiones heterogéneas.
+*_Figura 5. Instalador Apache NetBeans 24_*
 
-#### Paso 3: Patrón Strategy para Conversión de Unidades
-Se define la interfaz `IConversor<U>`:
-```java
-public interface IConversor<U> {
-    double convertir(double valor, U origen, U destino);
-    boolean soporta(U unidad);
+Al ejecutar el instalador se muestra la siguiente pantalla, en el proceso de instalación se aceptan los términos y condiciones, se selecciona la ubicación de la descarga y se finaliza la instalación.
+
+![Captura](imagenes/image5.png)
+
+*_Figura 6. Pantalla inicial de instalación NetBeans 24_*
+
+Una vez finalizada la descarga se ejecuta la aplicación y se iniciará Apache NetBeans 24.
+
+![Captura](imagenes/image6.png)
+
+*_Figura 7. Aplicación Apache NetBeans 24_*
+
+#### INSTALACIÓN Y CONFIGURACIÓN DE ANDROID STUDIO
+
+Para la instalación de la herramienta se accede a la página oficial de descarga de Android Studio https://developer.android.com/studio se selecciona la opción de descarga, se aceptan términos y condiciones e iniciará la descarga.
+
+![Captura](imagenes/image7.png)
+
+*_Figura 8. Página oficial de descarga de Android Studio_*
+
+Al finalizar la descarga se obtendrá el instalador ejecutable.
+
+![Captura](imagenes/image8.png)
+
+*_Figura 9. Ejecutable Android Studio_*
+
+Al ejecutar el instalador se mostrará la siguiente pantalla:
+
+![Captura](imagenes/image9.png)
+
+*_Figura 10. Pantalla inicial de instalación de Android Studio_*
+
+Durante la instalación se selecciona los componentes a instalar, ubicación y carpeta de inicio. Al finalizar la instalación se iniciará la configuración en donde se selecciona el Setup Standard se aceptan términos y condiciones y se inicia la descarga de componentes.
+
+![Captura](imagenes/image10.png)
+
+*_Figura 11. Aplicación Android Studio_*
+
+### ESTRUCTURA DE PROYECTO
+
+Para la elaboración del proyecto, en primer lugar, es necesario crear una carpeta en la cual se alojarán los archivos necesarios para su funcionamiento.
+
+![Captura](imagenes/image11.png)
+
+*_Figura 1. Creación de la carpeta raíz_*
+
+Dentro de la carpeta principal del proyecto, se debe ubicar la siguiente subestructura.
+
+![Captura](imagenes/image12.png)
+
+*_Figura 2. Estructura inicial del proyecto_*
+
+Todo esto con la finalidad de llevar buenas prácticas y mantener organizado el proyecto.
+
+## APLICACIONES SERVIDOR
+
+### CREACIÓN DEL PROYECTO SERVIDOR
+
+Se crea el proyecto en NetBeans seleccionando ‘New Project’, ‘Java with Maven’ y ‘Web Application’. Se coloca el nombre del proyecto, ubicación y grupo. Se selecciona el servidor Payara y la versión de Jakarta. Finalmente se hace clic en ‘Finish’.
+
+![Captura](imagenes/image13.png)
+
+*_Figura 12. Creación del proyecto – Servidor SOAP_*
+
+![Captura](imagenes/image14.png)
+
+*_Figura 13. Configuración del proyecto 1 - Servidor SOAP_*
+
+![Captura](imagenes/image15.png)
+
+*_Figura 14. Configuración del proyecto 2 - Servidor SOAP_*
+
+### CODIFICACIÓN DEL PROYECTO SERVIDOR
+
+#### CREACIÓN DE PAQUETES
+
+Al tratarse de una arquitectura orientada a servicios (SOA) sin conexión a base de datos, se crea la estructura del proyecto enfocada en las dos divisiones funcionales principales. Se incluyen los paquetes: ec.edu.espe.servidorconversiones.WebServices, modelo, pruebas, servicios y vistas, siguiendo el patrón arquitectónico MVC.
+
+![Captura](imagenes/image16.png)
+
+*_Figura 15. Estructura de paquetes - Servidor SOAP_*
+
+#### CREACIÓN DE WEBSERVICES
+
+Para la exposición de las funcionalidades hacia los clientes (Android y Java), se utiliza la especificación Jakarta XML Web Services (JAX-WS). En esta capa se definen los Endpoints que transforman las peticiones XML en llamadas a los servicios de lógica de negocio anteriormente creados.
+
+Se utilizan anotaciones de Jakarta EE como @WebService para marcar la clase como un servicio web y @WebMethod para exponer cada función específica (Login y Conversiones). Esta estructura permite que el servidor Payara genere automáticamente el archivo WSDL (Web Services Description Language), que sirve como el contrato de interfaz para cualquier cliente que desee consumir el servicio.
+
+![Captura](imagenes/image17.png)
+
+*_Figura 16. Estructura de paquetes - WebServices_*
+
+Tabla 1. Clase WSLogin
+
+package ec.edu.monster.WebServices;
+
+import jakarta.jws.WebService;
+
+import jakarta.jws.WebMethod;
+
+import jakarta.jws.WebParam;
+
+import java.util.UUID;
+
+import java.util.HashMap;
+
+import java.util.Map;
+
+/**
+
+* @author Monster
+
+*/
+
+@WebService(serviceName = "WSLogin")
+
+public class WSLogin {
+
+// Guarda los tokens validos
+
+public static Map<String, Boolean> tokensValidos = new HashMap<>();
+
+@WebMethod(operationName = "login")
+
+public String login(@WebParam(name = "usuario") String usuario, @WebParam(name = "clave") String clave) {
+
+if ("monster".equals(usuario) && "monster9".equals(clave)) {
+
+String token = UUID.randomUUID().toString(); //generar token
+
+tokensValidos.put(token, true); //guardar token valido
+
+return token;
+
 }
-```
-Y las tres estrategias concretas para el catálogo de 5 unidades por magnitud:
-- **`UnidadLongitud` (Base: Metro):** Metro ($1.0$), Centímetro ($0.01$), Pie ($0.3048$), Yarda ($0.9144$), Milla ($1609.34$).
-- **`UnidadMasa` (Base: Kilogramo):** Kilogramo ($1.0$), Gramo ($0.001$), Libra ($0.453592$), Onza ($0.0283495$), Quintal ($45.3592$).
-- **`UnidadTemperatura` (5 Escalas):** Celsius ($^\circ\text{C}$), Fahrenheit ($^\circ\text{F}$), Kelvin ($\text{K}$), Newton ($^\circ\text{N}$), Réaumur ($^\circ\text{Ré}$).
 
-Formateo numérico estricto a **2 decimales con punto (`.`)**:
-```java
-public static double redondear(double valor) {
-    return BigDecimal.valueOf(valor)
-            .setScale(2, RoundingMode.HALF_UP)
-            .doubleValue();
+return "ERROR: Credenciales inválidas";
+
 }
-```
 
-#### Paso 4: Servicios Web Expuestos y Contratos WSDL
+}
 
-| Servicio Web | Clase Implementadora | Operaciones Principales | Endpoint WSDL en Payara |
-| :--- | :--- | :--- | :--- |
-| **Autenticación** | `AuthWebService` | `login(usuario, contrasenia)`<br/>`validarToken(token)`<br/>`cerrarSesion(token)` | `http://localhost:8080/ServidorSOAP/ServicioAutenticacion?wsdl` |
-| **Conversión** | `ConversionWebService` | `convertirLongitud(token, valor, origen, destino)`<br/>`convertirMasa(...)`<br/>`convertirTemperatura(...)` | `http://localhost:8080/ServidorSOAP/ServicioConversion?wsdl` |
+Tabla 2. Clase WSLongitud
 
----
+package ec.edu.monster.WebServices;
 
-### 4.2. Cliente de Consola (`04. CLICON`)
+import ec.edu.monster.servicios.ConversorLongitud; // Importas tu lógica movida
 
-- **Estructura MVC:** Paquetes `model`, `view`, `controller` y `ws`.
-- **`SoapClientManager.java`:** Conector dinámico JAX-WS que auto-detecta la URL activa de Payara (`/04.%20SERVIDOR` o `/ServidorSOAP`) e inyecta la propiedad `ENDPOINT_ADDRESS_PROPERTY`.
-- **Ejecución desde NetBeans:** Clic derecho sobre `04. CLICON` $\rightarrow$ **Run** (`F6`).
-- **Ejecución desde Terminal CLI:**
-  ```bash
-  cd "04. CLICON"
-  mvn clean compile exec:java
-  ```
+import jakarta.jws.WebService;
 
----
+import jakarta.jws.WebMethod;
 
-### 4.3. Cliente de Escritorio (`04. CLIESC`)
+import jakarta.jws.WebParam;
 
-- **Tecnología Gráfica:** Java Swing con Look and Feel **FlatLaf Light** (con fallback automático al estilo nativo del sistema operativo).
-- **Vistas:**
-  - `LoginForm.java`: Pantalla de autenticación con credenciales `MONSTER` / `MONSTER9`.
-  - `MainConversionForm.java`: Ventana ejecutiva con pestañas de magnitudes (Longitud, Masa, Temperatura), combos sincronizados con las 5 unidades estrictas y campo numérico protegido con filtro de 16 caracteres.
-- **Ejecución desde NetBeans:** Clic derecho sobre `04. CLIESC` $\rightarrow$ **Run** (`F6`).
+/**
 
----
+* @author Monster
 
-### 4.4. Cliente Web (`04. CLIWEB`)
+*/
 
-- **Arquitectura:** JSP, Servlets MVC y servidor embebido Jetty / Tomcat.
-- **Vistas Web:** Formularios estilizados con diseño corporativo moderno, cálculo reactivo y presentación de resultados a 2 decimales.
-- **Ejecución:** Clic derecho sobre `04. CLIWEB` $\rightarrow$ **Run** (`F6`).  
-- **URL de Acceso:** `http://localhost:8081/ClienteWeb/`
+@WebService(serviceName = "WSLongitud")
 
----
+public class WSLongitud {
 
-### 4.5. Cliente Móvil Android (`04. CLIMOV`)
+ConversorLongitud servicio = new ConversorLongitud();
 
-- **Tecnología:** Android SDK 35, Java 17, Gradle 8.11, librería **ksoap2-android 3.6.4**.
-- **Configuración de Red Especial:**
-  - Emulador de Android Studio: Utiliza la IP puente **`http://10.0.2.2:8080/04.%20SERVIDOR/`** (o `/ServidorSOAP/`).
-  - Celular físico: Apunta a la IP local de la computadora por Wi-Fi.
-- **Ejecución:** Abrir en Android Studio y presionar **Run ▶️** (`Shift + F10`).
+@WebMethod(operationName = "convertirLongitud")
 
----
+public double convertirLongitud(
 
-## 5. GUÍA PASO A PASO PARA COMPILAR Y DESPLEGAR EL SERVIDOR
+@WebParam(name = "valor") double valor,
 
-### Opción A: Despliegue en Payara Server 6 (Modo Oficial)
+@WebParam(name = "unidadOrigen") String unidadOrigen,
 
-1. **Iniciar Payara Server en NetBeans:**
-   Pestaña **Services** $\rightarrow$ **Servers** $\rightarrow$ Clic derecho en **Payara Server** $\rightarrow$ **Start**.
-2. **Compilar el archivo WAR:**
-   ```powershell
-   cd "TI.1.1. PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09\04. SERVIDOR"
-   mvn clean package
-   ```
-3. **Desplegar en Payara:**
-   Clic derecho sobre el proyecto `04. SERVIDOR` en NetBeans $\rightarrow$ **Run** (o **Deploy**).
-4. **Verificación en el Navegador:**
-   - `http://localhost:8080/ServidorSOAP/ServicioAutenticacion?wsdl`
-   - `http://localhost:8080/ServidorSOAP/ServicioConversion?wsdl`
+@WebParam(name = "unidadDestino") String unidadDestino,
 
-### Opción B: Ejecución Standalone Ligera (`Publisher.java`)
+@WebParam(name = "token") String token) {
 
-```powershell
-cd "TI.1.1. PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09\04. SERVIDOR"
-mvn exec:java
-```
-El servidor publicará los endpoints SOAP en el puerto `8080` utilizando el servidor HTTP nativo del JDK.
+// Validación de seguridad obligatoria
 
----
+if (WSLogin.tokensValidos.containsKey(token)) {
 
-## 6. PRUEBAS Y VALIDACIÓN DEL SISTEMA
+return servicio.convertirLongitud(valor, unidadOrigen, unidadDestino);
 
-| ID | Caso de Prueba | Entrada | Salida Esperada | Estado |
-| :--- | :--- | :--- | :--- | :--- |
-| **CP-01** | Autenticación válida | `usuario = "MONSTER"`, `clave = "MONSTER9"` | `exito = true`, Token UUID emitido | ✅ Aprobado |
-| **CP-02** | Autenticación inválida | `usuario = "MONSTER"`, `clave = "1234"` | `exito = false`, Mensaje de error | ✅ Aprobado |
-| **CP-03** | Conversión sin token | Token nulo o vacío enviado a `convertirLongitud` | `exito = false`, Mensaje "No autorizado" | ✅ Aprobado |
-| **CP-04** | Conversión de Longitud | 1000 Metros a Centímetros (con token) | Resultado: `100000.00` | ✅ Aprobado |
-| **CP-05** | Conversión de Masa | 1 Quintal a Kilogramos (con token) | Resultado: `45.36` | ✅ Aprobado |
-| **CP-06** | Conversión de Temperatura | 0 Celsius a Réaumur (con token) | Resultado: `0.00` | ✅ Aprobado |
-| **CP-07** | Formateo estricto a 2 decimales | 1 Metro a Pies (con token) | Resultado: `3.28` | ✅ Aprobado |
-| **CP-08** | Límite de 16 caracteres | Entrada numérica de 18 caracteres | Bloqueo automático a 16 caracteres | ✅ Aprobado |
+} else {
 
----
+return -999999.401;
 
-## 7. CONCLUSIONES
+}
 
-1. **Rigor Contractual de SOAP / WSDL:** El uso de sobres SOAP y contratos WSDL garantiza una interoperabilidad estricta y tipificada entre los clientes y el servidor central, minimizando discrepancias en los tipos de datos transmitidos.
-2. **Despliegue Empresarial en Payara Server:** El despliegue sobre Payara Server cumple plenamente con el requisito no funcional RNF-004 de la cátedra, permitiendo al servidor de aplicaciones gestionar el ciclo de vida y los hilos de atención concurrentes.
-3. **Mantenibilidad con Patrón Strategy y MVC:** La integración del patrón GoF Strategy permitió estructurar limpiamente las fórmulas matemáticas de las 5 unidades por magnitud, desacoplándolas por completo de la lógica de red JAX-WS y facilitando las pruebas unitarias automatizadas.
-4. **Cumplimiento del Esquema SINBDD:** La persistencia volátil en memoria RAM cumplió a cabalidad con la restricción de ausencia de motores relacionales, proveyendo seguridad mediante credenciales quemadas (`MONSTER` / `MONSTER9`) y revocación de sesiones.
+}
 
----
+}
 
-## 8. RECOMENDACIONES
+Tabla 3. Clase WSMasa
 
-1. **Gestión de Bloqueos de Archivos en Windows:** Cuando Payara Server esté en ejecución, evitar ejecutar `mvn clean` sobre la carpeta `target` para prevenir errores de acceso bloqueado en los archivos `.jar` de Metro. Utilizar `mvn package` o reiniciar el dominio si es necesario limpiar la carpeta `target`.
-2. **Validación de Conectividad en Clientes:** Verificar siempre que los servicios WSDL respondan en el navegador (`http://localhost:8080/.../ServicioAutenticacion?wsdl`) antes de lanzar los clientes de consola, escritorio, web o móvil.
+package ec.edu.monster.WebServices;
 
----
+import ec.edu.monster.servicios.ConversorMasa;
 
-## 9. REFERENCIAS BIBLIOGRÁFICAS
+import jakarta.jws.WebService;
 
-1. **W3C.** (2007). *SOAP Version 1.2 Part 1: Messaging Framework (Second Edition)*. W3C Recommendation. https://www.w3.org/TR/soap12-part1/
-2. **W3C.** (2001). *Web Services Description Language (WSDL) 1.1*. W3C Note. https://www.w3.org/TR/wsdl.html
-3. **Payara Services Ltd.** (2024). *Payara Server Documentation*. https://docs.payara.fish/
-4. **Gamma, E., Helm, R., Johnson, R., & Vlissides, J.** (1994). *Design Patterns: Elements of Reusable Object-Oriented Software*. Addison-Wesley.
-5. **Oracle Corporation.** (2023). *Java API for XML Web Services (JAX-WS)*. Jakarta XML Web Services Specification 4.0.
+import jakarta.jws.WebMethod;
+
+import jakarta.jws.WebParam;
+
+/**
+
+* @author Monster
+
+*/
+
+@WebService(serviceName = "WSMasa")
+
+public class WSMasa {
+
+ConversorMasa servicio = new ConversorMasa();
+
+@WebMethod(operationName = "convertirMasa")
+
+public double convertirMasa(
+
+@WebParam(name = "valor") double valor,
+
+@WebParam(name = "unidadOrigen") String unidadOrigen,
+
+@WebParam(name = "unidadDestino") String unidadDestino,
+
+@WebParam(name = "token") String token) {
+
+if (WSLogin.tokensValidos.containsKey(token)) {
+
+return servicio.convertirMasa(valor, unidadOrigen, unidadDestino);
+
+} else {
+
+return -9999999.401;
+
+}
+
+}
+
+}
+
+Tabla 4. Clase WSTemperatura
+
+package ec.edu.monster.WebServices;
+
+import ec.edu.monster.servicios.ConversorTemperatura;
+
+import jakarta.jws.WebService;
+
+import jakarta.jws.WebMethod;
+
+import jakarta.jws.WebParam;
+
+/**
+
+* @author Monster
+
+*/
+
+@WebService(serviceName = "WSTemperatura")
+
+public class WSTemperatura {
+
+ConversorTemperatura servicio = new ConversorTemperatura();
+
+@WebMethod(operationName = "convertirTemperatura")
+
+public double convertirTemperatura(
+
+@WebParam(name = "valor") double valor,
+
+@WebParam(name = "opcionOrigen") String opcionOrigen,
+
+@WebParam(name = "opcionDestino") String opcionDestino,
+
+@WebParam(name = "token") String token) {
+
+if (WSLogin.tokensValidos.containsKey(token)) {
+
+return servicio.convertirTemperatura(valor, opcionOrigen, opcionDestino);
+
+} else {
+
+return -9999999.401;
+
+}
+
+}
+
+}
+
+#### CREACIÓN DE SERVICIO
+
+En esta sección se implementa la "capa de servicio", que es el cerebro de la aplicación. Aquí se separa la lógica matemática y de seguridad del protocolo de comunicación. Al no contar con una base de datos, toda la gestión de datos se realiza en memoria, optimizando la velocidad de respuesta.
+
+Servicio de Seguridad: Encargado de la validación de credenciales "hardcoded" y la generación/verificación de tokens de sesión para proteger los puntos de entrada del servidor.
+
+Servicio de Conversiones: Contiene los algoritmos y factores de conversión para las magnitudes de longitud, masa y temperatura. Está diseñado para ser escalable, permitiendo añadir nuevas unidades sin afectar la estructura principal.
+
+![Captura](imagenes/image18.png)
+
+*_Figura 17. Estructura de paquetes - servicios_*
+
+Tabla 5. Clase ConversorLongitud
+
+| package ec.edu.monster.servicios;/** * * @author Soto */public class ConversorLongitud { public double convertirLongitud(double valor, String unidadOrigen, String unidadDestino) { double valorEnMetros = 0.0; String origen = unidadOrigen.toLowerCase().trim(); String destino = unidadDestino.toLowerCase().trim(); try { //Lleva cualquier unidad a metros switch (origen) { case "centimetros": valorEnMetros = valor / 100.0; break; case "metros": valorEnMetros = valor; break; case "pies": valorEnMetros = valor * 0.3048; break; case "yardas": valorEnMetros = valor * 0.9144; break; case "millas": valorEnMetros = valor * 1609.34; break; default: return -999999.404; } //Lleva de metros a la unidad de destino switch (destino) { case "centimetros": return valorEnMetros * 100.0; case "metros": return valorEnMetros; case "pies": return valorEnMetros / 0.3048; case "yardas": return valorEnMetros / 0.9144; case "millas": return valorEnMetros / 1609.34; default: return -999999.404; } } catch (Exception e) { return -999999.500; //error de calculo } }} |
+| --- |
+
+Tabla 6. Clase ConversorMasa
+
+| package ec.edu.monster.servicios;/** * * @author Soto */public class ConversorMasa { public double convertirMasa(double valor, String unidadOrigen, String unidadDestino) { double valorEnKilos = 0.0; String origen = unidadOrigen.toLowerCase(); String destino = unidadDestino.toLowerCase(); try { //Lleva cualquier unidad a kg switch (origen) { case "gramos": valorEnKilos = valor / 1000.0; break; case "kilogramos": valorEnKilos = valor; break; case "onzas": valorEnKilos = valor * 0.0283495; break; case "libras": valorEnKilos = valor * 0.453592; break; case "quintales": valorEnKilos = (valor * 100.0) * 0.453592; break; default: return -999999.404; //codigo de error para unidad no existente } //De kg a la unidad destino switch (destino) { case "gramos": return valorEnKilos * 1000.0; case "kilogramos": return valorEnKilos; case "onzas": return valorEnKilos / 0.0283495; case "libras": return valorEnKilos / 0.453592; case "quintales": return (valorEnKilos / 0.453592) / 100.0; default: return -999999.404; //codigo de error de unidad no existente } } catch (Exception e) { return -999999.500; //error de calculo } }} |
+| --- |
+
+Tabla 7. Clase ConversorTemperatura
+
+| package ec.edu.monster.servicios;/** * * @author Soto */public class ConversorTemperatura { public double convertirTemperatura(double valor, String opcionOrigen, String opcionDestino) { double valorEnCelsius = 0.0; String origen = opcionOrigen.toLowerCase(); String destino = opcionDestino.toLowerCase(); try { //Lleva cualquier temperatura a celsius switch (origen) { case "fahrenheit": valorEnCelsius = (valor - 32) * 5.0 / 9.0; break; case "kelvin": valorEnCelsius = valor - 273.15; break; case "celsius": valorEnCelsius = valor; break; case "newton": valorEnCelsius = valor * 100.0 / 33.0; break; case "reaumur": valorEnCelsius = valor * 5.0 / 4.0; break; default: return -999999.404; } //Lleva de celsius a la unidad de destino switch (destino) { case "fahrenheit": return (valorEnCelsius * 9.0 / 5.0) + 32; case "kelvin": return valorEnCelsius + 273.15; case "celsius": return valorEnCelsius; case "newton": return valorEnCelsius * 33.0 / 100.0; case "reaumur": return valorEnCelsius * 4.0 / 5.0; default: return -999999.404; } }catch (Exception e) { return -999999.500; //error de calculo } }} |
+| --- |
+
+### PRUEBAS DE LOS SERVICIOS
+
+Al trabajar con una arquitectura basada en SOAP, la validación de que el servidor está en línea y operando correctamente se realiza verificando la generación del archivo WSDL (Web Services Description Language). Este documento en formato XML es generado automáticamente por el servidor Payara y actúa como el contrato de comunicación que los clientes deberán consumir.
+
+Analizando la estructura de la aplicación, el sistema expone cuatro servicios web principales (Endpoints) utilizando la especificación JAX-WS:
+
+WSLogin: Punto de entrada para el módulo de seguridad. Recibe la petición del cliente y procesa la validación de credenciales para permitir o denegar el acceso a las funciones del servidor.
+
+WSLongitud: Expone las operaciones matemáticas para las conversiones de medidas de longitud soportadas por el sistema (centímetros, metros, pies, yardas y millas).
+
+WSMasa: Se encarga de recibir los parámetros y retornar las transformaciones entre las distintas unidades de masa (gramos, kilogramos, onzas, libras y quintales).
+
+WSTemperatura: Maneja las peticiones referentes a las variaciones térmicas, permitiendo convertir entre Fahrenheit, Kelvin, Celsius, Newton y Réaumur.
+
+Para probar la correcta exposición de los métodos, se utilizó la herramienta de prueba de Web Services de NetBeans, la cual despliega el archivo WSDL en el navegador.
+
+![Captura](imagenes/image19.png)
+
+*_Figura 18. Archivo WSDL generado por el servidor Payara detallando el esquema XML de los endpoints._*
+
+![Captura](imagenes/image20.png)
+
+*_Figura 19. Prueba 1: Login._*
+
+![Captura](imagenes/image21.png)
+
+*_Figura 20. Prueba 2: Conversor de Longitud._*
+
+![Captura](imagenes/image22.png)
+
+*_Figura 21. Prueba 3: Conversor de masa._*
+
+![Captura](imagenes/image23.png)
+
+*_Figura 22. Prueba 4: Conversor de temperatura._*
+
+## CODIFICACIÓN DE LOS CLIENTES
+
+### CLIENTE CONSOLA
+
+#### CREACIÓN DEL PROYECTO
+
+El proyecto se crea usando NetBeans seleccionando ‘Nuevo Proyecto’, ‘Java with Maven’ y ‘Java Application’.
+
+![Captura](imagenes/image24.png)
+
+*_Figura 23. Creación del proyecto - Cliente consola_*
+
+En este paso se define el nombre del proyecto y la ubicación.
+
+![Captura](imagenes/image25.png)
+
+*_Figura 24. Configuración del proyecto - Cliente consola_*
+
+#### ESTRUCTURA DEL PROYECTO
+
+Una vez creado el proyecto se crea la estructura de paquetes basada en el patrón MVC
+
+![Captura](imagenes/image26.png)
+
+*_Figura 25. Estructura del proyecto - Cliente consola_*
+
+### CODIFICACIÓN DEL PROYECTO CLIENTE CONSOLA
+
+#### CREACIÓN DE MODELOS Y VISTAS
+
+Dado que no se requiere persistencia local ni mapeo de entidades complejas, el modelo se enfoca en la organización lógica de las opciones. Se crea la clase CatalogoUnidades dentro del paquete modelo para gestionar paramétricamente los tipos de unidades de medida disponibles.
+
+En la capa de interacción, dentro del paquete vista, se implementan las clases InterfazConsola y el enumerador OpcionMenu. Estas clases se encargan de abstraer la clase Scanner, capturar los datos por teclado de forma segura y desplegar los menús interactivos al usuario sin mezclar la lógica de negocio.
+
+![Captura](imagenes/image27.png)
+
+*_Figura 26. Creación de modelos y vistas - Cliente consola_*
+
+Tabla 8. Clase CatalogoUnidades - Cliente consola
+
+| package ec.edu.monster.clienteconsola.modelo;/** * * @author joanc */public class CatalogoUnidades { public enum Longitud { CENTIMETROS, METROS, MILLAS, YARDAS, PIES } public enum Masa { GRAMOS, KILOGRAMOS, ONZAS, LIBRAS, QUINTALES } public enum Temperatura { CELSIUS, FAHRENHEIT, KELVIN, NEWTON, REAUMUR }} |
+| --- |
+
+Tabla 9. Clase InterfazConsola - Cliente consola
+
+| package ec.edu.monster.clienteconsola.vista;import java.util.Scanner;/** * * @author joanc */public class InterfazConsola { private final Scanner entrada; public InterfazConsola() { this.entrada = new Scanner(System.in); } public OpcionMenu seleccionarConversion() { System.out.println("\n--- Menú de Conversión de Unidades ---"); for (OpcionMenu opcion : OpcionMenu.values()) { System.out.println(opcion.getNumero() + ". " + opcion.getDescripcion()); } System.out.print("Selecciona una opción: "); String seleccion = entrada.nextLine(); for (OpcionMenu opcion : OpcionMenu.values()) { if (opcion.getNumero().equals(seleccion)) { return opcion; } } System.out.println("Opción inválida. Intenta de nuevo."); return null; } public <T extends Enum<T>> T seleccionarUnidad(String titulo, T[] opciones) { System.out.println("\n--- " + titulo + " ---"); for (int i = 0; i < opciones.length; i++) { System.out.println((i + 1) + ". " + opciones[i].name()); } System.out.print("Elige una unidad: "); try { int seleccion = Integer.parseInt(entrada.nextLine()); if (seleccion >= 1 && seleccion <= opciones.length) { return opciones[seleccion - 1]; } } catch (NumberFormatException e) { // Ignorar para que caiga en el error de abajo } System.out.println("Unidad inválida. Operación cancelada."); return null; } public Double pedirValorAConvertir() { System.out.print("\nIngresa el valor a convertir: "); try { return Double.valueOf(entrada.nextLine()); } catch (NumberFormatException e) { System.out.println("Debe ser un número válido."); return null; } } public String pedirTexto(String mensaje) { System.out.print(mensaje); return entrada.nextLine().trim(); }} |
+| --- |
+
+Tabla 10. Clase OpcionMenu - Cliente consola
+
+| package ec.edu.monster.clienteconsola.vista;/** * * @author joanc */public enum OpcionMenu { CONVERTIR_LONGITUD("1", "Convertir Longitud"), CONVERTIR_MASA("2", "Convertir Masa"), CONVERTIR_TEMPERATURA("3", "Convertir Temperatura"), SALIR("4", "Salir"); private final String numero; private final String descripcion; OpcionMenu(String numero, String descripcion) { this.numero = numero; this.descripcion = descripcion; } public String getNumero() { return numero; } public String getDescripcion() { return descripcion; }} |
+| --- |
+
+CONSUMO DEL SERVICIO SOAP (CONTROLADOR)
+
+En esta sección se reemplazan los clientes REST tradicionales. Para la comunicación con el servidor, se utilizó la herramienta "Web Service Client" de NetBeans para generar los artefactos JAX-WS a partir del WSDL expuesto por Payara.
+
+![Captura](imagenes/image28.png)
+
+*_Figura 27. Creación de controlador - Cliente consola_*
+
+Se crea la clase ControladorConversiones en la carpeta controlador. Esta clase centraliza la comunicación y se encarga de instanciar los puertos de los servicios SOAP (WSLogin, WSLongitud, WSMasa, WSTemperatura). Su función es recibir los datos de la vista, invocar las operaciones remotas (pasando los parámetros de unidad de origen, destino y valor) y devolver el resultado procesado.
+
+Tabla 11. Clase ControladorConversiones - Cliente consola
+
+| package ec.edu.monster.clienteconsola.controlador;import ec.edu.monster.clientesws.*;/** * * @author joanc */public class ControladorConversiones { private String token; public boolean iniciarSesion(String usuario, String clave) { String msgCredencialesInvalidas = "ERROR: Credenciales inválidas"; try { WSLogin_Service service = new WSLogin_Service(); this.token = service.getWSLoginPort().login(usuario, clave); if(this.token.equals(msgCredencialesInvalidas)){ System.out.println("Credenciales incorrectas"); return false; } return true; } catch (Exception e) { System.err.println("Error en la comunicación con el servicio: " + e.getMessage()); return false; } } public double convertirLongitud(double valor, String origen, String destino) throws Exception { WSLongitud_Service service = new WSLongitud_Service(); return service.getWSLongitudPort().convertirLongitud(valor, origen, destino, token); } public double convertirTemperatura(double valor, String origen, String destino) throws Exception { WSTemperatura_Service service = new WSTemperatura_Service(); return service.getWSTemperaturaPort().convertirTemperatura(valor, origen, destino, token); } public double convertirMasa(double valor, String origen, String destino) throws Exception { WSMasa_Service service = new WSMasa_Service(); return service.getWSMasaPort().convertirMasa(valor, origen, destino, token); }} |
+| --- |
+
+CLASE PRINCIPAL (EJECUCIÓN)
+
+Finalmente, se codifica la clase ClienteConsola.java que orquesta el flujo completo de la aplicación. El sistema inicia solicitando credenciales al usuario para invocar el servicio de seguridad; únicamente si la autenticación es exitosa, se instancia la interfaz y el controlador para permitir el uso de las operaciones de conversión.
+
+![Captura](imagenes/image29.png)
+
+*_Figura 28. Creación de clase principal - Cliente consola_*
+
+Tabla 12. Clase ControladorConversiones - Cliente consola
+
+| package ec.edu.monster.clienteconsola;import ec.edu.monster.clienteconsola.controlador.ControladorConversiones;import ec.edu.monster.clienteconsola.vista.InterfazConsola;import ec.edu.monster.clienteconsola.vista.OpcionMenu;import ec.edu.monster.clienteconsola.modelo.CatalogoUnidades;public class ClienteConsola { public static void main(String[] args) { InterfazConsola interfaz = new InterfazConsola(); // Instanciamos nuestro nuevo controlador ControladorConversiones controlador = new ControladorConversiones(); System.out.println("=== BIENVENIDO AL SISTEMA DE CONVERSIONES ==="); boolean autenticado = false; while (!autenticado) { // Nota: Debes implementar estos dos métodos en InterfazConsola String usuario = interfaz.pedirTexto("Ingresa tu usuario: "); String clave = interfaz.pedirTexto("Ingresa tu clave: "); System.out.println("[Autenticando...]"); autenticado = controlador.iniciarSesion(usuario, clave); if (!autenticado) { System.out.println("Credenciales incorrectas o error de red. Intenta nuevamente.\n"); } } System.out.println("Sesión iniciada con éxito\n"); OpcionMenu opcion; do { opcion = interfaz.seleccionarConversion(); if (opcion != null) { switch (opcion) { case CONVERTIR_LONGITUD -> ejecutarFlujoConversion( interfaz, CatalogoUnidades.Longitud.values(), (v, o, d) -> controlador.convertirLongitud(v, o, d) ); case CONVERTIR_TEMPERATURA -> ejecutarFlujoConversion( interfaz, CatalogoUnidades.Temperatura.values(), (v, o, d) -> controlador.convertirTemperatura(v, o, d) ); case CONVERTIR_MASA -> ejecutarFlujoConversion( interfaz, CatalogoUnidades.Masa.values(), (v, o, d) -> controlador.convertirMasa(v, o, d) ); case SALIR -> System.out.println("Saliendo..."); } } } while (opcion != OpcionMenu.SALIR); } /** * Interfaz funcional simplificada. Ya no maneja credenciales. */ @FunctionalInterface private interface OperacionSOAP { double ejecutar(double valor, String origen, String destino) throws Exception; } /** * Flujo de UI genérico. */ private static <T extends Enum<T>> void ejecutarFlujoConversion( InterfazConsola interfaz, T[] valoresCatalogo, OperacionSOAP operacion) { T origen = interfaz.seleccionarUnidad("Selecciona la unidad de ORIGEN", valoresCatalogo); if (origen == null) return; T destino = interfaz.seleccionarUnidad("Selecciona la unidad de DESTINO", valoresCatalogo); if (destino == null) return; Double valor = interfaz.pedirValorAConvertir(); if (valor == null) return; System.out.println("\n[Llamando Controlador...] Convirtiendo " + valor + " de " + origen.name() + " a " + destino.name()); try { // El controlador maneja la complejidad subyacente double result = operacion.ejecutar(valor, origen.name(), destino.name()); System.out.println("Resultado = " + result); } catch (Exception ex) { System.err.println("Error durante la conversión: " + ex.getMessage()); } }} |
+| --- |
+
+#### EJECUCIÓN DEL CLIENTE DE CONSOLA
+
+![Captura](imagenes/image30.png)
+
+*_Figura 29. Login - Cliente consola_*
+
+![Captura](imagenes/image31.png)
+
+*_Figura 30. Conversión de Longitud - Cliente consola_*
+
+![Captura](imagenes/image32.png)
+
+*_Figura 31. Conversión de Masa - Cliente consola_*
+
+![Captura](imagenes/image33.png)
+
+*_Figura 32. Conversión de Temperatura - Cliente consola_*
+
+### CLIENTE ESCRITORIO
+
+#### CREACIÓN DEL PROYECTO
+
+El proyecto se crea de igual manera que el cliente de consola Java Application
+
+#### ESTRUCTURA DEL PROYECTO
+
+El cliente de escritorio con interfaz gráfica se estructuró bajo el patrón MVC. Se crearon los paquetes modelo, vista y controlador para separar el diseño visual de la lógica de consumo del servicio web.
+
+![Captura](imagenes/image34.png)
+
+*_Figura 33. Estructura del proyecto - Cliente escritorio_*
+
+### CODIFICACIÓN DEL PROYECTO CLIENTE ESCRITORIO
+
+#### CREACIÓN DE MODELOS
+
+Al no requerir base de datos, en el paquete modelo solo se manejan clases auxiliares y enumeradores. Estos sirven exclusivamente para llenar las opciones de listas desplegables en las ventanas.
+
+![Captura](imagenes/image35.png)
+
+*_Figura 34. Creación de modelo - Cliente escritorio_*
+
+CREACIÓN DE CONTROLADOR
+
+Para conectar la interfaz con el servidor, se generaron los clientes JAX-WS a partir del WSDL. En el paquete controlador se crearon las clases que capturan los datos ingresados en las ventanas, invocan las operaciones SOAP remotas y devuelven el resultado a la pantalla.
+
+![Captura](imagenes/image36.png)
+
+*_Figura 35. Creación de servicio - Cliente consola_*
+
+Tabla 13. Clase ControladorConversiones - Cliente escritorio
+
+| package ec.edu.monster.clienteescritorio.controlador;import ec.edu.monster.clientesws.*;/** * * @author joanc */public class ControladorConversiones { private String token; public boolean iniciarSesion(String usuario, String clave) { String msgCredencialesInvalidas = "ERROR: Credenciales inválidas"; try { WSLogin_Service service = new WSLogin_Service(); this.token = service.getWSLoginPort().login(usuario, clave); if(this.token.equals(msgCredencialesInvalidas)){ System.out.println("Credenciales incorrectas"); return false; } return true; } catch (Exception e) { System.err.println("Error en la comunicación con el servicio: " + e.getMessage()); return false; } } public double convertirLongitud(double valor, String origen, String destino) throws Exception { WSLongitud_Service service = new WSLongitud_Service(); return service.getWSLongitudPort().convertirLongitud(valor, origen, destino, token); } public double convertirTemperatura(double valor, String origen, String destino) throws Exception { WSTemperatura_Service service = new WSTemperatura_Service(); return service.getWSTemperaturaPort().convertirTemperatura(valor, origen, destino, token); } public double convertirMasa(double valor, String origen, String destino) throws Exception { WSMasa_Service service = new WSMasa_Service(); return service.getWSMasaPort().convertirMasa(valor, origen, destino, token); }} |
+| --- |
+
+CREACIÓN DE VISTAS
+
+En el paquete vista se diseñaron las interfaces gráficas utilizando los formularios (JFrames) de NetBeans. Estas ventanas contienen los componentes visuales necesarios para interactuar con el usuario. Su función es estrictamente visual: capturan los datos de entrada y muestran los resultados obtenidos, delegando todo el procesamiento al controlador.
+
+![Captura](imagenes/image37.png)
+
+*_Figura 36. Creación de vistas - Cliente escritorio_*
+
+CLASE PRINCIPAL (EJECUCIÓN)
+
+La clase principal del proyecto funciona como el punto de entrada de la aplicación. Su única responsabilidad es instanciar la ventana inicial del sistema (la interfaz de inicio de sesión) y hacerla visible en la pantalla para iniciar el flujo gráfico del programa.
+
+![Captura](imagenes/image37.png)
+
+*_Figura 37. Creación de vistas - Cliente escritorio_*
+
+#### EJECUCIÓN DEL CLIENTE DE ESCRITORIO
+
+![Captura](imagenes/image38.png)
+
+*_Figura 38. Login - Cliente escritorio_*
+
+![Captura](imagenes/image39.png)
+
+*_Figura 39. Pantalla de Conversiones - Cliente escritorio_*
+
+### CLIENTE WEB
+
+#### CREACIÓN DEL PROYECTO
+
+El proyecto se crea de igual manera que el webservice con ‘Web Application’.
+
+#### ESTRUCTURA DEL PROYECTO
+
+El cliente web se desarrolló siguiendo el patrón MVC utilizando Servlets y JavaServer Pages (JSP). La estructura separa la lógica de control (en el paquete controlador) de las interfaces de usuario (páginas web).
+
+![Captura](imagenes/image40.png)
+
+*_Figura 40. Estructura del proyecto - Cliente web_*
+
+### CODIFICACIÓN DEL PROYECTO CLIENTE WEB
+
+CONSUMO DEL SERVICIO SOAP (SERVLETS)
+
+Para la comunicación con el servidor SOAP, se crearon controladores basados en Servlets de Jakarta EE. Clases como LoginServlet y ConversorServlet se encargan de recibir las peticiones HTTP (GET y POST) desde el navegador, instanciar los clientes JAX-WS para consumir los servicios remotos y redirigir los resultados obtenidos hacia las páginas correspondientes.
+
+![Captura](imagenes/image41.png)
+
+*_Figura 41. Creación de servlets - Cliente web_*
+
+Tabla 14. Clase ConversorServlet - Cliente escritorio
+
+| package ec.edu.monster.controlador; import java.io.IOException; import jakarta.servlet.ServletException; import jakarta.servlet.annotation.WebServlet; import jakarta.servlet.http.HttpServlet; import jakarta.servlet.http.HttpServletRequest; import jakarta.servlet.http.HttpServletResponse; import jakarta.servlet.http.HttpSession; import ec.edu.monster.controlador.WSLongitud_Service; import ec.edu.monster.controlador.WSMasa_Service; import ec.edu.monster.controlador.WSTemperatura_Service; /** * * @author Soto */ @WebServlet(name = "ConversorServlet", urlPatterns = {"/ConversorServlet"}) public class ConversorServlet extends HttpServlet { @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { response.setContentType("text/plain;charset=UTF-8"); HttpSession sesion = request.getSession(); String token = (String) sesion.getAttribute("miToken"); if (token == null) { response.getWriter().write("ERROR_SESSION"); return; } double valor = Double.parseDouble(request.getParameter("txtValor")); String tipo = request.getParameter("cmbTipo"); String origen = request.getParameter("txtOrigen"); String destino = request.getParameter("txtDestino"); if (valor < 0 && (tipo.equals("longitud") // tipo.equals("masa"))) { response.getWriter().write("ERROR: No existen valores negativos en " + tipo + "."); return; } double resultado = 0; try { switch (tipo) { case "longitud": if (valor < 0){ response.getWriter().write("ERROR: No se permiten valores negativos para esta magnitud."); break; } var portLon = new WSLongitud_Service().getWSLongitudPort(); resultado = portLon.convertirLongitud(valor, origen, destino, token); break; case "masa": if (valor < 0){ response.getWriter().write("ERROR: No se permiten valores negativos para esta magnitud."); break; } var portMas = new WSMasa_Service().getWSMasaPort(); resultado = portMas.convertirMasa(valor, origen, destino, token); break; case "temperatura": var portTemp = new WSTemperatura_Service().getWSTemperaturaPort(); resultado = portTemp.convertirTemperatura(valor, origen, destino, token); break; } if (resultado == -9999999.401) { response.getWriter().write("ERROR: Sesión inválida. Loguéate de nuevo."); } else if (resultado == -999999.404) { response.getWriter().write("ERROR: Unidades no reconocidas por el sistema."); } else { response.getWriter().write(String.valueOf(resultado)); } } catch (Exception e) { response.getWriter().write("ERROR: Fallo al conectar con el servicio web."); } }} |
+| --- |
+
+Tabla 15. Clase LoginServlet - Cliente escritorio
+
+| package ec.edu.monster.controlador;import ec.edu.monster.controlador.WSLogin_Service; import java.io.IOException;import java.io.PrintWriter;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;/** * * @author Soto */@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})public class LoginServlet extends HttpServlet { @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { //Recoger datos del jsp String user = request.getParameter("txtUsuario"); String pass = request.getParameter("txtClave"); try { //Llamar al web service WSLogin_Service loginService = new WSLogin_Service(); var portLogin = loginService.getWSLoginPort(); String token = portLogin.login(user, pass); if (token.contains("ERROR")) { request.setAttribute("error", "Credenciales incorrectas, intenta de nuevo."); request.getRequestDispatcher("index.jsp").forward(request, response); } else { HttpSession sesion = request.getSession(); sesion.setAttribute("miToken", token); response.sendRedirect("conversor.jsp"); } } catch (Exception e) { request.setAttribute("error", "Error de conexión con el Servidor Payara."); request.getRequestDispatcher("index.jsp").forward(request, response); } }} |
+| --- |
+
+CREACIÓN DE VISTAS
+
+Las interfaces de usuario se construyeron utilizando HTML y la tecnología JSP (JavaServer Pages) dentro del directorio Web Pages. Se diseñaron dos vistas principales: index.jsp, que actúa como la pantalla de inicio de sesión interactuando con el LoginServlet, y conversor.jsp, que contiene los formularios dinámicos para seleccionar las unidades de medida, capturar los valores y mostrar los resultados procesados por el ConversorServlet.
+
+![Captura](imagenes/image42.png)
+
+*_Figura 42. Creación de vistas - Cliente web_*
+
+Tabla 16. Archivo conversor - Cliente web
+
+| <%@page contentType="text/html" pageEncoding="UTF-8"%><% String token = (String) session.getAttribute("miToken"); if (token == null) { response.sendRedirect("index.jsp"); return; }%><!DOCTYPE html><html><head> <title>Panel de Conversiones - ESPE</title> <style> /* Estilos generales */ body { font-family: Arial, sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; } /* Contenedor principal con el borde sutil */ .converter-box { background-color: #111111; padding: 40px; border-radius: 4px; border: 2px solid #e0e0fa; /* Borde clarito de tu imagen */ width: 450px; box-shadow: 0 4px 15px rgba(0,0,0,0.8); } h3 { margin-top: 0; font-size: 1.2em; margin-bottom: 10px; } /* Selector principal de arriba */ .main-select { width: 60%; padding: 8px; background-color: #1a1a1a; color: white; border: 1px solid #555; margin-bottom: 40px; outline: none; } /* Contenedor de las dos columnas */ .columns-container { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; } /* Cada columna (Origen y Destino) */ .col { display: flex; flex-direction: column; width: 40%; } .col label { font-weight: bold; font-size: 0.9em; margin-bottom: 15px; } .col select, .col input { background-color: #111; color: white; border: 1px solid #fff; padding: 8px; margin-bottom: 15px; outline: none; } /* Columna del medio para la mano */ .col-center { width: 15%; display: flex; justify-content: center; align-items: center; padding-bottom: 25px; /* Para alinear con los inputs */ } .hand-img { width: 40px; /* Ajusta el tamaño de tu imagen aquí */ } /* Botón azul gigante */ button { background-color: #5b88e5; color: white; cursor: pointer; font-weight: bold; font-size: 1.1em; width: 100%; padding: 15px; border: none; } button:hover { background-color: #4a75c9; } .error { color: #ff4d4d; margin-top: 15px; font-weight: bold; text-align: center; } .logout { display: block; text-align: center; margin-top: 20px; color: #888; text-decoration: none; font-size: 0.9em; } </style> <script> const dicUnidades = { longitud: ["centimetros", "metros", "pies", "yardas", "millas"], masa: ["gramos", "kilogramos", "libras", "quintales"], temperatura: ["fahrenheit", "kelvin", "celsius", "newton", "reaumur"] }; function actualizarListas() { const magnitud = document.getElementById("cmbTipo").value; const listaOrigen = document.getElementById("listaOrigen"); const listaDestino = document.getElementById("listaDestino"); listaOrigen.innerHTML = ""; listaDestino.innerHTML = ""; dicUnidades[magnitud].forEach(unidad => { listaOrigen.add(new Option(unidad, unidad)); listaDestino.add(new Option(unidad, unidad)); }); // Limpiamos los inputs al cambiar de magnitud document.getElementById("txtValor").value = ""; document.getElementById("txtResultado").value = ""; document.getElementById("errorTxt").innerText = ""; } window.onload = function() { actualizarListas(); document.getElementById("formConversor").addEventListener("submit", async function(e) { e.preventDefault(); const formData = new URLSearchParams(new FormData(this)); try { const response = await fetch('ConversorServlet', { method: 'POST', body: formData }); const texto = await response.text(); document.getElementById("errorTxt").innerText = ""; document.getElementById("txtResultado").value = ""; if (texto === "ERROR_SESSION") { window.location.href = "index.jsp"; } else if (texto.startsWith("ERROR")) { document.getElementById("errorTxt").innerText = texto.replace("ERROR:", ""); } else { // Aquí metemos el resultado en la cajita derecha document.getElementById("txtResultado").value = texto; } } catch (error) { document.getElementById("errorTxt").innerText = "Error conectando al servidor."; } }); }; </script></head><body> <div class="converter-box"> <form id="formConversor"> <h3>Elija el tipo de unidad para la conversión</h3> <select name="cmbTipo" id="cmbTipo" onchange="actualizarListas()" class="main-select"> <option value="longitud">Longitud</option> <option value="masa">Masa</option> <option value="temperatura">Temperatura</option> </select> <div class="columns-container"> <div class="col"> <label>Unidad de origen</label> <select name="txtOrigen" id="listaOrigen"></select> <input type="number" step="any" name="txtValor" id="txtValor" required> </div> <div class="col-center"> <img src="Imagenes/flecha40px.png" alt=""/> </div> <div class="col"> <label>Unidad de destino</label> <select name="txtDestino" id="listaDestino"></select> <input type="text" id="txtResultado" readonly> </div> </div> <button type="submit">CONVERTIR</button> </form> <div id="errorTxt" class="error"></div> <a href="index.jsp" class="logout">Cerrar Sesión</a> </div></body></html> |
+| --- |
+
+Tabla 17. Archivo index - Cliente web
+
+| <%@page contentType="text/html" pageEncoding="UTF-8"%><!DOCTYPE html><html> <head> <meta charset="UTF-8"> <title>Login - Conversor ESPE</title> <style> /* Fondo general de la página */ body { font-family: sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; } /* Contenedor principal (la caja negra) */ .login-container { display: flex; background-color: #151515; padding: 30px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.8); gap: 40px; /* Espacio entre el form y la foto */ } /* Columna izquierda (Formulario) */ .form-section { display: flex; flex-direction: column; justify-content: center; width: 280px; } h3 { margin-top: 0; margin-bottom: 40px; font-size: 1.1em; font-weight: bold; } /* Fila para cada label + input */ .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; } label { font-weight: bold; font-size: 0.9em; } input { background-color: #404040; border: none; color: white; padding: 10px; width: 170px; outline: none; } button { background-color: #5b88e5; color: white; border: none; padding: 15px; font-weight: bold; margin-top: 20px; cursor: pointer; width: 100%; font-size: 1em; } button:hover { background-color: #4a75c9; } /* Columna derecha (Imagen) */ .image-section img { width: 220px; height: 100%; object-fit: cover; border-radius: 2px; } /* Mensaje de error */ .error { color: #ff4d4d; font-size: 0.85em; margin-top: 15px; text-align: center; font-weight: bold; } </style> </head> <body> <div class="login-container"> <div class="form-section"> <h3>Ingrese sus credenciales:</h3> <form method="POST" action="LoginServlet"> <div class="input-group"> <label>Usuario:</label> <input type="text" name="txtUsuario" required> </div> <div class="input-group"> <label>Clave:</label> <input type="password" name="txtClave" required> </div> <button type="submit">INICIAR SESIÓN</button> </form> <%-- Mensaje de error si falla el login --%> <% if(request.getAttribute("error") != null) { %> <div class="error"><%= request.getAttribute("error") %></div> <% } %> </div> <div class="image-section"> <img src="Imagenes/monsterlogin.jpg" alt=""/> </div> </div> </body></html> |
+| --- |
+
+EJECUCIÓN DEL CLIENTE DE WEB
+
+![Captura](imagenes/image43.png)
+
+*_Figura 43. Login - Cliente web_*
+
+![Captura](imagenes/image44.png)
+
+*_Figura 44. Pantalla de Conversiones - Cliente web_*
+
+### CLIENTE MÓVIL
+
+#### CREACIÓN DEL PROYECTO
+
+El proyecto se debe crear en Android Studio. Se selecciona la opción ‘New Project’, en la pantalla siguiente ‘Empty Activity’ y finalmente se configura el proyecto con nombre, ubicación y la opción ‘Kotlin’ en Build Configuration Laguaje. Finalizamos haciendo click en el botón ‘Finish’.
+
+![Captura](imagenes/image45.png)
+
+*_Figura 45. Configuración del proyecto - Cliente móvil_*
+
+#### ESTRUCTURA DEL PROYECTO
+
+El desarrollo de la aplicación móvil en Android Studio se organizó bajo el patrón arquitectónico MVC (Modelo-Vista-Controlador). Para asegurar el desacoplamiento de la lógica, la vista y el consumo de red, se estructuró el proyecto en los paquetes model, view y controller.
+
+![Captura](imagenes/image46.png)
+
+*_Figura 46. Estructura del proyecto - Cliente móvil_*
+
+### CODIFICACIÓN DEL PROYECTO CLIENTE MÓVIL
+
+#### CREACIÓN DE MODELOS
+
+En el paquete model se crearon las clases necesarias para el intercambio de información: ConversionRequest, ConversionResult, LoginResult y la enumeración ServiceType.
+
+Adicionalmente, debido a que Android no incluye bibliotecas nativas para el consumo directo de WSDL (como JAX-WS en escritorio), se implementó la clase SoapClient para estructurar y ejecutar las peticiones HTTP/XML hacia el servidor Payara, apoyada por SoapErrorMapper para una correcta gestión de excepciones de red.
+
+![Captura](imagenes/image47.png)
+
+*_Figura 47. Creación de modelos - Cliente móvil_*
+
+CREACIÓN DE CONTROLADORES
+
+s reemplaza la implementación de clientes REST. En el paquete controller se desarrollaron las clases LoginController y ConversionController. Estos controladores operan de forma asíncrona (en hilos secundarios) para no bloquear la interfaz gráfica; capturan los datos de la pantalla, invocan al SoapClient pasándole los parámetros requeridos y devuelven la respuesta procesada a las actividades correspondientes.
+
+![Captura](imagenes/image48.png)
+
+*_Figura 48. Creación de controladores - Cliente móvil_*
+
+Tabla 18. LoginController - Cliente web
+
+| package ec.edu.monster.conuniclientemovil.controller;import ec.edu.monster.conuniclientemovil.model.LoginResult;import ec.edu.monster.conuniclientemovil.model.SoapClient;import java.util.concurrent.ExecutionException;import java.util.concurrent.ExecutorService;import java.util.concurrent.Executors;public class LoginController { /** * Callback para el resultado del login. */ public interface LoginCallback { void onResult(LoginResult result); } private final SoapClient soapClient; private final ExecutorService executorService; public LoginController(SoapClient soapClient) { this(soapClient, Executors.newSingleThreadExecutor()); } public LoginController(SoapClient soapClient, ExecutorService executorService) { this.soapClient = soapClient; this.executorService = executorService; } /** * Ejecuta el login de forma asíncrona. */ public void login(String baseUrl, String usuario, String clave, LoginCallback callback) { executorService.execute(() -> { try { String token = soapClient.login(baseUrl, usuario, clave).get(); callback.onResult(LoginResult.success(token)); } catch (Exception exception) { callback.onResult(LoginResult.error(extractMessage(exception))); } }); } public void shutdown() { executorService.shutdown(); } private String extractMessage(Exception exception) { Throwable cause = exception; if (exception instanceof ExecutionException && exception.getCause() != null) { cause = exception.getCause(); } String message = cause.getMessage(); if (message == null // message.trim().isEmpty()) { return "Error desconocido"; } return message; }} |
+| --- |
+
+Tabla 19. ConversionController - Cliente web
+
+| package ec.edu.monster.conuniclientemovil.controller;import ec.edu.monster.conuniclientemovil.model.ConversionRequest;import ec.edu.monster.conuniclientemovil.model.ConversionResult;import ec.edu.monster.conuniclientemovil.model.ServiceType;import ec.edu.monster.conuniclientemovil.model.SoapClient;import ec.edu.monster.conuniclientemovil.model.SoapErrorMapper;import java.util.concurrent.ExecutionException;import java.util.concurrent.ExecutorService;import java.util.concurrent.Executors;public class ConversionController { /** * Callback para operaciones de conversión. */ public interface ConversionCallback { void onResult(ConversionResult result); } private final SoapClient soapClient; private final ExecutorService executorService; public ConversionController(SoapClient soapClient) { this(soapClient, Executors.newSingleThreadExecutor()); } public ConversionController(SoapClient soapClient, ExecutorService executorService) { this.soapClient = soapClient; this.executorService = executorService; } /** * Ejecuta una conversión de forma asíncrona usando el modelo ConversionRequest. */ public void convert(ConversionRequest request, String baseUrl, ConversionCallback callback) { executorService.execute(() -> { try { double result = executeConversion( request.getServiceType(), baseUrl, request.getValue(), request.getOriginUnit(), request.getDestinationUnit(), request.getToken() ); String mappedError = SoapErrorMapper.mapConversionError( request.getServiceType(), result); if (mappedError != null) { callback.onResult(ConversionResult.serviceError(mappedError, result)); return; } callback.onResult(ConversionResult.success(result)); } catch (Exception exception) { callback.onResult(ConversionResult.error(extractMessage(exception))); } }); } public void shutdown() { executorService.shutdown(); } private double executeConversion( ServiceType serviceType, String baseUrl, double inputValue, String origin, String destination, String token ) throws Exception { switch (serviceType) { case LONGITUD: return soapClient.convertirLongitud(baseUrl, inputValue, origin, destination, token).get(); case MASA: return soapClient.convertirMasa(baseUrl, inputValue, origin, destination, token).get(); case TEMPERATURA: return soapClient.convertirTemperatura(baseUrl, inputValue, origin, destination, token).get(); default: throw new IllegalArgumentException("Servicio no soportado: " + serviceType); } } private String extractMessage(Exception exception) { Throwable cause = exception; if (exception instanceof ExecutionException && exception.getCause() != null) { cause = exception.getCause(); } String message = cause.getMessage(); if (message == null // message.trim().isEmpty()) { return "Error desconocido"; } return message; }} |
+| --- |
+
+CREACIÓN DE VISTAS
+
+Se crean los archivos de interfaz gráfica en el paquete views.
+
+![Captura](imagenes/image49.png)
+
+*_Figura 49. Creación de vistas - Cliente móvil_*
+
+#### EJECUCIÓN DEL CLIENTE DE MÓVIL
+
+![Captura](imagenes/image50.png)
+
+*_Figura 50. Login - Cliente móvil_*
+
+![Captura](imagenes/image51.png)
+
+*_Figura 51. Pantalla de Conversiones - Cliente móvil_*
+
+#### CONCLUSIONES
+
+El desarrollo del proyecto permitió integrar múltiples tecnologías y herramientas necesarias para la construcción de un sistema completo basado en una arquitectura orientada a servicios (SOA) con SOAP, aplicando buenas prácticas de ingeniería de software. La instalación y configuración de entornos como NetBeans, el servidor Payara, Jakarta EE y Android Studio facilitaron un flujo de trabajo ordenado, garantizando que todos los componentes del sistema se ejecuten de forma consistente.
+
+La implementación de los módulos de seguridad y conversiones evidenció la importancia de separar correctamente la lógica de negocio y la capa de exposición del servicio web. A pesar de no contar con conexión a una base de datos, el uso de DTOs, validaciones en memoria y manejo de sesiones simuladas dio como resultado soluciones mantenibles, escalables y con un nivel adecuado de desacoplamiento.
+
+La construcción de los cuatro clientes (consola, escritorio, web con JSP/Servlets y móvil con Android) permitió evidenciar la correcta comunicación y consumo de servicios SOAP a partir del archivo WSDL. Se demostró la interoperabilidad entre tecnologías, gestionando exitosamente las peticiones JAX-WS en Java y estructurando peticiones HTTP/XML nativas en el entorno móvil. Además, se verificó el funcionamiento completo del flujo, desde el inicio de sesión hasta las transformaciones de longitud, masa y temperatura.
+
+En conjunto, el proyecto consolida los aprendizajes del ciclo completo de desarrollo de software para servicios web clásicos: configuración del servidor de aplicaciones, diseño de la interfaz WSDL, exposición de métodos (WebMethods), consumo desde distintos clientes y validación funcional mediante pruebas controladas.
+
+#### RECOMENDACIONES
+
+Mantener la estructura modular y el patrón MVC utilizados en el proyecto para futuros desarrollos, ya que permite escalar nuevas categorías de conversión sin comprometer la arquitectura inicial del servidor SOAP.
+
+Implementar un manejo de excepciones más detallado (como SOAPFaults) en el servidor, de modo que cuando el cliente envíe unidades no soportadas o datos erróneos, los mensajes de error XML sean estandarizados y faciliten el diagnóstico.
+
+Añadir validaciones más estrictas en los servicios, especialmente en el control del tiempo de vida de las sesiones del usuario y en el bloqueo de peticiones con valores numéricos inválidos (como medidas de masa negativas).
+
+Integrar un sistema de logs en el servidor Payara, lo cual permitiría rastrear las solicitudes SOAP entrantes y analizar el comportamiento de las conversiones en diferentes clientes.
+
+Implementar mecanismos de caché o estructuras de datos optimizadas en memoria para los catálogos de unidades, en caso de que el sistema escale a un volumen masivo de peticiones concurrentes.
+
+Desarrollar pruebas unitarias en la capa de servicios para asegurar la exactitud de las fórmulas matemáticas utilizadas en las transformaciones de temperatura, longitud y masa ante futuras modificaciones.
+
+Mejorar la interfaz de usuario en los clientes web y móvil incorporando retroalimentación visual más precisa, controles de validación en los formularios y manejo asíncrono avanzado para no bloquear las pantallas durante la espera de respuesta del servidor.
+
+Documentar el contrato WSDL detalladamente con comentarios estructurados, lo que permitirá a futuros desarrolladores entender rápidamente los tipos de datos requeridos y facilitar su consumo desde sistemas construidos en otros lenguajes de programación.
