@@ -122,12 +122,20 @@ public class RestClient {
 
     public ConversionResponse convertir(String magnitud, String unidadOrigen, String unidadDestino, double valor, String token) {
         try {
-            String endpoint = switch (magnitud.toLowerCase().trim()) {
-                case "longitud" -> "conversor/longitud";
-                case "masa" -> "conversor/masa";
-                case "temperatura" -> "conversor/temperatura";
-                default -> throw new IllegalArgumentException("Magnitud no reconocida: " + magnitud);
-            };
+            String endpoint;
+            switch (magnitud.toLowerCase().trim()) {
+                case "longitud":
+                    endpoint = "conversor/longitud";
+                    break;
+                case "masa":
+                    endpoint = "conversor/masa";
+                    break;
+                case "temperatura":
+                    endpoint = "conversor/temperatura";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Magnitud no reconocida: " + magnitud);
+            }
 
             Map<String, Object> payload = new HashMap<>();
             payload.put("from", unidadOrigen);

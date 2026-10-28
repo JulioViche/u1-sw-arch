@@ -41,16 +41,26 @@ public class ConsoleAppController {
         while (continuar) {
             String opcion = view.mostrarMenuPrincipal(session);
             switch (opcion) {
-                case "1" -> procesarConversion("longitud", ConsoleView.UNIDADES_LONGITUD);
-                case "2" -> procesarConversion("masa", ConsoleView.UNIDADES_MASA);
-                case "3" -> procesarConversion("temperatura", ConsoleView.UNIDADES_TEMPERATURA);
-                case "4" -> mostrarEstadoSesion();
-                case "5" -> {
+                case "1":
+                    procesarConversion("longitud", ConsoleView.UNIDADES_LONGITUD);
+                    break;
+                case "2":
+                    procesarConversion("masa", ConsoleView.UNIDADES_MASA);
+                    break;
+                case "3":
+                    procesarConversion("temperatura", ConsoleView.UNIDADES_TEMPERATURA);
+                    break;
+                case "4":
+                    mostrarEstadoSesion();
+                    break;
+                case "5":
                     authController.logout();
                     view.mostrarDespedida();
                     continuar = false;
-                }
-                default -> view.mostrarError("Opción no válida. Ingrese un valor entre 1 y 5.");
+                    break;
+                default:
+                    view.mostrarError("Opción no válida. Ingrese un valor entre 1 y 5.");
+                    break;
             }
         }
     }
