@@ -88,7 +88,7 @@
                         android:id="@+id/edtServerUrl"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="http://10.0.2.2:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/"
+                        android:text="http://10.0.2.2:8080/ServidorREST/"
                         android:textSize="13sp"
                         android:inputType="textUri" />
                 </com.google.android.material.textfield.TextInputLayout>

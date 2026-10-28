@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ec.edu.monster</groupId>
-    <artifactId>WS_CONV_UNI_RESTFULL_JAVA</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>ServidorREST</artifactId>
+    <version>1.0.0</version>
     <packaging>war</packaging>
-    <name>WS_CONV_UNI_RESTFULL_JAVA</name>
+    <name>Servidor REST - Conversor de Unidades (SINBDD)</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -72,7 +72,7 @@
     </dependencies>
 
     <build>
-        <finalName>WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT</finalName>
+        <finalName>ServidorREST</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

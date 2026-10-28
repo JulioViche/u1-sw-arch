@@ -19,8 +19,8 @@ import java.nio.charset.StandardCharsets;
  */
 public class RestClient {
 
-    private static final String DEFAULT_EMULATOR_8080 = "http://10.0.2.2:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/";
-    private static final String FALLBACK_EMULATOR_8085 = "http://10.0.2.2:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/";
+    private static final String DEFAULT_EMULATOR_8080 = "http://10.0.2.2:8080/ServidorREST/";
+    private static final String FALLBACK_EMULATOR_8085 = "http://10.0.2.2:8085/ServidorREST/";
 
     private static final int TIMEOUT_MS = 6000;
     private String baseUrl;

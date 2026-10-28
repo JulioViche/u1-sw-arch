@@ -88,7 +88,7 @@ public class ConversionActivity extends AppCompatActivity {
         session = (SessionModel) getIntent().getSerializableExtra("SESSION");
         serverUrl = getIntent().getStringExtra("SERVER_URL");
         if (serverUrl == null || serverUrl.trim().isEmpty()) {
-            serverUrl = "http://10.0.2.2:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/";
+            serverUrl = "http://10.0.2.2:8080/ServidorREST/";
         }
 
         controller = new ConversionController();

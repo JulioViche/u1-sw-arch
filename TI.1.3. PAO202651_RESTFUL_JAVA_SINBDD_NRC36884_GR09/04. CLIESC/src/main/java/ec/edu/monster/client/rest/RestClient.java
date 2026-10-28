@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class RestClient {
 
-    private static final String DEFAULT_URL_8080 = "http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/";
-    private static final String FALLBACK_URL_8085 = "http://localhost:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/";
+    private static final String DEFAULT_URL_8080 = "http://localhost:8080/ServidorREST/";
+    private static final String FALLBACK_URL_8085 = "http://localhost:8085/ServidorREST/";
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -60,14 +60,14 @@ public class RestClient {
         }
 
         String[] candidatos = {
-            "http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/",
+            "http://localhost:8080/ServidorREST/",
             "http://localhost:8080/04.%20SERVIDOR/",
             "http://localhost:8080/04.SERVIDOR/",
-            "http://localhost:8080/ServidorREST/",
-            "http://localhost:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/",
+            "http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/",
+            "http://localhost:8085/ServidorREST/",
             "http://localhost:8085/04.%20SERVIDOR/",
             "http://localhost:8085/04.SERVIDOR/",
-            "http://localhost:8085/ServidorREST/"
+            "http://localhost:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/"
         };
 
         for (String candidato : candidatos) {

@@ -26,7 +26,7 @@ Cinco componentes de software por variante, cada uno en su carpeta.
 > - **Doble modo de ejecución**: Standalone (`Publisher.java` vía `mvn exec:java`) y contenedor Java EE (`ServidorSOAP.war` en Payara Server).
 
 > [!tip] Implementación en RESTful Java (TI.1.3 - GR09)
-> - **Servidor de Aplicaciones (RNF-004)**: Despliegue en Payara Server 5/6 mediante WAR (`WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT.war`), `glassfish-web.xml`, `payara-web.xml` y `beans.xml`.
+> - **Servidor de Aplicaciones (RNF-004)**: Despliegue en Payara Server 5/6 mediante WAR (`ServidorREST.war`), `glassfish-web.xml`, `payara-web.xml` y `beans.xml` bajo context-root `/ServidorREST`.
 > - **Arquitectura Interna**: Patrón de diseño **Strategy** con `IConversor<U>` implementado en `ConversorLongitud`, `ConversorMasa` y `ConversorTemperatura`, con enums estrictos de 5 unidades y formateo a 2 decimales.
 > - **Doble modo de ejecución**: Standalone (`ServidorRestMain.java` con Grizzly HTTP vía `mvn exec:java`) y contenedor Payara Server / GlassFish.
 

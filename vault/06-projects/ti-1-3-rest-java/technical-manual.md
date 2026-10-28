@@ -113,9 +113,10 @@ El archivo `pom.xml` define la versión de Java 17, las especificaciones de Jaka
 
 ```xml
 <groupId>ec.edu.monster</groupId>
-<artifactId>WS_CONV_UNI_RESTFULL_JAVA</artifactId>
-<version>1.0-SNAPSHOT</version>
+<artifactId>ServidorREST</artifactId>
+<version>1.0.0</version>
 <packaging>war</packaging>
+<name>Servidor REST - Conversor de Unidades (SINBDD)</name>
 
 <properties>
     <maven.compiler.source>17</maven.compiler.source>
@@ -158,7 +159,7 @@ Para garantizar el despliegue automático en Payara Server 6 / GlassFish 7 desde
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
             version="6.0">
-       <display-name>WS_CONV_UNI_RESTFULL_JAVA</display-name>
+       <display-name>Servidor REST - Conversor de Unidades (SINBDD)</display-name>
        <servlet>
            <servlet-name>ec.edu.monster.config.ConvUnitApplication</servlet-name>
            <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -181,7 +182,7 @@ Para garantizar el despliegue automático en Payara Server 6 / GlassFish 7 desde
    <!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" 
        "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
    <glassfish-web-app>
-       <context-root>/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT</context-root>
+       <context-root>/ServidorREST</context-root>
    </glassfish-web-app>
    ```
 
@@ -242,14 +243,14 @@ private double redondear2Decimales(double valor) {
 | `/conversor/longitud` | `POST` | `{"token":"...","value":100.0,"from":"metro","to":"pie"}` | `{"value":100.0,"result":328.08,"success":true,...}` | Conversión de longitud |
 | `/conversor/masa` | `POST` | `{"token":"...","value":50.0,"from":"kilogramo","to":"libra"}` | `{"value":50.0,"result":110.23,"success":true,...}` | Conversión de masa |
 | `/conversor/temperatura`| `POST`| `{"token":"...","value":100.0,"from":"celsius","to":"fahrenheit"}`| `{"value":100.0,"result":212.00,"success":true,...}` | Conversión de temperatura |
-| `/health` | `GET` | *(Ninguna)* | `{"status":"UP","service":"WS_CONV_UNI_RESTFULL_JAVA"}` | Verificación de estado del servidor |
+| `/health` | `GET` | *(Ninguna)* | `{"status":"UP","service":"ServidorREST"}` | Verificación de estado del servidor |
 
 ---
 
 ### 4.2. Cliente de Consola (`04. CLICON`)
 
 El cliente de consola implementa una interfaz textual interactiva y robusta bajo el patrón MVC:
-- **`RestClient.java`:** Cliente HTTP basado en `java.net.http.HttpClient` de Java 17 con soporte para JSON mediante Jackson. Implementa un resolvedor inteligente de URLs: intenta conectarse a `http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/` (Payara) y, si el puerto está ocupado, conmuta automáticamente a `http://localhost:8085/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/` (Standalone).
+- **`RestClient.java`:** Cliente HTTP basado en `java.net.http.HttpClient` de Java 17 con soporte para JSON mediante Jackson. Implementa un resolvedor inteligente de URLs: intenta conectarse a `http://localhost:8080/ServidorREST/` (Payara) y, si el puerto está ocupado, conmuta automáticamente a `http://localhost:8085/ServidorREST/` (Standalone), admitiendo también rutas heredadas como fallback.
 - **`ConsoleView.java`:** Despliega el banner oficial de la ESPE, solicita credenciales interactivas y ofrece un menú con opciones numéricas (1 a 5).
 - **Validaciones:** Control estricto de entrada numérica (máximo 16 caracteres, dígitos y punto decimal).
 
@@ -305,8 +306,8 @@ Aplicación móvil nativa para la plataforma Android desarrollada con Java y And
 - **Compatibilidad:** `minSdk = 24` (Android 7.0), `compileSdk = 35`, `targetSdk = 35`, JDK 17 y Gradle 8.11.
 - **Comunicación REST:** Utiliza `HttpURLConnection` / `OkHttp` para despachar solicitudes JSON hacia el servidor.
 - **Configuración de IP de Conexión:**
-  - En emulador de Android Studio: Utiliza la dirección virtual de bucle invertido **`http://10.0.2.2:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/`**.
-  - En teléfono físico mediante Wi-Fi: Apunta a la dirección IP privada de la computadora anfitriona (ej. `http://192.168.1.15:8080/...`).
+  - En emulador de Android Studio: Utiliza la dirección virtual de bucle invertido **`http://10.0.2.2:8080/ServidorREST/`**.
+  - En teléfono físico mediante Wi-Fi: Apunta a la dirección IP privada de la computadora anfitriona (ej. `http://192.168.1.15:8080/ServidorREST/`).
 
 #### Ejecución del Cliente Móvil:
 1. Abrir la carpeta `04. CLIMOV/` en **Android Studio**.
@@ -330,16 +331,16 @@ Aplicación móvil nativa para la plataforma Android desarrollada con Java y And
    cd "TI.1.3. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09\04. SERVIDOR"
    mvn clean package
    ```
-   El paquete se generará en: `target/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT.war`.
+   El paquete se generará en: `target/ServidorREST.war`.
 3. **Desplegar en Payara:**
    - Desde NetBeans: Clic derecho sobre el proyecto `04. SERVIDOR` $\rightarrow$ **Run** (o **Deploy**).
    - O vía CLI:
      ```bash
-     asadmin deploy --force target/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT.war
+     asadmin deploy --force target/ServidorREST.war
      ```
 4. **Verificación en el Navegador:**
-   Abrir: `http://localhost:8080/WS_CONV_UNI_RESTFULL_JAVA-1.0-SNAPSHOT/health`  
-   Debe responder el JSON: `{"status":"UP","service":"WS_CONV_UNI_RESTFULL_JAVA"}`.
+   Abrir: `http://localhost:8080/ServidorREST/health`  
+   Debe responder el JSON: `{"status":"UP","service":"ServidorREST"}`.
 
 ### Opción B: Ejecución Standalone Ligera (Grizzly HTTP)
 
