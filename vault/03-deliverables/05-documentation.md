@@ -15,9 +15,20 @@ Carpeta `05. DOCUMENTACION/` de cada variante. Manual técnico, presentación y 
 
 En el ejemplo de referencia, el manual vive en una subcarpeta `02. MANUAL TECNICO/`.
 
+## Entregables Generados (.docx)
+
+| Variante | Carpeta | Archivo Oficial | Estado |
+| :--- | :--- | :--- | :--- |
+| **TI.1.1** (SOAP Java) | `TI.1.1. PAO202651_SOAP_JAVA_SINBDD_NRC36884_GR09/05. DOCUMENTACION/` | `CONVUNI_SOAP_JAVA_GR09.docx` | Generado |
+| **TI.1.2** (SOAP .NET) | `TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09/05. DOCUMENTACION/` | `CONVUNI_SOAP_DOTNET_GR09.docx` | Generado |
+| **TI.1.3** (RESTful Java) | `TI.1.3. PAO202651_RESTFUL_JAVA_SINBDD_NRC36884_GR09/05. DOCUMENTACION/` | `CONVUNI_RESTFUL_JAVA_GR09.docx` | Generado |
+| **TI.1.4** (RESTful .NET) | `TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09/05. DOCUMENTACION/` | `CONVUNI_RESTFUL_DOTNET_GR09.docx` | Generado |
+
 ## Manuales Técnicos en Markdown (Vault)
-- [Manual Técnico - SOAP Java (TI.1.1)](manual-tecnico-soap.md)
-- [Manual Técnico - RESTful Java (TI.1.3)](manual-tecnico-restful.md)
+- [Manual Técnico - SOAP Java (TI.1.1)](../06-projects/ti-1-1-soap-java/technical-manual.md)
+- [Manual Técnico - SOAP .NET (TI.1.2)](../06-projects/ti-1-2-soap-dotnet/technical-manual.md)
+- [Manual Técnico - RESTful Java (TI.1.3)](../06-projects/ti-1-3-rest-java/technical-manual.md)
+- [Manual Técnico - RESTful .NET (TI.1.4)](../06-projects/ti-1-4-rest-dotnet/technical-manual.md)
 
 ## Contenido sugerido del manual
 
