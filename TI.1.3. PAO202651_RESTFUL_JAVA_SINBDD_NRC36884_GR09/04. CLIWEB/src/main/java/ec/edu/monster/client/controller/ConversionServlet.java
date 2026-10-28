@@ -85,23 +85,23 @@ public class ConversionServlet extends HttpServlet {
             );
 
             if (resp != null && resp.isExito()) {
-                String valorOrigenFmt = String.format(Locale.US, "%.2f", valor);
-                String valorDestinoFmt = String.format(Locale.US, "%.2f", resp.getValorConvertido());
-
-                String resultadoTexto = valorDestinoFmt + " " + capitalizar(unidadDestino);
-                String detalleTexto = valorOrigenFmt + " " + capitalizar(unidadOrigen) + " equivale a " + resultadoTexto;
-
-                response.sendRedirect(request.getContextPath() + "/conversor.html?resultado=" +
-                        URLEncoder.encode(resultadoTexto, StandardCharsets.UTF_8) +
-                        "&detalle=" + URLEncoder.encode(detalleTexto, StandardCharsets.UTF_8) +
-                        "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) +
-                        "&token=" + sessionUser.getTokenAbreviado());
+                String params = String.format(Locale.US, "valor=%.2f&origen=%s&destino=%s&resultado=%.2f&magnitud=%s&usuario=%s&token=%s",
+                        valor,
+                        URLEncoder.encode(unidadOrigen, StandardCharsets.UTF_8),
+                        URLEncoder.encode(unidadDestino, StandardCharsets.UTF_8),
+                        resp.getValorConvertido(),
+                        URLEncoder.encode(magnitud, StandardCharsets.UTF_8),
+                        URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8),
+                        sessionUser.getTokenAbreviado());
+                response.sendRedirect(request.getContextPath() + "/conversor.html?" + params);
             } else {
                 String errorMsg = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor REST";
-                response.sendRedirect(request.getContextPath() + "/conversor.html?error=" +
-                        URLEncoder.encode(errorMsg, StandardCharsets.UTF_8) +
-                        "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) +
-                        "&token=" + sessionUser.getTokenAbreviado());
+                String params = String.format("error=%s&magnitud=%s&usuario=%s&token=%s",
+                        URLEncoder.encode(errorMsg, StandardCharsets.UTF_8),
+                        URLEncoder.encode(magnitud, StandardCharsets.UTF_8),
+                        URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8),
+                        sessionUser.getTokenAbreviado());
+                response.sendRedirect(request.getContextPath() + "/conversor.html?" + params);
             }
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/conversor.html?error=" +

@@ -11,8 +11,8 @@ import java.util.Map;
 
 /**
  * Controlador para la raíz del contexto web RESTful ("/").
- * Muestra una página de bienvenida / documentación visual interactiva en el navegador
- * o el estado en JSON según el header Accept.
+ * Presenta una interfaz visual idéntica a la del Servidor SOAP (estética institucional ESPE),
+ * manteniendo coherencia total entre variantes arquitectónicas.
  *
  * @author Julio Enrique Viche Castillo - GR09 - NRC 36884
  */
@@ -25,211 +25,144 @@ public class RootController {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Servidor REST · Conversor de Unidades</title>
+            <title>Servidor REST - Conversor de Unidades (SINBDD)</title>
             <style>
-                * { box-sizing: border-box; margin: 0; padding: 0; }
                 body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-                    background: #0f172a;
-                    color: #e2e8f0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    min-height: 100vh;
-                    padding: 24px;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background: #f4f6f9;
+                    margin: 0;
+                    padding: 40px 20px;
+                    color: #333;
                 }
-                .card {
-                    background: #1e293b;
-                    border: 1px solid #334155;
-                    border-radius: 16px;
-                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-                    max-width: 760px;
-                    width: 100%;
-                    padding: 36px;
-                }
-                .header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    margin-bottom: 20px;
-                    border-bottom: 1px solid #334155;
-                    padding-bottom: 16px;
-                }
-                .badge {
-                    background: #065f46;
-                    color: #34d399;
-                    font-size: 0.75rem;
-                    font-weight: 700;
-                    letter-spacing: 0.05em;
-                    padding: 6px 14px;
-                    border-radius: 9999px;
-                    text-transform: uppercase;
+                .container {
+                    max-width: 750px;
+                    margin: 0 auto;
+                    background: #ffffff;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+                    padding: 30px 40px;
                 }
                 h1 {
-                    color: #38bdf8;
-                    font-size: 1.8rem;
-                    margin-bottom: 6px;
+                    color: #1a365d;
+                    border-bottom: 2px solid #e2e8f0;
+                    padding-bottom: 12px;
+                    font-size: 24px;
                 }
-                .subtitle {
-                    color: #94a3b8;
-                    font-size: 0.95rem;
-                    margin-bottom: 20px;
-                    line-height: 1.5;
-                }
-                .meta-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: 12px;
-                    background: #0f172a;
-                    padding: 16px;
-                    border-radius: 10px;
-                    border: 1px solid #1e293b;
-                    margin-bottom: 24px;
-                }
-                .meta-item strong {
-                    color: #38bdf8;
-                    display: block;
-                    font-size: 0.8rem;
-                    text-transform: uppercase;
-                    margin-bottom: 2px;
-                }
-                .meta-item span {
-                    color: #f1f5f9;
-                    font-size: 0.95rem;
-                }
-                h2 {
-                    color: #f1f5f9;
-                    font-size: 1.2rem;
+                .badge {
+                    display: inline-block;
+                    background: #dcfce7;
+                    color: #15803d;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 600;
                     margin-bottom: 12px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+                .meta {
+                    background: #edf2f7;
+                    padding: 12px 18px;
+                    border-radius: 8px;
+                    margin-bottom: 25px;
+                    font-size: 14px;
+                    line-height: 1.6;
+                }
+                .endpoint-card {
+                    border: 1px solid #cbd5e0;
+                    border-radius: 8px;
+                    padding: 16px;
+                    margin-bottom: 16px;
+                    background: #f8fafc;
+                }
+                .endpoint-card h3 {
+                    margin-top: 0;
+                    color: #2b6cb0;
+                    font-size: 16px;
+                }
+                .endpoint-card p {
+                    margin: 6px 0;
+                    font-size: 14px;
+                }
+                a.btn {
+                    display: inline-block;
+                    background: #3182ce;
+                    color: white;
+                    text-decoration: none;
+                    padding: 8px 14px;
+                    border-radius: 6px;
+                    font-size: 13px;
+                    margin-top: 8px;
+                    font-weight: 500;
+                }
+                a.btn:hover {
+                    background: #2b6cb0;
+                }
+                code {
+                    background: #edf2f7;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                    font-size: 13px;
+                    color: #b91c1c;
+                    font-family: Consolas, 'Courier New', monospace;
                 }
                 table {
                     width: 100%;
                     border-collapse: collapse;
-                    margin-bottom: 24px;
+                    margin-top: 10px;
+                    font-size: 13px;
                 }
                 th, td {
                     text-align: left;
-                    padding: 12px;
-                    border-bottom: 1px solid #334155;
-                    font-size: 0.9rem;
+                    padding: 8px 10px;
+                    border-bottom: 1px solid #e2e8f0;
                 }
                 th {
-                    color: #94a3b8;
-                    background: #0f172a;
-                    text-transform: uppercase;
-                    font-size: 0.75rem;
-                    letter-spacing: 0.05em;
-                }
-                .method {
-                    display: inline-block;
-                    padding: 2px 8px;
-                    border-radius: 4px;
-                    font-weight: 700;
-                    font-size: 0.75rem;
-                    font-family: monospace;
-                }
-                .method-post { background: #0369a1; color: #bae6fd; }
-                .method-get { background: #047857; color: #a7f3d0; }
-                code {
-                    font-family: 'Consolas', 'Courier New', monospace;
-                    color: #f43f5e;
-                    background: #0f172a;
-                    padding: 2px 6px;
-                    border-radius: 4px;
-                }
-                .actions {
-                    display: flex;
-                    gap: 12px;
-                    margin-top: 20px;
-                    flex-wrap: wrap;
-                }
-                .btn {
-                    display: inline-block;
-                    padding: 10px 20px;
-                    border-radius: 8px;
-                    font-weight: 600;
-                    text-decoration: none;
-                    font-size: 0.9rem;
-                    transition: all 0.2s ease;
-                }
-                .btn-primary {
-                    background: #0284c7;
-                    color: white;
-                }
-                .btn-primary:hover {
-                    background: #0369a1;
+                    background: #edf2f7;
+                    color: #4a5568;
                 }
             </style>
         </head>
         <body>
-            <div class="card">
-                <div class="header">
-                    <div>
-                        <h1>Servidor RESTful · ESPE</h1>
-                        <p style="color: #94a3b8; font-size: 0.9rem;">Conversor de Unidades (SINBDD)</p>
-                    </div>
-                    <span class="badge">Activo · Payara Server</span>
+            <div class="container">
+                <span class="badge">ESTADO: ACTIVO · PAYARA SERVER</span>
+                <h1>Servidor RESTful — Conversión de Unidades</h1>
+                <div class="meta">
+                    <strong>Asignatura:</strong> Arquitectura de Software (PAO 2026-51)<br>
+                    <strong>Tarea:</strong> TI.1.3 (RESTful Java SINBDD) | <strong>NRC:</strong> 36884 | <strong>Grupo:</strong> GR09<br>
+                    <strong>Autor:</strong> Julio Enrique Viche Castillo<br>
+                    <strong>Credenciales:</strong> Usuario <code>MONSTER</code> · Contraseña <code>MONSTER9</code>
                 </div>
 
-                <div class="meta-grid">
-                    <div class="meta-item">
-                        <strong>Tarea Oficial</strong>
-                        <span>TI.1.3 · RESTful Java</span>
-                    </div>
-                    <div class="meta-item">
-                        <strong>Autor & Grupo</strong>
-                        <span>Julio Viche · GR09 · NRC 36884</span>
-                    </div>
-                    <div class="meta-item">
-                        <strong>Arquitectura</strong>
-                        <span>Jakarta REST / GoF Strategy</span>
-                    </div>
-                    <div class="meta-item">
-                        <strong>Credenciales Fijas</strong>
-                        <span>MONSTER / MONSTER9</span>
-                    </div>
+                <h2>Endpoints y Recursos RESTful Disponibles</h2>
+
+                <div class="endpoint-card">
+                    <h3>1. Servicio de Autenticación</h3>
+                    <p>Gestiona el inicio de sesión contra credenciales fijas y emisión de tokens UUID en memoria.</p>
+                    <p><strong>Endpoint:</strong> <code>POST /ServidorREST/auth/login</code></p>
+                    <p><strong>Payload JSON:</strong> <code>{"username":"MONSTER", "password":"MONSTER9"}</code></p>
                 </div>
 
-                <h2>Endpoints del Servicio</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Método</th>
-                            <th>Ruta</th>
-                            <th>Descripción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="method method-post">POST</span></td>
-                            <td><code>/auth/login</code></td>
-                            <td>Autenticación y generación de token de sesión</td>
-                        </tr>
-                        <tr>
-                            <td><span class="method method-post">POST</span></td>
-                            <td><code>/conversor/longitud</code></td>
-                            <td>Conversión de longitud (5 unidades estrictas)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="method method-post">POST</span></td>
-                            <td><code>/conversor/masa</code></td>
-                            <td>Conversión de masa (5 unidades estrictas)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="method method-post">POST</span></td>
-                            <td><code>/conversor/temperatura</code></td>
-                            <td>Conversión de temperatura (5 unidades estrictas)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="method method-get">GET</span></td>
-                            <td><code>/health</code></td>
-                            <td>Comprobación de salud y estado del servicio</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="endpoint-card">
+                    <h3>2. Servicio de Conversión de Unidades (Patrón Strategy)</h3>
+                    <p>Procesa conversiones de <strong>Longitud</strong>, <strong>Masa</strong> y <strong>Temperatura</strong> protegidas por token de sesión (5 unidades estrictas por magnitud).</p>
+                    <table>
+                        <thead>
+                            <tr><th>Magnitud</th><th>Endpoint</th><th>Unidades Catálogo</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Longitud</strong></td><td><code>POST /ServidorREST/conversor/longitud</code></td><td>metro, centimetro, pie, yarda, milla</td></tr>
+                            <tr><td><strong>Masa</strong></td><td><code>POST /ServidorREST/conversor/masa</code></td><td>gramo, kilogramo, libra, onza, quintal</td></tr>
+                            <tr><td><strong>Temperatura</strong></td><td><code>POST /ServidorREST/conversor/temperatura</code></td><td>celsius, fahrenheit, kelvin, newton, reaumur</td></tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                <div class="actions">
-                    <a class="btn btn-primary" href="health" target="_blank">Consultar /health (JSON)</a>
+                <div class="endpoint-card">
+                    <h3>3. Verificación de Salud del Servidor</h3>
+                    <p>Monitoreo del estado operativo del servicio web RESTful y metadatos de la plataforma.</p>
+                    <p><strong>Endpoint:</strong> <code>GET /ServidorREST/health</code></p>
+                    <a href="health" class="btn" target="_blank">Consultar /health (JSON) &rarr;</a>
                 </div>
             </div>
         </body>

@@ -3,99 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servicio Web RESTful - Conversor de Unidades</title>
+    <title>Servidor REST - Conversor de Unidades (SINBDD)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f6f9;
-            color: #333;
             margin: 0;
             padding: 40px 20px;
-            display: flex;
-            justify-content: center;
+            color: #333;
         }
         .container {
-            max-width: 720px;
-            background: white;
-            padding: 30px;
+            max-width: 750px;
+            margin: 0 auto;
+            background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 30px 40px;
         }
-        h1 { color: #007749; margin-top: 0; }
+        h1 {
+            color: #1a365d;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+            font-size: 24px;
+        }
         .badge {
             display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: #dcfce7;
+            color: #15803d;
             padding: 4px 10px;
             border-radius: 6px;
+            font-size: 12px;
             font-weight: 600;
-            font-size: 0.85rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .meta {
+            background: #edf2f7;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .endpoint-card {
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: #f8fafc;
+        }
+        .endpoint-card h3 {
+            margin-top: 0;
+            color: #2b6cb0;
+            font-size: 16px;
+        }
+        .endpoint-card p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+        a.btn {
+            display: inline-block;
+            background: #3182ce;
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        a.btn:hover {
+            background: #2b6cb0;
+        }
+        code {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #b91c1c;
+            font-family: Consolas, 'Courier New', monospace;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
+            font-size: 13px;
         }
         th, td {
             text-align: left;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            padding: 8px 10px;
+            border-bottom: 1px solid #e2e8f0;
         }
-        th { background: #f9fafb; }
-        code {
-            background: #f1f3f5;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            color: #d63384;
+        th {
+            background: #edf2f7;
+            color: #4a5568;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <span class="badge">ESTADO: ACTIVO</span>
-    <h1>Conversor de Unidades RESTful · ESPE</h1>
-    <p><strong>Tarea:</strong> TI.1.3 · RESTful Java (SINBDD)</p>
-    <p><strong>Autor:</strong> Julio Enrique Viche Castillo · GR09 · NRC 36884</p>
-    <p>API REST basada en <strong>Jakarta EE / JAX-RS</strong> con formato de intercambio <strong>JSON</strong>.</p>
+    <div class="container">
+        <span class="badge">ESTADO: ACTIVO · PAYARA SERVER</span>
+        <h1>Servidor RESTful — Conversión de Unidades</h1>
+        <div class="meta">
+            <strong>Asignatura:</strong> Arquitectura de Software (PAO 2026-51)<br>
+            <strong>Tarea:</strong> TI.1.3 (RESTful Java SINBDD) | <strong>NRC:</strong> 36884 | <strong>Grupo:</strong> GR09<br>
+            <strong>Autor:</strong> Julio Enrique Viche Castillo<br>
+            <strong>Credenciales:</strong> Usuario <code>MONSTER</code> · Contraseña <code>MONSTER9</code>
+        </div>
 
-    <h3>Endpoints Disponibles</h3>
-    <table>
-        <thead>
-        <tr>
-            <th>Método</th>
-            <th>Ruta</th>
-            <th>Descripción</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><code>POST</code></td>
-            <td><code>/auth/login</code></td>
-            <td>Autenticación con <code>MONSTER</code> / <code>MONSTER9</code></td>
-        </tr>
-        <tr>
-            <td><code>POST</code></td>
-            <td><code>/conversor/longitud</code></td>
-            <td>Conversión de longitud (5 unidades)</td>
-        </tr>
-        <tr>
-            <td><code>POST</code></td>
-            <td><code>/conversor/masa</code></td>
-            <td>Conversión de masa (5 unidades)</td>
-        </tr>
-        <tr>
-            <td><code>POST</code></td>
-            <td><code>/conversor/temperatura</code></td>
-            <td>Conversión de temperatura (5 unidades)</td>
-        </tr>
-        <tr>
-            <td><code>GET</code></td>
-            <td><code>/health</code></td>
-            <td>Verificación de salud del servicio</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+        <h2>Endpoints y Recursos RESTful Disponibles</h2>
+
+        <div class="endpoint-card">
+            <h3>1. Servicio de Autenticación</h3>
+            <p>Gestiona el inicio de sesión contra credenciales fijas y emisión de tokens UUID en memoria.</p>
+            <p><strong>Endpoint:</strong> <code>POST /ServidorREST/auth/login</code></p>
+            <p><strong>Payload JSON:</strong> <code>{"username":"MONSTER", "password":"MONSTER9"}</code></p>
+        </div>
+
+        <div class="endpoint-card">
+            <h3>2. Servicio de Conversión de Unidades (Patrón Strategy)</h3>
+            <p>Procesa conversiones de <strong>Longitud</strong>, <strong>Masa</strong> y <strong>Temperatura</strong> protegidas por token de sesión (5 unidades estrictas por magnitud).</p>
+            <table>
+                <thead>
+                    <tr><th>Magnitud</th><th>Endpoint</th><th>Unidades Catálogo</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Longitud</strong></td><td><code>POST /ServidorREST/conversor/longitud</code></td><td>metro, centimetro, pie, yarda, milla</td></tr>
+                    <tr><td><strong>Masa</strong></td><td><code>POST /ServidorREST/conversor/masa</code></td><td>gramo, kilogramo, libra, onza, quintal</td></tr>
+                    <tr><td><strong>Temperatura</strong></td><td><code>POST /ServidorREST/conversor/temperatura</code></td><td>celsius, fahrenheit, kelvin, newton, reaumur</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="endpoint-card">
+            <h3>3. Verificación de Salud del Servidor</h3>
+            <p>Monitoreo del estado operativo del servicio web RESTful y metadatos de la plataforma.</p>
+            <p><strong>Endpoint:</strong> <code>GET /ServidorREST/health</code></p>
+            <a href="health" class="btn" target="_blank">Consultar /health (JSON) &rarr;</a>
+        </div>
+    </div>
 </body>
 </html>
