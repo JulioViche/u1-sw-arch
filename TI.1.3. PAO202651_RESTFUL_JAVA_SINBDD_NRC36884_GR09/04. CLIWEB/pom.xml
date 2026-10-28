@@ -17,6 +17,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <jetty.version>11.0.18</jetty.version>
         <jackson.version>2.16.1</jackson.version>
+        <netbeans.hint.deploy.server>pfv5ee8</netbeans.hint.deploy.server>
     </properties>
 
     <dependencies>
@@ -76,6 +77,7 @@
                 <version>3.4.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>WEB-INF/lib/jetty-*.jar,WEB-INF/lib/apache-*.jar,WEB-INF/lib/ecj-*.jar,WEB-INF/lib/asm-*.jar,WEB-INF/lib/jakarta.*.jar,WEB-INF/lib/slf4j-*.jar</packagingExcludes>
                 </configuration>
             </plugin>
             <!-- Permite arrancar el cliente web instantáneamente con: mvn exec:java -->
