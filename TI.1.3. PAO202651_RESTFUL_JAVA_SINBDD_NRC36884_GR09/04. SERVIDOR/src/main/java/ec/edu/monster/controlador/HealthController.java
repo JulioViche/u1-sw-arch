@@ -22,7 +22,7 @@ public class HealthController {
     public Response checkHealth() {
         Map<String, Object> status = new HashMap<>();
         status.put("status", "UP");
-        status.put("service", "WS_CONV_UNI_RESTFULL_JAVA");
+        status.put("service", "ServidorREST");
         status.put("protocol", "RESTful JSON");
         status.put("platform", "Java 17+ / Jakarta REST");
         status.put("author", "Julio Enrique Viche Castillo");
