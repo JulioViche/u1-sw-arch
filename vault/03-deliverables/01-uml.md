@@ -13,7 +13,7 @@ modelos UML.
 | Carpeta | Contenido | Formato |
 | --- | --- | --- |
 | `01. ERS/` | Especificación de Requisitos de Software (únicamente Word oficial) | `.docx` |
-| `02. ECUD/` | Especificación de Casos de Uso Detallados | `.pdf` / `.docx` |
+| `02. ECUD/` | Especificación de Casos de Uso Detallados ([ecud.md](ecud.md)) | `.pdf` / `.docx` |
 | `03. DIAGRAMAS UML/` | Modelos y exportados | nativo (`.oom`, `.prj`, `.eam`, etc.) + `.png`/`.pdf` |
 
 Adicionalmente, en la raíz de cada variante se ubica el espacio de trabajo de PowerDesigner (`CON_UNI_GR09.sws`) que enlaza los proyectos de diagramas.

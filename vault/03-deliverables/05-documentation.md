@@ -15,6 +15,10 @@ Carpeta `05. DOCUMENTACION/` de cada variante. Manual técnico, presentación y 
 
 En el ejemplo de referencia, el manual vive en una subcarpeta `02. MANUAL TECNICO/`.
 
+## Manuales Técnicos en Markdown (Vault)
+- [Manual Técnico - SOAP Java (TI.1.1)](manual-tecnico-soap.md)
+- [Manual Técnico - RESTful Java (TI.1.3)](manual-tecnico-restful.md)
+
 ## Contenido sugerido del manual
 
 1. Introducción y objetivo del sistema.

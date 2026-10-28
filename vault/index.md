@@ -74,10 +74,13 @@ flowchart TD
 - [01 · UML](03-deliverables/01-uml.md)
 - [Plantilla ERS / SRS (Documento base)](03-deliverables/srs-template.md)
 - [Variaciones del ERS por Taller (TI.1.1 a TI.1.4)](03-deliverables/srs-variations.md)
+- [Especificación de Casos de Uso Detallados (ECUD)](03-deliverables/ecud.md)
 - [02 · MER](03-deliverables/02-mer.md)
 - [03 · BDD](03-deliverables/03-bdd.md)
 - [04 · Clientes y servidor](03-deliverables/04-clients-and-server.md)
 - [05 · Documentación](03-deliverables/05-documentation.md)
+  - [Manual Técnico - SOAP Java](03-deliverables/manual-tecnico-soap.md)
+  - [Manual Técnico - RESTful Java](03-deliverables/manual-tecnico-restful.md)
 
 ### 04 · Guías
 - [Instalación y replicabilidad del entorno](04-guides/environment-setup.md)
@@ -90,10 +93,10 @@ flowchart TD
 
 ### 06 · Projects
 - [06 · Projects](06-projects/index.md)
-  - [TI.1.1 · SOAP Java](06-projects/ti-1-1-soap-java/index.md) ([ERS](06-projects/ti-1-1-soap-java/srs.md) · [Diagramas](06-projects/ti-1-1-soap-java/diagrams.md) · [Manual Técnico](06-projects/ti-1-1-soap-java/technical-manual.md))
-  - [TI.1.2 · SOAP .NET](06-projects/ti-1-2-soap-dotnet/index.md) ([ERS](06-projects/ti-1-2-soap-dotnet/srs.md) · [Diagramas](06-projects/ti-1-2-soap-dotnet/diagrams.md))
-  - [TI.1.3 · RESTful Java](06-projects/ti-1-3-rest-java/index.md) ([ERS](06-projects/ti-1-3-rest-java/srs.md) · [Diagramas](06-projects/ti-1-3-rest-java/diagrams.md))
-  - [TI.1.4 · RESTful .NET](06-projects/ti-1-4-rest-dotnet/index.md) ([ERS](06-projects/ti-1-4-rest-dotnet/srs.md) · [Diagramas](06-projects/ti-1-4-rest-dotnet/diagrams.md))
+  - [TI.1.1 · SOAP Java](06-projects/ti-1-1-soap-java/index.md) ([ERS](06-projects/ti-1-1-soap-java/srs.md) · [ECUD](06-projects/ti-1-1-soap-java/ecud.md) · [Diagramas](06-projects/ti-1-1-soap-java/diagrams.md) · [Manual Técnico](06-projects/ti-1-1-soap-java/technical-manual.md))
+  - [TI.1.2 · SOAP .NET](06-projects/ti-1-2-soap-dotnet/index.md) ([ERS](06-projects/ti-1-2-soap-dotnet/srs.md) · [ECUD](06-projects/ti-1-2-soap-dotnet/ecud.md) · [Diagramas](06-projects/ti-1-2-soap-dotnet/diagrams.md))
+  - [TI.1.3 · RESTful Java](06-projects/ti-1-3-rest-java/index.md) ([ERS](06-projects/ti-1-3-rest-java/srs.md) · [ECUD](06-projects/ti-1-3-rest-java/ecud.md) · [Diagramas](06-projects/ti-1-3-rest-java/diagrams.md) · [Manual Técnico](06-projects/ti-1-3-rest-java/technical-manual.md))
+  - [TI.1.4 · RESTful .NET](06-projects/ti-1-4-rest-dotnet/index.md) ([ERS](06-projects/ti-1-4-rest-dotnet/srs.md) · [ECUD](06-projects/ti-1-4-rest-dotnet/ecud.md) · [Diagramas](06-projects/ti-1-4-rest-dotnet/diagrams.md))
 
 ---
 
