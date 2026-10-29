@@ -1,0 +1,78 @@
+@{
+    Layout = null;
+    string? error = ViewBag.Error as string;
+    string? mensaje = ViewBag.Mensaje as string;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Sistema - Conversor de Unidades RESTful .NET (GR09)</title>
+    <link rel="stylesheet" href="~/css/style.css">
+</head>
+<body>
+
+    <!-- Encabezado Institucional -->
+    <header class="header-bar">
+        <div class="header-brand">
+            <h1>UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE</h1>
+            <p>Arquitectura de Software (TI.1.4) · Grupo GR09 | Julio Enrique Viche Castillo</p>
+        </div>
+        <div class="header-user">
+            <span class="badge-session">
+                <span class="status-dot">●</span> Servidor REST: 5000
+            </span>
+        </div>
+    </header>
+
+    <!-- Contenedor del Formulario de Login -->
+    <main class="main-wrapper">
+        <div class="card-box card-login">
+            <h2 class="card-title">Iniciar Sesión</h2>
+            <p class="card-subtitle">Autenticación requerida para acceder al Conversor REST (SINBDD)</p>
+
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <div class="alert alert-error">
+                    @error
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert alert-info">
+                    @mensaje
+                </div>
+            }
+
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label class="form-label" for="txtUsuario">Usuario:</label>
+                    <input type="text" id="txtUsuario" name="usuario" class="form-input" 
+                           value="MONSTER" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="txtClave">Contraseña:</label>
+                    <input type="password" id="txtClave" name="clave" class="form-input" 
+                           value="MONSTER9" required>
+                </div>
+
+                <div class="alert alert-info" style="font-size: 0.8rem; padding: 8px 12px; margin-bottom: 20px;">
+                    <strong>Credenciales del curso:</strong> Usuario: <code>MONSTER</code> | Clave: <code>MONSTER9</code>
+                </div>
+
+                <button type="submit" class="btn-primary">Ingresar al Conversor</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Barra de Estado Inferior -->
+    <footer class="footer-bar">
+        <span>Servidor Backend: <code>http://192.168.137.1:5000</code> (Modalidad SINBDD)</span>
+        <span>Patrón Arquitectónico: Modelo - Vista - Controlador (ASP.NET Core MVC / .NET 10)</span>
+    </footer>
+
+</body>
+</html>
