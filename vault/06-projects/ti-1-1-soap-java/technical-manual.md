@@ -11,7 +11,7 @@ tags: [manual-tecnico, sinbdd, entrega, capturas]
 **Universidad de las Fuerzas Armadas ESPE — Sede Latacunga**  
 **Departamento de Ciencias de la Computación**  
 **Asignatura:** Arquitectura de Software | **NRC:** 36884 | **Grupo:** GR09  
-**Autor:** Julio Enrique Viche Castillo  
+**Autores:** Murillo Medina, Gabriel Omar; Viche Castillo, Julio Enrique  
 **Docente:** Ing. Eduardo Mauricio Campaña Ortega, MIS.MDU.CCNA.CCIA. PhD. (c)  
 **Fecha:** 28 de Octubre de 2026
 
@@ -593,7 +593,7 @@ La clase principal del proyecto funciona como el punto de entrada de la aplicaci
 
 #### EJECUCIÓN DEL CLIENTE DE ESCRITORIO
 
-![Captura](imagenes/soap_cliesc_login.png)
+![Inicio de sesión del cliente de escritorio SOAP Java](imagenes/evidencia_cliente_soap_java_desktop_login.png)
 
 *_Figura 38. Login - Cliente escritorio_*
 
@@ -703,13 +703,135 @@ Para el cliente móvil Android se implementa la comunicación SOAP consumiendo l
 
 Tabla 18. Clase LoginController - Cliente móvil
 
-| package ec.edu.monster.conuniclientemovil.controller;import ec.edu.monster.conuniclientemovil.model.LoginResult;import ec.edu.monster.conuniclientemovil.model.SoapClient;import java.util.concurrent.ExecutionException;import java.util.concurrent.ExecutorService;import java.util.concurrent.Executors;public class LoginController { /** * Callback para el resultado del login. */ public interface LoginCallback { void onResult(LoginResult result); } private final SoapClient soapClient; private final ExecutorService executorService; public LoginController(SoapClient soapClient) { this(soapClient, Executors.newSingleThreadExecutor()); } public LoginController(SoapClient soapClient, ExecutorService executorService) { this.soapClient = soapClient; this.executorService = executorService; } /** * Ejecuta el login de forma asíncrona. */ public void login(String baseUrl, String usuario, String clave, LoginCallback callback) { executorService.execute(() -> { try { String token = soapClient.login(baseUrl, usuario, clave).get(); callback.onResult(LoginResult.success(token)); } catch (Exception exception) { callback.onResult(LoginResult.error(extractMessage(exception))); } }); } public void shutdown() { executorService.shutdown(); } private String extractMessage(Exception exception) { Throwable cause = exception; if (exception instanceof ExecutionException && exception.getCause() != null) { cause = exception.getCause(); } String message = cause.getMessage(); if (message == null // message.trim().isEmpty()) { return "Error desconocido"; } return message; }} |
-| --- |
+```java
+package ec.edu.monster.client.controller;
+
+import android.os.Handler;
+import android.os.Looper;
+
+import ec.edu.monster.client.model.LoginResponse;
+import ec.edu.monster.client.model.SessionModel;
+import ec.edu.monster.client.model.SoapClient;
+
+import java.util.concurrent.Future;
+
+/**
+ * [CONTROLADOR] Gestiona el flujo de autenticación para la vista móvil.
+ * Coordina llamadas asíncronas y publica resultados en el hilo principal (MainLooper).
+ */
+public class LoginController {
+
+    public interface LoginCallback {
+        void onSuccess(SessionModel session);
+        void onError(String mensaje);
+    }
+
+    private final SoapClient soapClient;
+    private final Handler mainHandler;
+
+    public LoginController() {
+        this.soapClient = new SoapClient();
+        this.mainHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public void procesarLogin(String baseUrl, String usuario, String clave, LoginCallback callback) {
+        new Thread(() -> {
+            try {
+                Future<LoginResponse> future = soapClient.iniciarSesion(baseUrl, usuario, clave);
+                LoginResponse resp = future.get();
+
+                mainHandler.post(() -> {
+                    if (resp != null && resp.isExito() && resp.getToken() != null) {
+                        SessionModel session = new SessionModel(usuario, resp.getToken());
+                        callback.onSuccess(session);
+                    } else {
+                        String err = (resp != null && resp.getMensaje() != null) 
+                                ? resp.getMensaje() 
+                                : "Error al iniciar sesión.";
+                        callback.onError(err);
+                    }
+                });
+
+            } catch (Exception e) {
+                mainHandler.post(() -> callback.onError("Error de conexión: " + e.getMessage()));
+            }
+        }).start();
+    }
+}
+```
 
 Tabla 19. Clase ConversionController - Cliente móvil
 
-| package ec.edu.monster.conuniclientemovil.controller;import ec.edu.monster.conuniclientemovil.model.ConversionRequest;import ec.edu.monster.conuniclientemovil.model.ConversionResult;import ec.edu.monster.conuniclientemovil.model.ServiceType;import ec.edu.monster.conuniclientemovil.model.SoapClient;import ec.edu.monster.conuniclientemovil.model.SoapErrorMapper;import java.util.concurrent.ExecutionException;import java.util.concurrent.ExecutorService;import java.util.concurrent.Executors;public class ConversionController { /** * Callback para operaciones de conversión. */ public interface ConversionCallback { void onResult(ConversionResult result); } private final SoapClient soapClient; private final ExecutorService executorService; public ConversionController(SoapClient soapClient) { this(soapClient, Executors.newSingleThreadExecutor()); } public ConversionController(SoapClient soapClient, ExecutorService executorService) { this.soapClient = soapClient; this.executorService = executorService; } /** * Ejecuta una conversión de forma asíncrona usando el modelo ConversionRequest. */ public void convert(ConversionRequest request, String baseUrl, ConversionCallback callback) { executorService.execute(() -> { try { double result = executeConversion( request.getServiceType(), baseUrl, request.getValue(), request.getOriginUnit(), request.getDestinationUnit(), request.getToken() ); String mappedError = SoapErrorMapper.mapConversionError( request.getServiceType(), result); if (mappedError != null) { callback.onResult(ConversionResult.serviceError(mappedError, result)); return; } callback.onResult(ConversionResult.success(result)); } catch (Exception exception) { callback.onResult(ConversionResult.error(extractMessage(exception))); } }); } public void shutdown() { executorService.shutdown(); } private double executeConversion( ServiceType serviceType, String baseUrl, double inputValue, String origin, String destination, String token ) throws Exception { switch (serviceType) { case LONGITUD: return soapClient.convertirLongitud(baseUrl, inputValue, origin, destination, token).get(); case MASA: return soapClient.convertirMasa(baseUrl, inputValue, origin, destination, token).get(); case TEMPERATURA: return soapClient.convertirTemperatura(baseUrl, inputValue, origin, destination, token).get(); default: throw new IllegalArgumentException("Servicio no soportado: " + serviceType); } } private String extractMessage(Exception exception) { Throwable cause = exception; if (exception instanceof ExecutionException && exception.getCause() != null) { cause = exception.getCause(); } String message = cause.getMessage(); if (message == null // message.trim().isEmpty()) { return "Error desconocido"; } return message; }} |
-| --- |
+```java
+package ec.edu.monster.client.controller;
+
+import android.os.Handler;
+import android.os.Looper;
+
+import ec.edu.monster.client.model.ConversionRequest;
+import ec.edu.monster.client.model.ConversionResponse;
+import ec.edu.monster.client.model.SoapClient;
+
+import java.util.concurrent.Future;
+
+/**
+ * [CONTROLADOR] Gestiona el despacho de conversiones de unidades SOAP.
+ */
+public class ConversionController {
+
+    public interface ConversionCallback {
+        void onSuccess(ConversionResponse response);
+        void onError(String mensaje);
+    }
+
+    private final SoapClient soapClient;
+    private final Handler mainHandler;
+
+    public ConversionController() {
+        this.soapClient = new SoapClient();
+        this.mainHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public void procesarConversion(String baseUrl, String token, ConversionRequest req, ConversionCallback callback) {
+        new Thread(() -> {
+            try {
+                Future<ConversionResponse> future;
+                String magnitud = req.getMagnitud().toLowerCase();
+
+                switch (magnitud) {
+                    case "longitud":
+                        future = soapClient.convertirLongitud(baseUrl, token, req.getValor(), req.getUnidadOrigen(), req.getUnidadDestino());
+                        break;
+                    case "masa":
+                        future = soapClient.convertirMasa(baseUrl, token, req.getValor(), req.getUnidadOrigen(), req.getUnidadDestino());
+                        break;
+                    case "temperatura":
+                        future = soapClient.convertirTemperatura(baseUrl, token, req.getValor(), req.getUnidadOrigen(), req.getUnidadDestino());
+                        break;
+                    default:
+                        mainHandler.post(() -> callback.onError("Magnitud física no soportada: " + req.getMagnitud()));
+                        return;
+                }
+
+                ConversionResponse resp = future.get();
+                mainHandler.post(() -> {
+                    if (resp != null && resp.isExito()) {
+                        callback.onSuccess(resp);
+                    } else {
+                        String err = (resp != null && resp.getMensajeError() != null) 
+                                ? resp.getMensajeError() 
+                                : "Error al procesar la conversión.";
+                        callback.onError(err);
+                    }
+                });
+
+            } catch (Exception e) {
+                mainHandler.post(() -> callback.onError("Error de red: " + e.getMessage()));
+            }
+        }).start();
+    }
+}
+```
 
 CREACIÓN DE VISTAS
 
@@ -721,13 +843,45 @@ Se crean los archivos de interfaz gráfica en el paquete views.
 
 #### EJECUCIÓN DEL CLIENTE DE MÓVIL
 
-![Captura](imagenes/soap_climov_login.png)
+![Inicio de sesión del cliente móvil SOAP Java](imagenes/evidencia_cliente_movil_soap_java_login.png)
 
-*_Figura 50. Login - Cliente móvil_*
+*_Figura 50. Inicio de sesión - Cliente móvil SOAP Java_*
 
-![Captura](imagenes/image51.png)
+![Conversión Android SOAP Java: 100.00 Metro a 10000.00 Centimetro](imagenes/evidencia_cliente_movil_soap_java_conversion.png)
 
-*_Figura 51. Pantalla de Conversiones - Cliente móvil_*
+*_Figura 51. Conversión en Android: 100.00 Metro a 10000.00 Centimetro_*
+
+**Figura 8. Cliente de consola SOAP Java: inicio de sesión.**
+
+![Inicio de sesión en consola](imagenes/soap_clicon_login.png)
+
+**Figura 9. Cliente de consola SOAP Java: conversión de longitud, 25 Metro a 82.02 Pie.**
+
+![Conversión de longitud en consola](imagenes/soap_clicon_longitud.png)
+
+**Figura 10. Cliente de consola SOAP Java: conversión de masa, 33 Kilogramo a 72.75 Libra.**
+
+![Conversión de masa en consola](imagenes/soap_clicon_masa.png)
+
+**Figura 11. Cliente de consola SOAP Java: conversión de temperatura, 45 Celsius a 14.85 Newton.**
+
+![Conversión de temperatura en consola](imagenes/soap_clicon_temperatura.png)
+
+**Figura 12. Cliente de escritorio SOAP Java: inicio de sesión.**
+
+![Inicio de sesión en escritorio](imagenes/evidencia_cliente_soap_java_desktop_login.png)
+
+**Figura 13. Cliente de escritorio SOAP Java: conversión, 150 Metro a 15000 Centimetro.**
+
+![Conversión en escritorio](imagenes/soap_cliesc_conversion.png)
+
+**Figura 14. Cliente móvil SOAP Java: conversión de masa, 100 Gramo a 0.10 Kilogramo.**
+
+![Conversión de masa en Android](imagenes/evidencia_cliente_movil_soap_java_masa.png)
+
+**Figura 15. Cliente móvil SOAP Java: conversión de temperatura, 100 Celsius a 212 Fahrenheit.**
+
+![Conversión de temperatura en Android](imagenes/evidencia_cliente_movil_soap_java_temperatura.png)
 
 #### CONCLUSIONES
 
@@ -756,3 +910,36 @@ Desarrollar pruebas unitarias en la capa de servicios para asegurar la exactitud
 Mejorar la interfaz de usuario en los clientes web y móvil incorporando retroalimentación visual más precisa, controles de validación en los formularios y manejo asíncrono avanzado para no bloquear las pantallas durante la espera de respuesta del servidor.
 
 Documentar el contrato WSDL detalladamente con comentarios estructurados, lo que permitirá a futuros desarrolladores entender rápidamente los tipos de datos requeridos y facilitar su consumo desde sistemas construidos en otros lenguajes de programación.
+
+## ANEXO: Capturas de ejecución
+
+Capturas verificadas del servidor y de los cuatro clientes del proyecto SOAP Java SINBDD, obtenidas o revisadas el 29 de octubre de 2026.
+
+**Figura 1. Servidor SOAP Java: estado y endpoints publicados.**
+
+![Figura 1. Servidor SOAP Java: estado y endpoints publicados.](imagenes/evidencia_servidor_soap_java.png)
+
+**Figura 2. Contrato WSDL del servicio SOAP Java.**
+
+![Figura 2. Contrato WSDL del servicio SOAP Java.](imagenes/evidencia_wsdl_soap_java.png)
+
+**Figura 3. Cliente web SOAP Java: inicio de sesión.**
+
+![Figura 3. Cliente web SOAP Java: inicio de sesión.](imagenes/evidencia_cliente_soap_java_login.png)
+
+**Figura 4. Cliente web SOAP Java: conversor con sesión autenticada.**
+
+![Figura 4. Cliente web SOAP Java: conversor con sesión autenticada.](imagenes/evidencia_cliente_soap_java_panel.png)
+
+**Figura 5. Conversión SOAP Java: 10 Metro a 10.94 Yarda.**
+
+![Figura 5. Conversión SOAP Java: 10 Metro a 10.94 Yarda.](imagenes/evidencia_cliente_soap_java_longitud.png)
+
+**Figura 6. Conversión SOAP Java: 500 Gramo a 17.64 Onza.**
+
+![Figura 6. Conversión SOAP Java: 500 Gramo a 17.64 Onza.](imagenes/evidencia_cliente_soap_java_masa.png)
+
+**Figura 7. Conversión SOAP Java: 0 Celsius a 273.15 Kelvin.**
+
+![Figura 7. Conversión SOAP Java: 0 Celsius a 273.15 Kelvin.](imagenes/evidencia_cliente_soap_java_temperatura.png)
+
