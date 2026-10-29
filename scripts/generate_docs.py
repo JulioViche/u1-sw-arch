@@ -323,7 +323,51 @@ def customize_ecud_document(docx_path, config):
             new_text = new_text.replace('"Monster9"', '"MONSTER9"')
             changed = True
 
-        # 4. Autores de los casos de uso: primer nombre y apellido
+        # 4. Parametrización estándar mediante marcadores de plantilla
+        servidor_nombre = "servidor .NET (Kestrel)" if is_dotnet else "servidor Payara"
+        servidor_estado = "Servidor .NET en estado operativo" if is_dotnet else "Servidor Payara en estado operativo"
+
+        if is_soap:
+            if not is_dotnet:  # SOAP Java (TI.1.1)
+                meta_servicio = "operaciones del servicio web SOAP (JAX-WS)"
+                desc_servicio = "operaciones del servicio web SOAP (JAX-WS)"
+                canal_peticion = "SOAP al servicio web (JAX-WS)."
+                login_validacion = "1. El sistema recibe la solicitud SOAP login() y valida las credenciales en memoria RAM (SINBDD)."
+            else:  # SOAP .NET (TI.1.2)
+                meta_servicio = "contratos de operación del servicio web SOAP (CoreWCF)"
+                desc_servicio = "contratos de operación del servicio web SOAP (CoreWCF)"
+                canal_peticion = "SOAP al servicio web (CoreWCF)."
+                login_validacion = "1. El sistema recibe la solicitud SOAP Login() y valida las credenciales en memoria RAM (SINBDD)."
+            formato_respuesta = "en el sobre de respuesta SOAP (XML)"
+        else:
+            if not is_dotnet:  # RESTful Java (TI.1.3)
+                meta_servicio = "recursos y endpoints de la API REST (Jersey)"
+                desc_servicio = "recursos de la API REST (Jersey)"
+                canal_peticion = "HTTP POST a los endpoints de la API REST (Jersey)."
+                login_validacion = "1. El sistema recibe la petición HTTP POST /auth/login y valida las credenciales en memoria RAM (SINBDD)."
+            else:  # RESTful .NET (TI.1.4)
+                meta_servicio = "recursos y endpoints de la API REST (ASP.NET Core)"
+                desc_servicio = "controladores de la API REST (ASP.NET Core)"
+                canal_peticion = "HTTP POST a los controladores de la API REST (ASP.NET Core)."
+                login_validacion = "1. El sistema recibe la petición HTTP POST /api/auth/login y valida las credenciales en memoria RAM (SINBDD)."
+            formato_respuesta = "en formato JSON"
+
+        placeholders = {
+            "{{AUTORES_CU}}": "Julio Viche, Gabriel Murillo",
+            "{{VAR_META_SERVICIO}}": meta_servicio,
+            "{{VAR_DESC_SERVICIO}}": desc_servicio,
+            "{{VAR_SERVIDOR_NOMBRE}}": servidor_nombre,
+            "{{VAR_SERVIDOR_ESTADO}}": servidor_estado,
+            "{{VAR_CANAL_PETICION}}": canal_peticion,
+            "{{VAR_LOGIN_VALIDACION}}": login_validacion,
+            "{{VAR_FORMATO_RESPUESTA}}": formato_respuesta
+        }
+        for k, v in placeholders.items():
+            if k in new_text:
+                new_text = new_text.replace(k, v)
+                changed = True
+
+        # Compatibilidad adicional con textos legados
         old_authors = [
             "Coloma Kevin, Granda Carlos, Moreira Erick.",
             "Viche Castillo, Julio Enrique; Murillo Medina, Gabriel Omar."
@@ -333,31 +377,10 @@ def customize_ecud_document(docx_path, config):
                 new_text = new_text.replace(oa, "Julio Viche, Gabriel Murillo")
                 changed = True
 
-        # 5. Adaptaciones por protocolo (SOAP vs REST)
-        if is_soap:
-            replacements = [
-                ("recursos y endpoints de la API REST", "operaciones del servicio web SOAP"),
-                ("recursos de la API REST", "operaciones del servicio web SOAP"),
-                ("endpoints de la API REST", "operaciones del servicio web SOAP"),
-                ("API REST", "servicio web SOAP"),
-                ("petición HTTP a la API REST", "petición SOAP sobre HTTP al servicio web"),
-                ("en formato JSON", "en envoltorio SOAP (XML)")
-            ]
-            for old, new in replacements:
-                if old in new_text:
-                    new_text = new_text.replace(old, new)
-                    changed = True
-
-        # 6. Adaptaciones por plataforma (Java vs .NET)
         if is_dotnet:
-            replacements_plat = [
-                ("servidor Payara 7", "servidor .NET (Kestrel)"),
-                ("servidor Payara", "servidor .NET"),
-                ("Servidor Payara", "Servidor .NET")
-            ]
-            for old, new in replacements_plat:
-                if old in new_text:
-                    new_text = new_text.replace(old, new)
+            for s_old, s_new in [("servidor Payara 7", "servidor .NET (Kestrel)"), ("servidor Payara", "servidor .NET"), ("Servidor Payara", "Servidor .NET")]:
+                if s_old in new_text:
+                    new_text = new_text.replace(s_old, s_new)
                     changed = True
 
         return new_text, changed
@@ -392,10 +415,9 @@ def generate_variant_documents(cfg, fresh=False):
 
     # 2. ECUD Word
     target_ecud = ecud_dir / cfg["ecud_file"]
-    if fresh or not target_ecud.exists():
-        src_ecud = TEMPLATES_DIR / "word" / "PLANTILLA_ECUD.docx"
-        shutil.copy2(src_ecud, target_ecud)
-        print(f"  + Inicializado ECUD desde plantilla: {cfg['ecud_file']}")
+    src_ecud = TEMPLATES_DIR / "word" / "PLANTILLA_ECUD.docx"
+    shutil.copy2(src_ecud, target_ecud)
+    print(f"  + Sincronizado ECUD desde plantilla maestra: {cfg['ecud_file']}")
     customize_ecud_document(target_ecud, cfg)
     print(f"  [OK] ECUD actualizado: {cfg['ecud_file']} ({target_ecud.stat().st_size / 1024:.1f} KB)")
 
