@@ -30,8 +30,9 @@ def build():
                 xml = xml.replace("GRANDA VELASQUEZ CARLOS JAVIER", "MURILLO MEDINA GABRIEL OMAR")
                 xml = xml.replace("MOREIRA VINUEZA ERICK PATRICIO", "NRC: 36884 | GRUPO: GR09")
                 
-                # 2. Tablas de Casos de Uso (Autores)
-                xml = xml.replace("Coloma Kevin, Granda Carlos, Moreira Erick.", "Viche Castillo, Julio Enrique; Murillo Medina, Gabriel Omar.")
+                # 2. Tablas de Casos de Uso (Autores: Primer nombre y primer apellido)
+                xml = xml.replace("Coloma Kevin, Granda Carlos, Moreira Erick.", "Julio Viche, Gabriel Murillo")
+                xml = xml.replace("Viche Castillo, Julio Enrique; Murillo Medina, Gabriel Omar.", "Julio Viche, Gabriel Murillo")
                 
                 # 3. Credenciales quemadas estandarizadas (MONSTER / MONSTER9)
                 xml = xml.replace('&quot;Monster&quot;', '&quot;MONSTER&quot;')

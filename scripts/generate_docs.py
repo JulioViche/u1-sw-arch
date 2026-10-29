@@ -243,6 +243,51 @@ def customize_pptx_document(pptx_path, config):
     update_xml_in_zip(pptx_path, 'ppt/slides/slide1.xml', transform_slide)
     apply_metadata_to_office(pptx_path)
 
+def patch_ecud_images_for_dotnet(docx_path):
+    """Reemplaza 'Servidor Payara - Seguridad' por 'Servidor .NET - Seguridad' en las imagenes incrustadas del docx."""
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+        import io
+
+        temp_dir = tempfile.mkdtemp()
+        temp_zip = Path(temp_dir) / docx_path.name
+        modified = False
+
+        with zipfile.ZipFile(docx_path, 'r') as zin, zipfile.ZipFile(temp_zip, 'w', compression=zipfile.ZIP_DEFLATED) as zout:
+            for item in zin.infolist():
+                data = zin.read(item.filename)
+                if item.filename.startswith("word/media/image") and item.filename.endswith(".png") and any(f"image{n}.png" in item.filename for n in [2, 3, 4, 5]):
+                    im = Image.open(io.BytesIO(data)).convert("RGB")
+                    w, h = im.size
+                    pixels = im.load()
+                    gray_pixels = [
+                        (x, y) for y in range(h) for x in range(w)
+                        if abs(pixels[x, y][0] - pixels[x, y][1]) < 5 and abs(pixels[x, y][1] - pixels[x, y][2]) < 5 and 150 < pixels[x, y][0] < 200
+                    ]
+                    if gray_pixels:
+                        min_x = min(p[0] for p in gray_pixels)
+                        max_x = max(p[0] for p in gray_pixels)
+                        min_y = min(p[1] for p in gray_pixels)
+                        center_x = (min_x + max_x) // 2
+
+                        draw = ImageDraw.Draw(im)
+                        draw.rectangle([min_x + 15, min_y + 15, max_x - 15, min_y + 70], fill=(192, 192, 192))
+                        font = ImageFont.truetype("C:\\Windows\\Fonts\\arialbd.ttf", 16)
+                        draw.text((center_x, min_y + 26), "Servidor .NET -", fill=(0, 0, 0), font=font, anchor="mt")
+                        draw.text((center_x, min_y + 44), "Seguridad", fill=(0, 0, 0), font=font, anchor="mt")
+
+                        buf = io.BytesIO()
+                        im.save(buf, format="PNG")
+                        data = buf.getvalue()
+                        modified = True
+                zout.writestr(item, data)
+
+        if modified:
+            shutil.move(str(temp_zip), str(docx_path))
+        shutil.rmtree(temp_dir, ignore_errors=True)
+    except Exception as e:
+        print(f"    [WARN] No se pudieron parchear imagenes para .NET: {e}")
+
 def customize_ecud_document(docx_path, config):
     """Personaliza la Especificación de Casos de Uso Detallados (ECUD) según protocolo y plataforma."""
     protocolo = config.get("protocolo", "SOAP").upper()
@@ -278,7 +323,17 @@ def customize_ecud_document(docx_path, config):
             new_text = new_text.replace('"Monster9"', '"MONSTER9"')
             changed = True
 
-        # 4. Adaptaciones por protocolo (SOAP vs REST)
+        # 4. Autores de los casos de uso: primer nombre y apellido
+        old_authors = [
+            "Coloma Kevin, Granda Carlos, Moreira Erick.",
+            "Viche Castillo, Julio Enrique; Murillo Medina, Gabriel Omar."
+        ]
+        for oa in old_authors:
+            if oa in new_text:
+                new_text = new_text.replace(oa, "Julio Viche, Gabriel Murillo")
+                changed = True
+
+        # 5. Adaptaciones por protocolo (SOAP vs REST)
         if is_soap:
             replacements = [
                 ("recursos y endpoints de la API REST", "operaciones del servicio web SOAP"),
@@ -293,7 +348,7 @@ def customize_ecud_document(docx_path, config):
                     new_text = new_text.replace(old, new)
                     changed = True
 
-        # 5. Adaptaciones por plataforma (Java vs .NET)
+        # 6. Adaptaciones por plataforma (Java vs .NET)
         if is_dotnet:
             replacements_plat = [
                 ("servidor Payara 7", "servidor .NET (Kestrel)"),
@@ -308,6 +363,8 @@ def customize_ecud_document(docx_path, config):
         return new_text, changed
 
     update_xml_in_zip(docx_path, 'word/document.xml', transform_ecud)
+    if is_dotnet:
+        patch_ecud_images_for_dotnet(docx_path)
     apply_metadata_to_office(docx_path)
 
 def generate_variant_documents(cfg, fresh=False):
