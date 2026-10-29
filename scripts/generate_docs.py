@@ -243,6 +243,73 @@ def customize_pptx_document(pptx_path, config):
     update_xml_in_zip(pptx_path, 'ppt/slides/slide1.xml', transform_slide)
     apply_metadata_to_office(pptx_path)
 
+def customize_ecud_document(docx_path, config):
+    """Personaliza la Especificación de Casos de Uso Detallados (ECUD) según protocolo y plataforma."""
+    protocolo = config.get("protocolo", "SOAP").upper()
+    plataforma = config.get("plataforma", "JAVA").upper()
+    is_soap = "SOAP" in protocolo
+    is_dotnet = "DOTNET" in plataforma
+
+    def transform_ecud(text):
+        changed = False
+        new_text = text
+
+        # 1. Quitar cualquier resaltado
+        if "<w:highlight" in new_text:
+            new_text = re.sub(r'<w:highlight [^>]*/>', '', new_text)
+            changed = True
+
+        # 2. Formato estricto a 2 decimales (Regla 10)
+        if "4 decimales" in new_text:
+            new_text = new_text.replace("4 decimales", "2 decimales")
+            changed = True
+
+        # 3. Normalizar credenciales quemadas (MONSTER / MONSTER9)
+        if '&quot;Monster&quot;' in new_text:
+            new_text = new_text.replace('&quot;Monster&quot;', '&quot;MONSTER&quot;')
+            changed = True
+        if '&quot;Monster9&quot;' in new_text:
+            new_text = new_text.replace('&quot;Monster9&quot;', '&quot;MONSTER9&quot;')
+            changed = True
+        if '"Monster"' in new_text:
+            new_text = new_text.replace('"Monster"', '"MONSTER"')
+            changed = True
+        if '"Monster9"' in new_text:
+            new_text = new_text.replace('"Monster9"', '"MONSTER9"')
+            changed = True
+
+        # 4. Adaptaciones por protocolo (SOAP vs REST)
+        if is_soap:
+            replacements = [
+                ("recursos y endpoints de la API REST", "operaciones del servicio web SOAP"),
+                ("recursos de la API REST", "operaciones del servicio web SOAP"),
+                ("endpoints de la API REST", "operaciones del servicio web SOAP"),
+                ("API REST", "servicio web SOAP"),
+                ("petición HTTP a la API REST", "petición SOAP sobre HTTP al servicio web"),
+                ("en formato JSON", "en envoltorio SOAP (XML)")
+            ]
+            for old, new in replacements:
+                if old in new_text:
+                    new_text = new_text.replace(old, new)
+                    changed = True
+
+        # 5. Adaptaciones por plataforma (Java vs .NET)
+        if is_dotnet:
+            replacements_plat = [
+                ("servidor Payara 7", "servidor .NET (Kestrel)"),
+                ("servidor Payara", "servidor .NET"),
+                ("Servidor Payara", "Servidor .NET")
+            ]
+            for old, new in replacements_plat:
+                if old in new_text:
+                    new_text = new_text.replace(old, new)
+                    changed = True
+
+        return new_text, changed
+
+    update_xml_in_zip(docx_path, 'word/document.xml', transform_ecud)
+    apply_metadata_to_office(docx_path)
+
 def generate_variant_documents(cfg, fresh=False):
     """Genera o sincroniza los 4 entregables para una variante específica."""
     variant_root = ROOT_DIR / cfg["folder"]
@@ -272,7 +339,7 @@ def generate_variant_documents(cfg, fresh=False):
         src_ecud = TEMPLATES_DIR / "word" / "PLANTILLA_ECUD.docx"
         shutil.copy2(src_ecud, target_ecud)
         print(f"  + Inicializado ECUD desde plantilla: {cfg['ecud_file']}")
-    customize_word_document(target_ecud, cfg)
+    customize_ecud_document(target_ecud, cfg)
     print(f"  [OK] ECUD actualizado: {cfg['ecud_file']} ({target_ecud.stat().st_size / 1024:.1f} KB)")
 
     # 3. Manual Técnico Word
