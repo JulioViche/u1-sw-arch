@@ -153,6 +153,41 @@ def customize_word_document(docx_path, config):
                     new_text = sub_text
                     changed = True
 
+            # Quitar resaltados (highlights)
+            if "<w:highlight" in new_text:
+                new_text = re.sub(r'<w:highlight [^>]*/>', '', new_text)
+                changed = True
+
+            # Unificar estilos de tablas RF y RNF a Tablaconcuadrcula4-nfasis1
+            if 'w:val="Tablaconcuadrcula5oscura-nfasis4"' in new_text:
+                new_text = new_text.replace('w:val="Tablaconcuadrcula5oscura-nfasis4"', 'w:val="Tablaconcuadrcula4-nfasis1"')
+                changed = True
+
+            # Unificar fuentes de tablas a Calibri
+            if 'w:ascii="Verdana"' in new_text:
+                new_text = new_text.replace('w:ascii="Verdana"', 'w:ascii="Calibri"').replace('w:hAnsi="Verdana"', 'w:hAnsi="Calibri"')
+                changed = True
+
+            # Ajustar pie de tabla 26 (RNF-001) según protocolo
+            proto_label = "SOAP" if "SOAP" in config.get("protocolo", "SOAP").upper() else "RESTful"
+            new_text = re.sub(
+                r'Tabla 26\. Requerimiento no funcional Protocolo de Arquitectura \((SOAP|RESTful)\)',
+                f'Tabla 26. Requerimiento no funcional Protocolo de Arquitectura ({proto_label})',
+                new_text
+            )
+            new_text = re.sub(
+                r'Tabla 26\. RNF-001: Protocolo de Arquitectura \((SOAP|RESTful)\)',
+                f'Tabla 26. RNF-001: Protocolo de Arquitectura ({proto_label})',
+                new_text
+            )
+            # RNF-007: Mantenibilidad
+            new_text = re.sub(
+                r'(<w:t>RNF-00</w:t></w:r><w:r[^>]*><w:t>7</w:t></w:r>.*?</w:tc><w:tc>.*?<w:r[^>]*><w:t>)Accesibilidad(</w:t>)',
+                r'\g<1>Mantenibilidad\g<2>',
+                new_text,
+                flags=re.DOTALL
+            )
+
         # 2. Autores en carátula
         if "Murillo Medina" not in new_text and "Viche Castillo, Julio Enrique" in new_text:
             target = "Viche Castillo, Julio Enrique"
