@@ -25,6 +25,7 @@ En el ejemplo de referencia, el manual vive en una subcarpeta `02. MANUAL TECNIC
 | **TI.1.4** (RESTful .NET) | `TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09/05. DOCUMENTACION/` | `CONVUNI_RESTFUL_DOTNET_GR09.docx` | Generado |
 
 ## Manuales Técnicos en Markdown (Vault)
+- [Propuesta y Análisis de Estructura de Manuales Técnicos](propuesta-estructura-manual-tecnico.md)
 - [Manual Técnico - SOAP Java (TI.1.1)](../06-projects/ti-1-1-soap-java/technical-manual.md)
 - [Manual Técnico - SOAP .NET (TI.1.2)](../06-projects/ti-1-2-soap-dotnet/technical-manual.md)
 - [Manual Técnico - RESTful Java (TI.1.3)](../06-projects/ti-1-3-rest-java/technical-manual.md)
