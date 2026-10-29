@@ -115,7 +115,7 @@ public class SoapClient {
 
     private String normalizarUrl(String url) {
         if (url == null || url.trim().isEmpty()) {
-            return "http://192.168.137.1:8080/ServidorSOAP";
+            return "http://192.168.137.1:8733/ServidorSOAP";
         }
         String u = url.trim();
         while (u.endsWith("/")) {
@@ -124,3 +124,4 @@ public class SoapClient {
         return u;
     }
 }
+

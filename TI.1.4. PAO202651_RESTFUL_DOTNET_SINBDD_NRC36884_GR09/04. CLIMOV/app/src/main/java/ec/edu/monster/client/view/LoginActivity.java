@@ -18,13 +18,13 @@ import ec.edu.monster.client.model.SessionModel;
 /**
  * [VISTA] Actividad de inicio de sesión obligatorio para el cliente Android RESTful.
  * Modalidad SINBDD: Credenciales fijas MONSTER / MONSTER9.
- * Servidor REST quemado: http://192.168.137.1:8080/ServidorREST/
+ * Servidor REST quemado: http://192.168.137.1:5000/api/
  *
  * @author Julio Enrique Viche Castillo - GR09 - NRC 36884
  */
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String SERVER_URL = "http://192.168.137.1:8080/ServidorREST/";
+    public static final String SERVER_URL = "http://192.168.137.1:5000/api/";
 
     private TextInputEditText edtUsuario;
     private TextInputEditText edtClave;
@@ -90,3 +90,4 @@ public class LoginActivity extends AppCompatActivity {
         txtMensajeError.setVisibility(View.VISIBLE);
     }
 }
+
