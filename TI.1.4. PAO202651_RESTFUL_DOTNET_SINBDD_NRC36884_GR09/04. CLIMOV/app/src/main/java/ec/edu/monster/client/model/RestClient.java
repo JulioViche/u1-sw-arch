@@ -1,29 +1,30 @@
 package ec.edu.monster.client.model;
 
+import android.os.Build;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Cliente HTTP RESTful nativo para Android (utiliza HttpURLConnection y org.json).
- * Diseñado para conectarse al host mediante 10.0.2.2 (emulador) o IP local (celular físico).
- * Soporta auto-detección entre puerto 8080 y 8085.
+ * Conecta con el servidor RESTful .NET (Kestrel en puerto 5000).
+ * Soporta auto-detección y fallback inteligente entre Emulador (10.0.2.2) y Hotspot (192.168.137.1).
  *
  * @author Julio Enrique Viche Castillo - GR09 - NRC 36884
  */
 public class RestClient {
 
-    private static final String DEFAULT_HOTSPOT_5000 = "http://192.168.137.1:5000/api/";
-    private static final String DEFAULT_EMULATOR_5000 = "http://10.0.2.2:5000/api/";
-    private static final String FALLBACK_EMULATOR_5000 = "http://10.0.2.2:5000/api/";
+    public static final String DEFAULT_EMULATOR_5000 = "http://10.0.2.2:5000/api/";
+    public static final String DEFAULT_HOTSPOT_5000 = "http://192.168.137.1:5000/api/";
 
-    private static final int TIMEOUT_MS = 6000;
+    private static final int TIMEOUT_MS = 3000;
     private String baseUrl;
 
     public RestClient() {
@@ -34,17 +35,64 @@ public class RestClient {
         if (customUrl != null && !customUrl.trim().isEmpty()) {
             this.baseUrl = normalizarUrl(customUrl);
         } else {
-            this.baseUrl = DEFAULT_HOTSPOT_5000;
+            this.baseUrl = isEmulator() ? DEFAULT_EMULATOR_5000 : DEFAULT_HOTSPOT_5000;
         }
     }
 
-    private String normalizarUrl(String url) {
+    public static boolean isEmulator() {
+        return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+                || Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.HARDWARE.contains("goldfish")
+                || Build.HARDWARE.contains("ranchu")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || Build.PRODUCT.contains("sdk_google")
+                || Build.PRODUCT.contains("google_sdk")
+                || Build.PRODUCT.contains("sdk")
+                || Build.PRODUCT.contains("sdk_x86")
+                || Build.PRODUCT.contains("vbox86p")
+                || Build.PRODUCT.contains("emulator")
+                || Build.PRODUCT.contains("simulator");
+    }
+
+    public static List<String> getCandidateUrls(String preferredUrl) {
+        List<String> list = new ArrayList<>();
+        boolean isEmu = isEmulator();
+
+        if (preferredUrl != null && !preferredUrl.trim().isEmpty()) {
+            list.add(normalizarUrl(preferredUrl));
+        }
+
+        if (isEmu) {
+            list.add(DEFAULT_EMULATOR_5000);
+            list.add(DEFAULT_HOTSPOT_5000);
+        } else {
+            list.add(DEFAULT_HOTSPOT_5000);
+            list.add(DEFAULT_EMULATOR_5000);
+        }
+
+        List<String> unique = new ArrayList<>();
+        for (String url : list) {
+            if (!unique.contains(url)) {
+                unique.add(url);
+            }
+        }
+        return unique;
+    }
+
+    public static String normalizarUrl(String url) {
+        if (url == null || url.trim().isEmpty()) {
+            return isEmulator() ? DEFAULT_EMULATOR_5000 : DEFAULT_HOTSPOT_5000;
+        }
         String u = url.trim();
         return u.endsWith("/") ? u : u + "/";
     }
 
     public String getBaseUrl() {
-        return baseUrl;
+        return baseUrl != null ? baseUrl : (isEmulator() ? DEFAULT_EMULATOR_5000 : DEFAULT_HOTSPOT_5000);
     }
 
     public void setBaseUrl(String baseUrl) {
@@ -52,19 +100,19 @@ public class RestClient {
     }
 
     public LoginResponse login(String usuario, String clave) {
-        // Intentar primero con la URL activa, y si falla, probar fallback entre hotspot y emulador
-        LoginResponse res = intentarLogin(this.baseUrl, usuario, clave);
-        if (!res.isExito()) {
-            String alt = this.baseUrl.contains("192.168.137.1") ? DEFAULT_EMULATOR_5000 : DEFAULT_HOTSPOT_5000;
-            if (!alt.equalsIgnoreCase(this.baseUrl)) {
-                LoginResponse resAlt = intentarLogin(alt, usuario, clave);
-                if (resAlt.isExito()) {
-                    this.baseUrl = alt;
-                    return resAlt;
-                }
+        List<String> candidates = getCandidateUrls(this.baseUrl);
+        LoginResponse lastResponse = null;
+
+        for (String candidate : candidates) {
+            LoginResponse res = intentarLogin(candidate, usuario, clave);
+            if (res != null && res.isExito()) {
+                this.baseUrl = candidate;
+                return res;
             }
+            lastResponse = res;
         }
-        return res;
+
+        return lastResponse != null ? lastResponse : new LoginResponse(false, null, "No se pudo conectar al servidor REST .NET.");
     }
 
     private LoginResponse intentarLogin(String urlServidor, String usuario, String clave) {
@@ -86,34 +134,41 @@ public class RestClient {
     }
 
     public ConversionResponse convertir(ConversionRequest req, String token) {
-        try {
-            String endpoint = switch (req.getMagnitud().toLowerCase().trim()) {
-                case "longitud" -> "conversor/longitud";
-                case "masa" -> "conversor/masa";
-                case "temperatura" -> "conversor/temperatura";
-                default -> throw new IllegalArgumentException("Magnitud no reconocida: " + req.getMagnitud());
-            };
+        List<String> candidates = getCandidateUrls(this.baseUrl);
 
-            JSONObject body = new JSONObject();
-            body.put("from", req.getUnidadOrigen());
-            body.put("to", req.getUnidadDestino());
-            body.put("value", req.getValor());
-            body.put("token", token);
+        for (String candidate : candidates) {
+            try {
+                String endpoint = switch (req.getMagnitud().toLowerCase().trim()) {
+                    case "longitud" -> "conversor/longitud";
+                    case "masa" -> "conversor/masa";
+                    case "temperatura" -> "conversor/temperatura";
+                    default -> throw new IllegalArgumentException("Magnitud no reconocida: " + req.getMagnitud());
+                };
 
-            JSONObject response = ejecutarPost(this.baseUrl + endpoint, body);
+                JSONObject body = new JSONObject();
+                body.put("from", req.getUnidadOrigen());
+                body.put("to", req.getUnidadDestino());
+                body.put("value", req.getValor());
+                body.put("token", token);
 
-            boolean success = response.optBoolean("success", false);
-            double result = response.optDouble("result", 0.0);
-            String message = response.optString("message", "");
+                JSONObject response = ejecutarPost(candidate + endpoint, body);
 
-            if (success) {
-                return new ConversionResponse(true, result, null);
-            } else {
-                return new ConversionResponse(false, 0.0, message);
+                boolean success = response.optBoolean("success", false);
+                double result = response.optDouble("result", 0.0);
+                String message = response.optString("message", "");
+
+                if (success) {
+                    this.baseUrl = candidate;
+                    return new ConversionResponse(true, result, null);
+                } else {
+                    return new ConversionResponse(false, 0.0, message);
+                }
+            } catch (Exception ignored) {
+                // Probar el siguiente candidato
             }
-        } catch (Exception e) {
-            return new ConversionResponse(false, 0.0, "Error en conversión REST: " + e.getMessage());
         }
+
+        return new ConversionResponse(false, 0.0, "Error en llamada REST: Servidor no disponible.");
     }
 
     private JSONObject ejecutarPost(String urlString, JSONObject payload) throws Exception {
@@ -138,11 +193,7 @@ public class RestClient {
             if (code >= 200 && code < 300) {
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
             } else {
-                if (conn.getErrorStream() != null) {
-                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), StandardCharsets.UTF_8));
-                } else {
-                    throw new IOException("Error HTTP " + code);
-                }
+                br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), StandardCharsets.UTF_8));
             }
 
             StringBuilder sb = new StringBuilder();
@@ -150,9 +201,16 @@ public class RestClient {
             while ((line = br.readLine()) != null) {
                 sb.append(line.trim());
             }
-            br.close();
 
-            return new JSONObject(sb.toString());
+            if (code >= 200 && code < 300) {
+                return new JSONObject(sb.toString());
+            } else {
+                try {
+                    return new JSONObject(sb.toString());
+                } catch (Exception ignored) {
+                    throw new Exception("Error HTTP " + code);
+                }
+            }
         } finally {
             conn.disconnect();
         }

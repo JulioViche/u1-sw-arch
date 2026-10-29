@@ -13,18 +13,21 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import ec.edu.monster.client.R;
 import ec.edu.monster.client.controller.LoginController;
+import ec.edu.monster.client.model.RestClient;
 import ec.edu.monster.client.model.SessionModel;
 
 /**
- * [VISTA] Actividad de inicio de sesión obligatorio para el cliente Android RESTful.
+ * [VISTA] Actividad de inicio de sesión obligatorio para el cliente Android RESTful .NET.
  * Modalidad SINBDD: Credenciales fijas MONSTER / MONSTER9.
- * Servidor REST quemado: http://192.168.137.1:5000/api/
+ * Soporta conexión automática en Emulador (10.0.2.2) y Hotspot (192.168.137.1).
  *
  * @author Julio Enrique Viche Castillo - GR09 - NRC 36884
  */
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String SERVER_URL = "http://192.168.137.1:5000/api/";
+    public static final String SERVER_URL = RestClient.isEmulator() 
+            ? RestClient.DEFAULT_EMULATOR_5000 
+            : RestClient.DEFAULT_HOTSPOT_5000;
 
     private TextInputEditText edtUsuario;
     private TextInputEditText edtClave;
@@ -90,4 +93,3 @@ public class LoginActivity extends AppCompatActivity {
         txtMensajeError.setVisibility(View.VISIBLE);
     }
 }
-

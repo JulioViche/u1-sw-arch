@@ -14,15 +14,20 @@ import com.google.android.material.textfield.TextInputEditText;
 import ec.edu.monster.client.R;
 import ec.edu.monster.client.controller.LoginController;
 import ec.edu.monster.client.model.SessionModel;
+import ec.edu.monster.client.model.SoapClient;
 
 /**
  * [VISTA] Actividad de inicio de sesión obligatorio para el cliente Android SOAP.
  * Modalidad SINBDD: Credenciales quemadas MONSTER / MONSTER9.
- * Servidor SOAP quemado: http://192.168.137.1:8080/ServidorSOAP
+ * Soporta conexión automática en Emulador (10.0.2.2) y Hotspot (192.168.137.1).
+ *
+ * @author Julio Enrique Viche Castillo - GR09 - NRC 36884
  */
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String SERVER_URL = "http://192.168.137.1:8080/ServidorSOAP";
+    public static final String SERVER_URL = SoapClient.isEmulator() 
+            ? SoapClient.EMULATOR_URL_8080 
+            : SoapClient.HOTSPOT_URL_8080;
 
     private TextInputEditText edtUsuario;
     private TextInputEditText edtClave;
@@ -63,13 +68,13 @@ public class LoginActivity extends AppCompatActivity {
 
         controller.procesarLogin(SERVER_URL, usuario, clave, new LoginController.LoginCallback() {
             @Override
-            public void onSuccess(SessionModel session) {
+            public void onSuccess(SessionModel session, String resolvedUrl) {
                 progressBarLogin.setVisibility(View.GONE);
                 btnIngresar.setEnabled(true);
 
                 Intent intent = new Intent(LoginActivity.this, ConversionActivity.class);
                 intent.putExtra("SESSION", session);
-                intent.putExtra("SERVER_URL", SERVER_URL);
+                intent.putExtra("SERVER_URL", resolvedUrl != null ? resolvedUrl : SERVER_URL);
                 startActivity(intent);
                 finish();
             }

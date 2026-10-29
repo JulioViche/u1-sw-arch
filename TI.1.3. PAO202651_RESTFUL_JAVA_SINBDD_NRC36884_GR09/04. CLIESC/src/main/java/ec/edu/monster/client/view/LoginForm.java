@@ -36,7 +36,7 @@ public class LoginForm extends JFrame {
         // Panel Superior: Encabezado Institucional
         JPanel pnlHeader = new JPanel();
         pnlHeader.setBackground(new Color(15, 60, 110));
-        pnlHeader.setPreferredSize(new Dimension(460, 115));
+        pnlHeader.setPreferredSize(new Dimension(480, 95));
         pnlHeader.setLayout(new GridBagLayout());
 
         GridBagConstraints gbcH = new GridBagConstraints();

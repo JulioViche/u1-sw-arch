@@ -29,6 +29,7 @@ import java.util.Map;
 
 import ec.edu.monster.client.R;
 import ec.edu.monster.client.controller.ConversionController;
+import ec.edu.monster.client.model.RestClient;
 import ec.edu.monster.client.model.ConversionRequest;
 import ec.edu.monster.client.model.ConversionResponse;
 import ec.edu.monster.client.model.SessionModel;
@@ -88,7 +89,7 @@ public class ConversionActivity extends AppCompatActivity {
         session = (SessionModel) getIntent().getSerializableExtra("SESSION");
         serverUrl = getIntent().getStringExtra("SERVER_URL");
         if (serverUrl == null || serverUrl.trim().isEmpty()) {
-            serverUrl = "http://192.168.137.1:8080/ServidorREST/";
+            serverUrl = RestClient.isEmulator() ? RestClient.DEFAULT_EMULATOR_8080 : RestClient.DEFAULT_HOTSPOT_8080;
         }
 
         controller = new ConversionController();
@@ -278,3 +279,4 @@ public class ConversionActivity extends AppCompatActivity {
         return texto.substring(0, 1).toUpperCase() + texto.substring(1).toLowerCase();
     }
 }
+

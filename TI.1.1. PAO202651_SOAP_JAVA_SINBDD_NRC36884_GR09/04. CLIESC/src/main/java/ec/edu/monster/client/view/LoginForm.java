@@ -39,15 +39,16 @@ public class LoginForm extends JFrame {
     private void inicializarComponentes() {
         setTitle("Acceso al Sistema - Conversor de Unidades SOAP");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(460, 520);
+        setSize(480, 590);
+        setMinimumSize(new Dimension(450, 530));
         setLocationRelativeTo(null);
-        setResizable(false);
+        setResizable(true);
         setLayout(new BorderLayout());
 
         // Panel Superior: Encabezado Institucional
         JPanel pnlHeader = new JPanel();
         pnlHeader.setBackground(new Color(15, 60, 110)); // Azul oscuro institucional
-        pnlHeader.setPreferredSize(new Dimension(460, 115));
+        pnlHeader.setPreferredSize(new Dimension(480, 95));
         pnlHeader.setLayout(new GridBagLayout());
 
         GridBagConstraints gbcH = new GridBagConstraints();

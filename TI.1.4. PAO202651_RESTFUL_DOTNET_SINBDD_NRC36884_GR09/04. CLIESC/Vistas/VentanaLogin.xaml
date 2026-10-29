@@ -2,68 +2,70 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Acceso al Sistema - Conversor de Unidades RESTful" 
-        Height="650" Width="490" MinHeight="620" MinWidth="460"
+        Height="620" Width="490" MinHeight="500" MinWidth="440"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
         Background="#F1F5F9"
         FontFamily="Segoe UI">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="110"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="35"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
         <!-- Encabezado Institucional ESPE -->
-        <Border Grid.Row="0" Background="#0F3C6E" Padding="20,12">
+        <Border Grid.Row="0" Background="#0F3C6E" Padding="16,10">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE" 
                            Foreground="#FFFFFF" FontWeight="Bold" FontSize="13" 
                            HorizontalAlignment="Center"/>
                 <TextBlock Text="Arquitectura de Software · Tarea TI.1.4 (RESTful .NET)" 
-                           Foreground="#C8DCF5" FontSize="12" Margin="0,4,0,0"
+                           Foreground="#C8DCF5" FontSize="12" Margin="0,3,0,0"
                            HorizontalAlignment="Center"/>
                 <TextBlock Text="Grupo GR09 | Julio Enrique Viche Castillo | NRC 36884" 
-                           Foreground="#94A3B8" FontStyle="Italic" FontSize="11" Margin="0,3,0,0"
+                           Foreground="#94A3B8" FontStyle="Italic" FontSize="11" Margin="0,2,0,0"
                            HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
 
-        <!-- Tarjeta de Login -->
-        <Border Grid.Row="1" Background="#FFFFFF" Margin="24,16,24,10" 
-                CornerRadius="10" Padding="24"
-                BorderBrush="#CBD5E1" BorderThickness="1">
-            <Border.Effect>
-                <DropShadowEffect Color="#000000" Opacity="0.08" BlurRadius="10" ShadowDepth="3"/>
-            </Border.Effect>
-            <StackPanel>
-                <TextBlock Text="Iniciar Sesión" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
-                <TextBlock Text="Autenticación requerida para acceder al conversor" 
-                           FontSize="12" Foreground="#64748B" Margin="0,2,0,16"/>
+        <!-- Tarjeta de Login con ScrollViewer -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Background="#FFFFFF" Margin="24,12,24,12" 
+                    CornerRadius="10" Padding="20"
+                    BorderBrush="#CBD5E1" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" Opacity="0.08" BlurRadius="10" ShadowDepth="3"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="Iniciar Sesión" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                    <TextBlock Text="Autenticación requerida para acceder al conversor" 
+                               FontSize="12" Foreground="#64748B" Margin="0,2,0,12"/>
 
-                <TextBlock Text="Usuario:" FontWeight="SemiBold" FontSize="13" Foreground="#334155" Margin="0,0,0,4"/>
-                <TextBox x:Name="TxtUsuario" Style="{StaticResource ModernTextBox}" Text="MONSTER" Margin="0,0,0,12"/>
+                    <TextBlock Text="Usuario:" FontWeight="SemiBold" FontSize="13" Foreground="#334155" Margin="0,0,0,4"/>
+                    <TextBox x:Name="TxtUsuario" Style="{StaticResource ModernTextBox}" Text="MONSTER" Margin="0,0,0,10"/>
 
-                <TextBlock Text="Contraseña:" FontWeight="SemiBold" FontSize="13" Foreground="#334155" Margin="0,0,0,4"/>
-                <PasswordBox x:Name="TxtClave" Style="{StaticResource ModernPasswordBox}" Password="MONSTER9" Margin="0,0,0,14"/>
+                    <TextBlock Text="Contraseña:" FontWeight="SemiBold" FontSize="13" Foreground="#334155" Margin="0,0,0,4"/>
+                    <PasswordBox x:Name="TxtClave" Style="{StaticResource ModernPasswordBox}" Password="MONSTER9" Margin="0,0,0,12"/>
 
-                <!-- Caja Informativa de Credenciales -->
-                <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,0,0,14">
-                    <TextBlock Text="💡 Credenciales quemadas: Usuario: MONSTER | Clave: MONSTER9" 
-                               FontSize="11" Foreground="#1D4ED8" TextWrapping="Wrap"/>
-                </Border>
+                    <!-- Caja Informativa de Credenciales -->
+                    <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,0,0,12">
+                        <TextBlock Text="💡 Credenciales quemadas: Usuario: MONSTER | Clave: MONSTER9" 
+                                   FontSize="11" Foreground="#1D4ED8" TextWrapping="Wrap"/>
+                    </Border>
 
-                <!-- Mensaje de Estado / Error -->
-                <TextBlock x:Name="LblEstado" Foreground="#B91C1C" FontSize="12" FontWeight="SemiBold" 
-                           TextWrapping="Wrap" Margin="0,0,0,10" Visibility="Collapsed"/>
+                    <!-- Mensaje de Estado / Error -->
+                    <TextBlock x:Name="LblEstado" Foreground="#B91C1C" FontSize="12" FontWeight="SemiBold" 
+                               TextWrapping="Wrap" Margin="0,0,0,10" Visibility="Collapsed"/>
 
-                <Button x:Name="BtnIngresar" Content="Ingresar al Conversor" Style="{StaticResource PrimaryButton}" 
-                        Click="BtnIngresar_Click" Height="40" Margin="0,0,0,8"/>
+                    <Button x:Name="BtnIngresar" Content="Ingresar al Conversor" Style="{StaticResource PrimaryButton}" 
+                            Click="BtnIngresar_Click" Height="40" Margin="0,2,0,8"/>
 
-                <Button x:Name="BtnSalir" Content="Salir de la Aplicación" Background="Transparent" Foreground="#64748B" 
-                        BorderThickness="0" Cursor="Hand" Click="BtnSalir_Click" FontSize="12"/>
-            </StackPanel>
-        </Border>
+                    <Button x:Name="BtnSalir" Content="Salir de la Aplicación" Background="Transparent" Foreground="#64748B" 
+                            BorderThickness="0" Cursor="Hand" Click="BtnSalir_Click" FontSize="12" Padding="4"/>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
 
         <!-- Pie de Página -->
         <Border Grid.Row="2" Background="#E2E8F0" Padding="12,0">
@@ -72,4 +74,3 @@
         </Border>
     </Grid>
 </Window>
-

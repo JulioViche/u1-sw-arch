@@ -12,11 +12,13 @@ import java.util.concurrent.Future;
 /**
  * [CONTROLADOR] Gestiona el flujo de autenticación para la vista móvil.
  * Coordina llamadas asíncronas y publica resultados en el hilo principal (MainLooper).
+ *
+ * @author Julio Enrique Viche Castillo - GR09 - NRC 36884
  */
 public class LoginController {
 
     public interface LoginCallback {
-        void onSuccess(SessionModel session);
+        void onSuccess(SessionModel session, String resolvedUrl);
         void onError(String mensaje);
     }
 
@@ -37,7 +39,7 @@ public class LoginController {
                 mainHandler.post(() -> {
                     if (resp != null && resp.isExito() && resp.getToken() != null) {
                         SessionModel session = new SessionModel(usuario, resp.getToken());
-                        callback.onSuccess(session);
+                        callback.onSuccess(session, soapClient.getActiveBaseUrl());
                     } else {
                         String err = (resp != null && resp.getMensaje() != null) 
                                 ? resp.getMensaje() 
