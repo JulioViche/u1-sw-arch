@@ -9,7 +9,7 @@ trabajar sin romper la coherencia** entre las cuatro variantes.
 ## 1. Contexto
 
 Repositorio académico de **Arquitectura de Software** (tarea **TI.1.1**, PAO 2026-51,
-NRC **36884**, grupo **GR09**, integrante **Julio Enrique Viche Castillo**). Contiene
+NRC **36884**, grupo **GR09**, integrantes **Julio Enrique Viche Castillo**, **Gabriel Omar Murillo Medina**). Contiene
 **cuatro proyectos independientes** que resuelven
 el mismo caso —un **conversor de unidades** con inicio de sesión— usando:
 

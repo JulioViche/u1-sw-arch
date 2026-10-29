@@ -12,7 +12,7 @@ tags: [referencia, academico]
 | Periodo | PAO 2026-51 |
 | NRC | 36884 |
 | Grupo | GR09 |
-| Integrante | Julio Enrique Viche Castillo |
+| Integrantes | Julio Enrique Viche Castillo, Gabriel Omar Murillo Medina |
 | Repositorio | u1-arch |
 
 ## Caso de estudio

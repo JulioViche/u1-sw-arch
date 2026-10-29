@@ -11,7 +11,7 @@ tags: [manual-tecnico, sinbdd, entrega, capturas]
 **Universidad de las Fuerzas Armadas ESPE — Sede Latacunga**  
 **Departamento de Ciencias de la Computación**  
 **Asignatura:** Arquitectura de Software | **NRC:** 36884 | **Grupo:** GR09  
-**Autor:** Julio Enrique Viche Castillo  
+**Autores:** Julio Enrique Viche Castillo, Gabriel Omar Murillo Medina  
 **Docente:** Ing. Eduardo Mauricio Campaña Ortega, MIS.MDU.CCNA.CCIA. PhD. (c)  
 **Fecha:** 28 de Octubre de 2026
 

@@ -11,7 +11,7 @@ unidades** construido como servicio web **RESTful** y **SOAP**, cada uno en **Ja
 | Periodo | PAO 2026-51 |
 | NRC | 36884 |
 | Grupo | GR09 |
-| Integrante | Julio Enrique Viche Castillo |
+| Integrantes | Julio Enrique Viche Castillo, Gabriel Omar Murillo Medina |
 
 > [!info] Documentación para agentes de IA
 > Lee **[AGENTS.md](AGENTS.md)** antes de tocar el repositorio.

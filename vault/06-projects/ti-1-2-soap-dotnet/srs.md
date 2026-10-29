@@ -20,7 +20,7 @@ tags: [deliverable, uml, ers, srs, template, requirements]
 | **Tarea / Taller** | **TI.1.2** |
 | **NRC** | 36884 |
 | **Grupo** | GR09 |
-| **Integrantes** | **Viche Castillo, Julio Enrique** |
+| **Integrantes** | **Viche Castillo, Julio Enrique**, **Murillo Medina, Gabriel Omar** |
 | **Docente / Tutor** | Ing. Eduardo Mauricio Campaña Ortega, MIS.MDU.CCNA.CCIA . PhD. (c) Ingeniería de Software, PhD. (c) Seguridad Información |
 | **Fecha** | 23/09/2026 |
 

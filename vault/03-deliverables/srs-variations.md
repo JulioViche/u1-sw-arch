@@ -28,7 +28,7 @@ No importa la tecnología ni el protocolo, los siguientes puntos se conservan ex
    - **Institución:** Universidad de las Fuerzas Armadas ESPE
    - **Carrera:** Tecnologías de la Información / Ingeniería de Software
    - **NRC:** 36884 | **Grupo:** GR09 | **Periodo:** PAO 2026-51
-   - **Integrantes:** `Viche Castillo, Julio Enrique` (solo él)
+   - **Integrantes:** `Viche Castillo, Julio Enrique`, `Murillo Medina, Gabriel Omar`
    - **Docente:** Ing. Eduardo Mauricio Campaña Ortega
 2. **Caso de Estudio y Alcance Funcional:**
    - Convertidor de unidades de 3 magnitudes físicas: **Longitud**, **Masa (peso)** y **Temperatura**.
@@ -129,7 +129,7 @@ No importa la tecnología ni el protocolo, los siguientes puntos se conservan ex
 Al preparar el documento de entrega para un taller concreto:
 
 1. [ ] Modificar el título y tema de la carátula con el protocolo y plataforma correspondientes.
-2. [ ] Validar que la tabla del integrante contenga: **`Viche Castillo, Julio Enrique`**.
+2. [ ] Validar que la tabla de integrantes contenga: **`Viche Castillo, Julio Enrique`**, **`Murillo Medina, Gabriel Omar`**.
 3. [ ] Ajustar la redacción de la sección **1. Introducción** para citar el protocolo adecuado (SOAP o REST).
 4. [ ] Verificar que las tablas **RNF-001 a RNF-005** reflejen la tecnología del taller (lenguaje, framework, runtime y formato de token).
 5. [ ] Asegurar que la descripción de las interfaces de los 4 clientes (Consola, Escritorio, Web, Móvil) mencione las librerías cliente correctas.

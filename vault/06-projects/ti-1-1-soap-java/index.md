@@ -17,7 +17,7 @@ Carpeta de trabajo y documentación maestra para la variante **SOAP en Java** de
 | Parámetro | Detalle |
 | :--- | :--- |
 | **Código Tarea** | TI.1.1 |
-| **Estudiante** | Julio Enrique Viche Castillo |
+| **Estudiantes** | Julio Enrique Viche Castillo, Gabriel Omar Murillo Medina |
 | **Grupo / NRC** | GR09 / NRC 36884 |
 | **Periodo** | PAO 2026-51 |
 | **Estilo de Servicio** | SOAP (Simple Object Access Protocol) con contratos WSDL y envelopes XML |

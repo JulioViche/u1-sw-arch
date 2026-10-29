@@ -5,7 +5,7 @@ tags: [requerimientos, decisiones, interfaz, precision, clientes]
 
 # Requerimientos Adicionales y Criterios del Usuario
 
-Este documento compila todos los **requerimientos, reglas y decisiones de diseño no formales** incorporados por el usuario (**Julio Enrique Viche Castillo**) a lo largo del desarrollo. 
+Este documento compila todos los **requerimientos, reglas y decisiones de diseño no formales** incorporados por el integrantes (**Julio Enrique Viche Castillo**, **Gabriel Omar Murillo Medina**) a lo largo del desarrollo. 
 
 Aunque algunos de estos puntos no estaban desglosados en el documento formal de especificación original (ERS/SRS) de la cátedra, constituyen **directrices obligatorias** para mantener la uniformidad funcional y estética entre las cuatro variantes del conversor de unidades.
 
