@@ -22,3 +22,15 @@ nbproject/private/
 *.tmp
 scratch/
 
+# .NET build outputs and user configs
+**/bin/
+**/obj/
+.vs/
+**/.vs/
+*.user
+*.suo
+
+# Android Gradle outputs
+**/.gradle/
+**/build/
+**/local.properties
