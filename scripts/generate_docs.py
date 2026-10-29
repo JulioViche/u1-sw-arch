@@ -25,6 +25,7 @@ VARIANTS_CONFIG = [
         "protocolo": "SOAP",
         "plataforma": "JAVA",
         "stack_label": "SOAP 1.2 / Java 17-21 (JAX-WS, Tomcat)",
+        "ers_title": "ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE PARA SOA CON SOAP EN JAVA SIN BDD",
         "ers_file": "ERS_SOAP_JAVA_SINBDD_GR09.docx",
         "ecud_file": "ECUD_SOAP_JAVA_SINBDD_GR09.docx",
         "manual_file": "CONVUNI_SOAP_JAVA_GR09.docx",
@@ -36,6 +37,7 @@ VARIANTS_CONFIG = [
         "protocolo": "SOAP",
         "plataforma": "DOTNET",
         "stack_label": "SOAP 1.2 / C# .NET 8 (CoreWCF, Kestrel)",
+        "ers_title": "ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE PARA SOA CON SOAP EN .NET SIN BDD",
         "ers_file": "ERS_SOAP_DOTNET_SINBDD_GR09.docx",
         "ecud_file": "ECUD_SOAP_DOTNET_SINBDD_GR09.docx",
         "manual_file": "CONVUNI_SOAP_DOTNET_GR09.docx",
@@ -47,6 +49,7 @@ VARIANTS_CONFIG = [
         "protocolo": "RESTFUL",
         "plataforma": "JAVA",
         "stack_label": "RESTful JSON / Java 17-21 (Spring Boot, Tomcat)",
+        "ers_title": "ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE PARA SOA CON REST EN JAVA SIN BDD",
         "ers_file": "ERS_RESTFUL_JAVA_SINBDD_GR09.docx",
         "ecud_file": "ECUD_RESTFUL_JAVA_SINBDD_GR09.docx",
         "manual_file": "CONVUNI_RESTFUL_JAVA_GR09.docx",
@@ -58,6 +61,7 @@ VARIANTS_CONFIG = [
         "protocolo": "RESTFUL",
         "plataforma": "DOTNET",
         "stack_label": "RESTful JSON / C# .NET 8 (ASP.NET Core Web API, Kestrel)",
+        "ers_title": "ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE PARA SOA CON REST EN .NET SIN BDD",
         "ers_file": "ERS_RESTFUL_DOTNET_SINBDD_GR09.docx",
         "ecud_file": "ECUD_RESTFUL_DOTNET_SINBDD_GR09.docx",
         "manual_file": "CONVUNI_RESTFUL_DOTNET_GR09.docx",
@@ -117,21 +121,53 @@ def customize_word_document(docx_path, config):
         changed = False
         new_text = text
 
-        # 1. Autores en carátula
+        # 1. Corrección estricta y limpia del Título del ERS (evita duplicaciones en carátula y TOC)
+        if docx_path.name.startswith("ERS_") and "ers_title" in config:
+            expected_title = config["ers_title"]
+
+            # Reemplazar cualquier párrafo de carátula con paraId="1A71C88B" por un único run limpio
+            clean_cover_para = (
+                '<w:p w14:paraId="1A71C88B" w14:textId="15B5DFC4" w:rsidR="00B6784F" w:rsidRDefault="00B6784F" w:rsidP="00B6784F">'
+                '<w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="44"/><w:szCs w:val="44"/></w:rPr></w:pPr>'
+                f'<w:r w:rsidRPr="00850009"><w:rPr><w:sz w:val="44"/><w:szCs w:val="44"/></w:rPr><w:t>{expected_title}</w:t></w:r>'
+                '</w:p>'
+            )
+            sub_text, n_cover = re.subn(r'<w:p [^>]*paraId="1A71C88B"[^>]*>.*?</w:p>', clean_cover_para, new_text, flags=re.DOTALL)
+            if n_cover > 0:
+                new_text = sub_text
+                changed = True
+
+            # Reemplazar el Título 1 del cuerpo (P#30)
+            pattern_h1 = r'(<w:p [^>]*paraId="60B8FD53"[^>]*>.*?<w:t[^>]*>).*?(</w:t>.*?</w:p>)'
+            if re.search(pattern_h1, new_text, flags=re.DOTALL):
+                sub_text = re.sub(pattern_h1, rf'\g<1>{expected_title}\g<2>', new_text, flags=re.DOTALL)
+                if sub_text != new_text:
+                    new_text = sub_text
+                    changed = True
+
+            # Reemplazar texto en el hipervínculo de la tabla de contenidos (TOC)
+            pattern_toc = r'(<w:hyperlink w:anchor="_Toc229513488"[^>]*>.*?<w:t>).*?(</w:t>)'
+            if re.search(pattern_toc, new_text, flags=re.DOTALL):
+                sub_text = re.sub(pattern_toc, rf'\g<1>{expected_title}\g<2>', new_text, flags=re.DOTALL)
+                if sub_text != new_text:
+                    new_text = sub_text
+                    changed = True
+
+        # 2. Autores en carátula
         if "Murillo Medina" not in new_text and "Viche Castillo, Julio Enrique" in new_text:
             target = "Viche Castillo, Julio Enrique"
             replacement = 'Viche Castillo, Julio Enrique</w:t></w:r></w:p><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:b/><w:sz w:val="24"/></w:rPr><w:t>Murillo Medina, Gabriel Omar'
             new_text = new_text.replace(target, replacement)
             changed = True
 
-        # 2. Lomo técnico
+        # 3. Lomo técnico
         if METADATA["LOMO_TECNICO"] not in new_text:
             for old_lomo in ["VICHE CASTILLO JULIO ENRIQUE", "JULIO VICHE"]:
                 if old_lomo in new_text:
                     new_text = new_text.replace(old_lomo, METADATA["LOMO_TECNICO"])
                     changed = True
 
-        # 3. NRC y Grupo
+        # 4. NRC y Grupo
         if "30741" in new_text:
             new_text = new_text.replace("30741", METADATA["NRC"])
             changed = True
