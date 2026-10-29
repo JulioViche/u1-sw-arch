@@ -7,7 +7,7 @@ Este directorio contiene herramientas en Python para la sincronización de metad
 ## 1. Requisitos
 
 - Python 3.10+
-- Dependencias opcionales (instalación con pip):
+- Dependencias (instalación con pip):
 
 ```bash
 pip install -r scripts/requirements.txt
@@ -16,6 +16,18 @@ pip install -r scripts/requirements.txt
 ---
 
 ## 2. Herramientas Disponibles
+
+### `generate_docs.py`
+Generador y compilador de documentación oficial (`ERS`, `ECUD`, `Manual Técnico` y `Presentación`) para las cuatro variantes a partir de las plantillas de `vault/03-deliverables/templates/` y metadatos del proyecto.
+
+**Uso:**
+```bash
+# Modo sincronización segura (actualiza metadatos y portadas preservando capturas técnicas)
+python scripts/generate_docs.py
+
+# Modo inicialización limpia (reemplaza con plantillas base frescas)
+python scripts/generate_docs.py --fresh
+```
 
 ### `update_metadata.py`
 Sincroniza y actualiza la metadata académica en los 16 documentos oficiales Office (`.docx` y `.pptx`) de las cuatro variantes del proyecto:
