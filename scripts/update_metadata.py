@@ -126,6 +126,8 @@ def process_all_deliverables():
 
         for ext in ["*.docx", "*.pptx"]:
             for file_path in variant_dir.rglob(ext):
+                if file_path.name.startswith("~$"):
+                    continue
                 if file_path.suffix.lower() == ".docx":
                     sync_word_document(file_path)
                 elif file_path.suffix.lower() == ".pptx":

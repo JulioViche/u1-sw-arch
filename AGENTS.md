@@ -30,7 +30,7 @@ entregables**.
 
 1. **No modifiques `examples/`.** Es material de referencia e ignorado por git. Solo lectura.
 2. **No introduzcas base de datos.** El proyecto es `SINBDD`. Evita ORM, migraciones y
-   scripts SQL como requisito. Por eso las carpetas `02. MER/` y `03. BDD/` quedan **vacías**.
+   scripts SQL como requisito. Por eso las carpetas `02. MER/` y `03. BDD/` quedan sin modelos relacionales.
 3. **Trabaja en la variante correcta.** No mezcles archivos entre RESTful/SOAP ni entre Java/.NET.
 4. **Respeta la estructura y la nomenclatura** (secciones 3 y 4).
 5. **No hagas commits ni cambios en git** salvo que el usuario lo pida de forma explícita.
@@ -38,9 +38,9 @@ entregables**.
    español según la convención que ya exista en la carpeta.
 7. **Mantén la coherencia entre variantes.** Mismas entidades, casos de uso y contrato lógico
    en las cuatro, aunque cambien la tecnología y el estilo de servicio.
-8. **Uso de `.gitkeep` y contenido en `01. ERS/`:**
-   - No borres `.gitkeep` en carpetas vacías (ej. `02. MER/`, `03. BDD/`).
-   - En las carpetas `01. UML/01. ERS/` solo va el archivo Word oficial (`.docx`), sin archivos `.md` duplicados ni `.gitkeep` innecesarios.
+8. **Carpetas `02. MER/`, `03. BDD/` y entregables:**
+   - En `02. MER/` y `03. BDD/` reside un `README.md` explicativo justificando que el proyecto es `SINBDD` (sin modelos ni scripts de base de datos). No se requieren archivos `.gitkeep`.
+   - En las carpetas `01. UML/01. ERS/` solo va el archivo Word oficial (`.docx`), sin archivos `.md` duplicados.
 9. **Todo proyecto inicia con login.** Antes de convertir, el usuario debe autenticarse con
    las credenciales **quemadas** `MONSTER` / `MONSTER9`. Ver
    [authentication](vault/01-architecture/authentication.md).
@@ -58,6 +58,7 @@ u1-arch/
 ├── AGENTS.md                     # Este archivo
 ├── .gitignore                    # Ignora examples/
 ├── vault/                        # Documentación Obsidian (fuente de verdad)
+├── scripts/                      # Scripts de generación y validación
 ├── examples/                     # Solución de referencia (NO tocar)
 └── TI.1.1. PAO202651_<PROTOCOLO>_<PLATAFORMA>_SINBDD_NRC36884_GR09/   # x4 variantes
 ```
@@ -82,8 +83,8 @@ Variantes:
 │   ├── 02. ECUD/                # Casos de uso detallados (.pdf/.docx)
 │   └── 03. DIAGRAMAS UML/       # 01_CASOS_DE_USO, 02_ACTIVIDAD, 03_SECUENCIA,
 │                                # 04_CLASES, 05_ARQUITECTURA (modelos + exportados)
-├── 02. MER/                     # Vacío (SINBDD): sin base de datos
-├── 03. BDD/                     # Vacío (SINBDD): sin base de datos
+├── 02. MER/                     # README.md justificativo (SINBDD): sin base de datos
+├── 03. BDD/                     # README.md justificativo (SINBDD): sin base de datos
 ├── 04. CLICON/                  # Cliente de consola
 ├── 04. CLIESC/                  # Cliente de escritorio
 ├── 04. CLIMOV/                  # Cliente móvil (Android)
@@ -93,9 +94,7 @@ Variantes:
 ```
 
 El código de cada componente va **dentro de su carpeta** (`04. SERVIDOR/`, `04. CLICON/`, etc.).
-La subestructura recomendada de `03. DIAGRAMAS UML` proviene del ejemplo de referencia y es
-opcional pero recomendada. `02. MER/` y `03. BDD/` permanecen **vacías** porque el proyecto
-es SINBDD (sin base de datos).
+`02. MER/` y `03. BDD/` albergan un `README.md` explicativo porque el proyecto es SINBDD (sin base de datos).
 
 ---
 
@@ -148,6 +147,7 @@ Reglas generales:
 | .NET (build) | `dotnet build` |
 | .NET (run) | `dotnet run` |
 | Android (build) | `gradlew.bat assembleDebug` |
+| Scripts de validación | `python scripts/validate_deliverables.py` |
 
 > Ejecuta el **servidor** antes que los clientes. Ver
 > [build-and-run](vault/04-guides/build-and-run.md).

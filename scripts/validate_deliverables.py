@@ -70,11 +70,11 @@ def validate_variant(variant_name):
             print(f"  [ERROR] Subcarpeta faltante: {sub}")
             errors += 1
         else:
-            # En 02. MER y 03. BDD verificar .gitkeep
+            # En 02. MER y 03. BDD verificar README.md explicativo (SINBDD)
             if sub in ["02. MER", "03. BDD"]:
-                gitkeep = sub_path / ".gitkeep"
-                if not gitkeep.exists():
-                    print(f"  [WARN] Falta .gitkeep en carpeta vacía: {sub}")
+                readme = sub_path / "README.md"
+                if not readme.exists():
+                    print(f"  [WARN] Falta README.md justificativo en: {sub}")
 
     # 2. Validar documentos de entrega
     doc_checks = [
@@ -86,7 +86,7 @@ def validate_variant(variant_name):
 
     for folder_sub, pattern, terms in doc_checks:
         folder = variant_path / folder_sub
-        files = list(folder.glob(pattern))
+        files = [f for f in folder.glob(pattern) if not f.name.startswith("~$")]
         if not files:
             print(f"  [ERROR] No se encontró {pattern} en {folder_sub}")
             errors += 1
