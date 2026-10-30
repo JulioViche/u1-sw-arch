@@ -37,7 +37,9 @@ Revisar los cuatro manuales técnicos DOCX y sus cuatro presentaciones PPTX de l
 ## Estado
 
 - [x] TI.1.1 SOAP + Java: manual y presentación revisados; código editable y capturas corregidas.
-- [x] TI.1.2 SOAP + .NET: manual y presentación revisados; capturas de ejecución incrustadas sin pendientes.
+- [ ] TI.1.2 SOAP + .NET: avance parcial; quedan capturas, pies y explicaciones que no coinciden. Continuar desde [CONTINUAR_DOCUMENTACION_TI12.md](CONTINUAR_DOCUMENTACION_TI12.md).
 - [x] TI.1.3 REST + Java: manual y presentación revisados; capturas de ejecución incrustadas sin pendientes.
 - [x] TI.1.4 REST + .NET: manual y presentación revisados; capturas de ejecución incrustadas sin pendientes.
-- [x] Revisión final cruzada de los cuatro pares DOCX/PPTX completada con éxito.
+- [ ] Revisión final cruzada de los cuatro pares DOCX/PPTX pendiente hasta resolver TI.1.2 y comprobar cada variante por separado.
+
+Los estados de TI.1.1, TI.1.3 y TI.1.4 se conservan del registro anterior; no representan una nueva auditoría completa realizada al guardar el contexto del 30 de octubre de 2026.
