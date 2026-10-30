@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ClienteMovilGR09.Pruebas</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="..\ClienteMovilGR09\Modelos\*.cs" LinkBase="Modelos" />
+    <Compile Include="..\ClienteMovilGR09\Servicios\*.cs" LinkBase="Servicios" />
+    <Compile Include="..\ClienteMovilGR09\Controladores\*.cs" LinkBase="Controladores" />
+  </ItemGroup>
+</Project>
+

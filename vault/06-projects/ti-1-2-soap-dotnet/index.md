@@ -21,7 +21,8 @@ Carpeta de trabajo y documentación maestra para la variante **SOAP en .NET** de
 | **Grupo / NRC** | GR09 / NRC 36884 |
 | **Periodo** | PAO 2026-51 |
 | **Estilo de Servicio** | SOAP con contratos WSDL y servicios CoreWCF / ASMX |
-| **Plataforma / SDK** | .NET 8.0 SDK / C# |
+| **Plataforma / SDK** | .NET 10.0 SDK / C# 12 / Kestrel |
+| **Clientes** | Consola (.NET 10), Escritorio (WPF), Web (ASP.NET Core), Móvil (.NET MAUI) |
 | **Persistencia** | `SINBDD` (Sin Base de Datos). Credenciales fijas `MONSTER`/`MONSTER9`, tokens en memoria |
 | **Carpeta del Proyecto** | `TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09/` |
 

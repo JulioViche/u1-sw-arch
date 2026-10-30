@@ -21,7 +21,8 @@ Carpeta de trabajo y documentación maestra para la variante **RESTful en .NET**
 | **Grupo / NRC** | GR09 / NRC 36884 |
 | **Periodo** | PAO 2026-51 |
 | **Estilo de Servicio** | RESTful (ASP.NET Core Web API) con JSON y Swagger / OpenAPI 3.0 |
-| **Plataforma / SDK** | .NET 8.0 SDK / C# 12 / Kestrel |
+| **Plataforma / SDK** | .NET 10.0 SDK / C# 12 / Kestrel |
+| **Clientes** | Consola (.NET 10), Escritorio (WPF), Web (ASP.NET Core), Móvil (.NET MAUI) |
 | **Persistencia** | `SINBDD` (Sin Base de Datos). Credenciales fijas `MONSTER`/`MONSTER9`, tokens en memoria |
 | **Carpeta del Proyecto** | `TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09/` |
 

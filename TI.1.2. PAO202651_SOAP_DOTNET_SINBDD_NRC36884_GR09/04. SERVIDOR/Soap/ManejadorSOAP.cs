@@ -97,7 +97,7 @@ public sealed class ManejadorSOAP
                 case "iniciarSesion" or "login":
                 {
                     string usuario = operacion.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("usuario", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
-                    string clave = operacion.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("clave", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
+                    string clave = operacion.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("clave", StringComparison.OrdinalIgnoreCase) || e.Name.LocalName.Equals("contrasenia", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
                     var resp = _servicio.IniciarSesion(usuario, clave);
                     respuestaXml = ConstruirXmlLogin(resp);
                     break;
@@ -166,9 +166,15 @@ public sealed class ManejadorSOAP
     private static (string? token, double valor, string? origen, string? destino) ExtraerParametrosConversion(XElement op)
     {
         string? token = op.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("token", StringComparison.OrdinalIgnoreCase))?.Value;
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            var header = op.Document?.Descendants().FirstOrDefault(e => e.Name.LocalName.Equals("Header", StringComparison.OrdinalIgnoreCase));
+            token = header?.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("token", StringComparison.OrdinalIgnoreCase))?.Value;
+        }
+
         string? valStr = op.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("valor", StringComparison.OrdinalIgnoreCase) || e.Name.LocalName.Equals("value", StringComparison.OrdinalIgnoreCase))?.Value;
-        string? origen = op.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("unidadOrigen", StringComparison.OrdinalIgnoreCase) || e.Name.LocalName.Equals("from", StringComparison.OrdinalIgnoreCase))?.Value;
-        string? destino = op.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("unidadDestino", StringComparison.OrdinalIgnoreCase) || e.Name.LocalName.Equals("to", StringComparison.OrdinalIgnoreCase))?.Value;
+        string? origen = op.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("unidadOrigen", StringComparison.OrdinalIgnoreCase) || e.Name.LocalName.Equals("unidadInicial", StringComparison.OrdinalIgnoreCase) || e.Name.LocalName.Equals("from", StringComparison.OrdinalIgnoreCase))?.Value;
+        string? destino = op.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("unidadDestino", StringComparison.OrdinalIgnoreCase) || e.Name.LocalName.Equals("unidadFinal", StringComparison.OrdinalIgnoreCase) || e.Name.LocalName.Equals("to", StringComparison.OrdinalIgnoreCase))?.Value;
 
         double.TryParse(valStr, NumberStyles.Float, CultureInfo.InvariantCulture, out double valor);
         return (token, valor, origen, destino);
@@ -182,6 +188,7 @@ public sealed class ManejadorSOAP
                 <token>{resp.Token ?? ""}</token>
                 <mensaje>{resp.Mensaje}</mensaje>
             </loginResult>
+            <return>{resp.Token ?? ""}</return>
         </ws:iniciarSesionResponse>
         """;
 
@@ -193,6 +200,7 @@ public sealed class ManejadorSOAP
                 <valorConvertido>{resp.ValorConvertido.ToString("F2", CultureInfo.InvariantCulture)}</valorConvertido>
                 <mensajeError>{resp.MensajeError ?? ""}</mensajeError>
             </conversionResult>
+            <return>{resp.ValorConvertido.ToString("F2", CultureInfo.InvariantCulture)}</return>
         </ws:{tagRespuesta}>
         """;
 

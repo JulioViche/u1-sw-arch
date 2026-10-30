@@ -30,4 +30,21 @@ public sealed class ControladorSalud : ControllerBase
             }
         });
     }
+
+    [HttpGet("/api/catalogo")]
+    [HttpGet("/catalogo")]
+    public ActionResult ObtenerCatalogo()
+    {
+        return Ok(new
+        {
+            exito = true,
+            magnitudes = new Dictionary<string, List<string>>
+            {
+                ["longitud"] = ["metro", "centimetro", "pie", "yarda", "milla"],
+                ["masa"] = ["gramo", "kilogramo", "libra", "onza", "quintal"],
+                ["temperatura"] = ["celsius", "fahrenheit", "kelvin", "newton", "reaumur"]
+            },
+            mensaje = "Catálogo de unidades de medida (5 por magnitud)"
+        });
+    }
 }

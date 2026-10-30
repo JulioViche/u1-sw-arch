@@ -80,31 +80,31 @@ Una vez finalizada la descarga se ejecuta la aplicación y se iniciará Visual S
 
 Figura 7. Aplicación Visual Studio 2022 / VS Code
 
-#### INSTALACIÓN Y CONFIGURACIÓN DE ANDROID STUDIO
+#### INSTALACIÓN Y CONFIGURACIÓN DE VISUAL STUDIO 2022 Y .NET MAUI
 
-Para la instalación de la herramienta se accede a la página oficial de descarga de Android Studio https://developer.android.com/studio se selecciona la opción de descarga, se aceptan términos y condiciones e iniciará la descarga.
+Para el desarrollo del cliente móvil multiplataforma se utiliza .NET MAUI (Multi-platform App UI). Se accede al instalador de Visual Studio 2022 y se selecciona la carga de trabajo "Desarrollo de .NET Multi-platform App UI" (.NET MAUI), la cual incluye el SDK de Android, herramientas de emulación y plantillas base.
 
 ![Captura](imagenes/image7.png)
 
-Figura 8. Página oficial de descarga de Android Studio
+Figura 8. Instalación de la carga de trabajo .NET MAUI en Visual Studio
 
-Al finalizar la descarga se obtendrá el instalador ejecutable.
+Al finalizar la instalación se obtienen las herramientas del SDK de Android integradas y el compilador cruzado para generar el paquete APK/AAB correspondiente.
 
 ![Captura](imagenes/image8.png)
 
-Figura 9. Ejecutable Android Studio
+Figura 9. Componentes y emulador Android configurados
 
-Al ejecutar el instalador se mostrará la siguiente pantalla:
+Al abrir Visual Studio se puede verificar la disponibilidad de plantillas de proyecto .NET MAUI:
 
 ![Captura](imagenes/image9.png)
 
-Figura 10. Pantalla inicial de instalación de Android Studio
+Figura 10. Plantilla de aplicación .NET MAUI en Visual Studio
 
-Durante la instalación se selecciona los componentes a instalar, ubicación y carpeta de inicio. Al finalizar la instalación se iniciará la configuración en donde se selecciona el Setup Standard se aceptan términos y condiciones y se inicia la descarga de componentes.
+La configuración permite compilar nativamente la lógica compartida en C# y renderizar controles nativos en Android mediante XAML.
 
 ![Captura](imagenes/image10.png)
 
-Figura 11. Aplicación Android Studio
+Figura 11. Entorno de desarrollo para .NET MAUI
 
 ### ESTRUCTURA DE PROYECTO
 
@@ -378,87 +378,12 @@ throw new IllegalArgumentException("Unidad de destino no reconocida en catálogo
 
 }
 
-Tabla 4. Método main - Program.cs
+Tabla 4. Configuración del Servidor Kestrel - Program.cs
 
-public static void main(String[] args) {
+| var builder = WebApplication.CreateBuilder(args); builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(5000); }); builder.Services.AddSingleton<AdministradorTokens>(); builder.Services.AddSingleton<ServicioAutenticacion>(); builder.Services.AddSingleton<ServicioConversion>(); builder.Services.AddControllers(); builder.Services.AddCors(options => { options.AddPolicy("PermitirTodo", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); }); }); var app = builder.Build(); app.UseCors("PermitirTodo"); app.UseRouting(); app.MapControllers(); app.Run(); |
+| --- |
 
-int preferredPort = Integer.getInteger("server.port", 8080);
 
-HttpServer server = null;
-
-try {
-
-server = startServer(preferredPort);
-
-activePort = preferredPort;
-
-} catch (Exception e) {
-
-if (e.getCause() instanceof BindException || e.getMessage().contains("Address already in use")) {
-
-System.out.println("⚠️ El puerto " + preferredPort + " está ocupado. Intentando en puerto alternativo 8085...");
-
-try {
-
-server = startServer(8085);
-
-activePort = 8085;
-
-} catch (Exception ex) {
-
-System.err.println("❌ No se pudo iniciar el servidor en puerto 8085: " + ex.getMessage());
-
-return;
-
-}
-
-} else {
-
-System.err.println("❌ Error al iniciar el servidor: " + e.getMessage());
-
-e.printStackTrace();
-
-return;
-
-}
-
-}
-
-try {
-
-System.out.println("====================================================================");
-
-System.out.println("🚀 SERVIDOR RESTFUL INICIADO (TI.1.3 - SINBDD)");
-
-System.out.println(" URL Base: http://localhost:" + activePort + CONTEXT_PATH);
-
-System.out.println(" Health: http://localhost:" + activePort + CONTEXT_PATH + "health");
-
-System.out.println(" Login: http://localhost:" + activePort + CONTEXT_PATH + "auth/login");
-
-System.out.println(" Longitud: http://localhost:" + activePort + CONTEXT_PATH + "conversor/longitud");
-
-System.out.println(" Masa: http://localhost:" + activePort + CONTEXT_PATH + "conversor/masa");
-
-System.out.println(" Temperatura: http://localhost:" + activePort + CONTEXT_PATH + "conversor/temperatura");
-
-System.out.println("====================================================================");
-
-System.out.println("Credenciales quemadas: usuario 'MONSTER', contraseña 'MONSTER9'");
-
-System.out.println("Presione Ctrl+C en la consola para detener el servidor...");
-
-Thread.currentThread().join();
-
-} catch (InterruptedException e) {
-
-System.out.println("Servidor detenido.");
-
-Thread.currentThread().interrupt();
-
-}
-
-}
 
 #### CREACIÓN DE SERVICIO
 
@@ -472,19 +397,19 @@ Servicio de Conversiones: Contiene los algoritmos y factores de conversión para
 
 Figura 17. Estructura de paquetes - servicios
 
-Tabla 5. Método convertirLongitud - ConversorLongitud.cs
+Tabla 5. Método ConvertirLongitud - ConversorLongitud.cs (.NET 10)
 
-| public double convertirLongitud(double valor, String unidadOrigen, String unidadDestino) { if (unidadOrigen == null // unidadDestino == null) { throw new IllegalArgumentException("Las unidades de origen y destino no pueden ser nulas."); } String origen = normalizar(unidadOrigen); String destino = normalizar(unidadDestino); double valorEnMetros; // 1. Paso a Metros (unidad base) switch (origen) { case "centimetros": case "centimetro": case "cm": valorEnMetros = valor / 100.0; break; case "metros": case "metro": case "m": valorEnMetros = valor; break; case "pies": case "pie": case "ft": valorEnMetros = valor * 0.3048; break; case "yardas": case "yarda": case "yd": valorEnMetros = valor * 0.9144; break; case "millas": case "milla": case "mi": valorEnMetros = valor * 1609.34; break; default: throw new IllegalArgumentException("Unidad de origen no reconocida en catálogo de longitud: " + unidadOrigen); } // 2. Paso de Metros a Destino switch (destino) { case "centimetros": case "centimetro": case "cm": return valorEnMetros * 100.0; case "metros": case "metro": case "m": return valorEnMetros; case "pies": case "pie": case "ft": return valorEnMetros / 0.3048; case "yardas": case "yarda": case "yd": return valorEnMetros / 0.9144; case "millas": case "milla": case "mi": return valorEnMetros / 1609.34; default: throw new IllegalArgumentException("Unidad de destino no reconocida en catálogo de longitud: " + unidadDestino); } } |
+| public double Convertir(double valor, UnidadLongitud origen, UnidadLongitud destino) { double metros = origen switch { UnidadLongitud.Metro => valor, UnidadLongitud.Centimetro => valor / 100.0, UnidadLongitud.Pie => valor * 0.3048, UnidadLongitud.Yarda => valor * 0.9144, UnidadLongitud.Milla => valor * 1609.34, _ => throw new ArgumentOutOfRangeException(nameof(origen)) }; return destino switch { UnidadLongitud.Metro => metros, UnidadLongitud.Centimetro => metros * 100.0, UnidadLongitud.Pie => metros / 0.3048, UnidadLongitud.Yarda => metros / 0.9144, UnidadLongitud.Milla => metros / 1609.34, _ => throw new ArgumentOutOfRangeException(nameof(destino)) }; } |
 | --- |
 
-Tabla 6. Método convertirMasa - ConversorMasa.cs
+Tabla 6. Método ConvertirMasa - ConversorMasa.cs (.NET 10)
 
-| public double convertirMasa(double valor, String unidadOrigen, String unidadDestino) { if (unidadOrigen == null // unidadDestino == null) { throw new IllegalArgumentException("Las unidades de origen y destino no pueden ser nulas."); } String origen = normalizar(unidadOrigen); String destino = normalizar(unidadDestino); double valorEnKilos; // 1. Paso a Kilogramos (unidad base) switch (origen) { case "gramos": case "gramo": case "g": valorEnKilos = valor / 1000.0; break; case "kilogramos": case "kilogramo": case "kilos": case "kilo": case "kg": valorEnKilos = valor; break; case "onzas": case "onza": case "oz": valorEnKilos = valor * 0.0283495; break; case "libras": case "libra": case "lb": case "lbs": valorEnKilos = valor * 0.453592; break; case "quintales": case "quintal": case "q": // 1 quintal = 100 libras valorEnKilos = (valor * 100.0) * 0.453592; break; default: throw new IllegalArgumentException("Unidad de origen no reconocida en catálogo de masa: " + unidadOrigen); } // 2. Paso de Kilogramos a Destino switch (destino) { case "gramos": case "gramo": case "g": return valorEnKilos * 1000.0; case "kilogramos": case "kilogramo": case "kilos": case "kilo": case "kg": return valorEnKilos; case "onzas": case "onza": case "oz": return valorEnKilos / 0.0283495; case "libras": case "libra": case "lb": case "lbs": return valorEnKilos / 0.453592; case "quintales": case "quintal": case "q": return (valorEnKilos / 0.453592) / 100.0; default: throw new IllegalArgumentException("Unidad de destino no reconocida en catálogo de masa: " + unidadDestino); } } |
+| public double Convertir(double valor, UnidadMasa origen, UnidadMasa destino) { double gramos = origen switch { UnidadMasa.Gramo => valor, UnidadMasa.Kilogramo => valor * 1000.0, UnidadMasa.Libra => valor * 453.59237, UnidadMasa.Onza => valor * 28.349523125, UnidadMasa.Quintal => valor * 100000.0, _ => throw new ArgumentOutOfRangeException(nameof(origen)) }; return destino switch { UnidadMasa.Gramo => gramos, UnidadMasa.Kilogramo => gramos / 1000.0, UnidadMasa.Libra => gramos / 453.59237, UnidadMasa.Onza => gramos / 28.349523125, UnidadMasa.Quintal => gramos / 100000.0, _ => throw new ArgumentOutOfRangeException(nameof(destino)) }; } |
 | --- |
 
-Tabla 7. Método convertirTemperatura - ConversorTemperatura.cs
+Tabla 7. Método ConvertirTemperatura - ConversorTemperatura.cs (.NET 10)
 
-| public double convertirTemperatura(double valor, String opcionOrigen, String opcionDestino) { if (opcionOrigen == null // opcionDestino == null) { throw new IllegalArgumentException("Las unidades de origen y destino no pueden ser nulas."); } String origen = normalizar(opcionOrigen); String destino = normalizar(opcionDestino); double valorEnCelsius; // 1. Paso a Celsius (unidad base de trabajo) switch (origen) { case "celsius": case "centigrados": case "c": valorEnCelsius = valor; break; case "fahrenheit": case "f": valorEnCelsius = (valor - 32.0) * 5.0 / 9.0; break; case "kelvin": case "k": valorEnCelsius = valor - 273.15; break; case "newton": case "n": valorEnCelsius = valor * 100.0 / 33.0; break; case "reaumur": case "re": valorEnCelsius = valor * 5.0 / 4.0; break; default: throw new IllegalArgumentException("Unidad de origen no reconocida en catálogo de temperatura: " + opcionOrigen); } // 2. Paso de Celsius a Destino switch (destino) { case "celsius": case "centigrados": case "c": return valorEnCelsius; case "fahrenheit": case "f": return (valorEnCelsius * 9.0 / 5.0) + 32.0; case "kelvin": case "k": return valorEnCelsius + 273.15; case "newton": case "n": return valorEnCelsius * 33.0 / 100.0; case "reaumur": case "re": return valorEnCelsius * 4.0 / 5.0; default: throw new IllegalArgumentException("Unidad de destino no reconocida en catálogo de temperatura: " + opcionDestino); } } |
+| public double Convertir(double valor, UnidadTemperatura origen, UnidadTemperatura destino) { double celsius = origen switch { UnidadTemperatura.Celsius => valor, UnidadTemperatura.Fahrenheit => (valor - 32.0) * (5.0 / 9.0), UnidadTemperatura.Kelvin => valor - 273.15, UnidadTemperatura.Newton => valor * (100.0 / 33.0), UnidadTemperatura.Reaumur => valor * 1.25, _ => throw new ArgumentOutOfRangeException(nameof(origen)) }; return destino switch { UnidadTemperatura.Celsius => celsius, UnidadTemperatura.Fahrenheit => (celsius * (9.0 / 5.0)) + 32.0, UnidadTemperatura.Kelvin => celsius + 273.15, UnidadTemperatura.Newton => celsius * (33.0 / 100.0), UnidadTemperatura.Reaumur => celsius * 0.8, _ => throw new ArgumentOutOfRangeException(nameof(destino)) }; } |
 | --- |
 
 ### PRUEBAS DE LOS SERVICIOS
@@ -561,24 +486,24 @@ En la capa de interacción, dentro del paquete vista, se implementan las clases 
 
 Figura 26. Creación de modelos y vistas - Cliente consola
 
-Tabla 8. Clase ConversionRequest - Cliente consola
+Tabla 8. DTO ConversionSolicitud - Cliente consola (.NET 10)
 
-| package Monster.Client.model;import java.io.Serializable;/** * [MODELO] Solicitud de conversión creada a partir de las entradas del usuario. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversionRequest implements Serializable { private static final long serialVersionUID = 1L; private String magnitud; private String unidadOrigen; private String unidadDestino; private double valor; public ConversionRequest() { } public ConversionRequest(String magnitud, String unidadOrigen, String unidadDestino, double valor) { this.magnitud = magnitud; this.unidadOrigen = unidadOrigen; this.unidadDestino = unidadDestino; this.valor = valor; } public String getMagnitud() { return magnitud; } public void setMagnitud(String magnitud) { this.magnitud = magnitud; } public String getUnidadOrigen() { return unidadOrigen; } public void setUnidadOrigen(String unidadOrigen) { this.unidadOrigen = unidadOrigen; } public String getUnidadDestino() { return unidadDestino; } public void setUnidadDestino(String unidadDestino) { this.unidadDestino = unidadDestino; } public double getValor() { return valor; } public void setValor(double valor) { this.valor = valor; }} |
+| namespace ClienteConsola_DotNet_REST_GR09.Modelos; public sealed class ConversionSolicitud { public string Magnitud { get; set; } = string.Empty; public string Origen { get; set; } = string.Empty; public string Destino { get; set; } = string.Empty; public double Valor { get; set; } public string? Token { get; set; } } |
 | --- |
 
-Tabla 9. Clase ConsoleView - Cliente consola
+Tabla 9. Clase VistaConsola - Cliente consola (.NET 10)
 
-| package Monster.Client.view;import Monster.Client.model.ConversionRequest;import Monster.Client.model.ConversionResponse;import Monster.Client.model.SessionModel;import java.util.Locale;import java.util.Scanner;/** * [VISTA] Interfaz de usuario para la consola de comandos. * Formateo estricto a 2 decimales con punto decimal (Locale.US) y límite de 16 caracteres numéricos. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConsoleView { public static final String[] UNIDADES_LONGITUD = { "metro", "centimetro", "pie", "yarda", "milla" }; public static final String[] UNIDADES_MASA = { "gramo", "kilogramo", "libra", "onza", "quintal" }; public static final String[] UNIDADES_TEMPERATURA = { "celsius", "fahrenheit", "kelvin", "newton", "reaumur" }; private final Scanner scanner; public ConsoleView() { this.scanner = new Scanner(System.in); } public void mostrarBanner() { System.out.println("=================================================================="); System.out.println(" UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE - EXTENSIÓN LATACUNGA"); System.out.println(" DEPARTAMENTO DE ENERGÍA Y MECÁNICA"); System.out.println(" ARQUITECTURA DE SOFTWARE"); System.out.println(" TAREA TI.1.3 (PAO 2026-51)"); System.out.println("------------------------------------------------------------------"); System.out.println(" CLIENTE DE CONSOLA: CONVERSOR DE UNIDADES (RESTFUL JAVA - SINBDD)"); System.out.println(" NRC: 36884 / Grupo: GR09 / Autor: Julio Enrique Viche Castillo "); System.out.println(" Patrón Arquitectónico: Modelo - Vista - Controlador (MVC)"); System.out.println("==================================================================\n"); } public String[] pedirCredenciales() { System.out.println("------------------------------------------------------------------"); System.out.println(" INICIO DE SESIÓN OBLIGATORIO (AUTENTICACIÓN) "); System.out.println("------------------------------------------------------------------"); System.out.println(" [Nota]: Credenciales del sistema:"); System.out.println(" Usuario: MONSTER / Contraseña: MONSTER9"); System.out.println("------------------------------------------------------------------"); System.out.print("Ingrese Usuario: "); String usuario = scanner.nextLine().trim(); System.out.print("Ingrese Contraseña: "); String clave = scanner.nextLine().trim(); return new String[]{usuario, clave}; } public boolean preguntarReintento() { System.out.print("\n¿Desea reintentar el inicio de sesión? (s/n): "); String resp = scanner.nextLine().trim().toLowerCase(); return resp.equals("s") // resp.equals("si") // resp.equals("y"); } public String mostrarMenuPrincipal(SessionModel session) { System.out.println("\n=========================================================="); System.out.println(" MENÚ PRINCIPAL DE CONVERSIONES REST (MVC) "); System.out.println("=========================================================="); System.out.printf(" Sesión activa: %s / Token: %s\n", session.getUsuario(), session.getTokenAbreviado()); System.out.println("----------------------------------------------------------"); System.out.println(" 1. Conversión de Longitud (metro, centimetro, pie, yarda, milla)"); System.out.println(" 2. Conversión de Masa (gramo, kilogramo, libra, onza, quintal)"); System.out.println(" 3. Conversión de Temperatura (celsius, fahrenheit, kelvin, newton, reaumur)"); System.out.println(" 4. Verificar estado del token de sesión"); System.out.println(" 5. Cerrar sesión y Salir"); System.out.println("=========================================================="); System.out.print("Seleccione una opción (1-5): "); return scanner.nextLine().trim(); } public ConversionRequest solicitarDatosConversion(String magnitud, String[] unidades) { System.out.println("\n--- [CONVERSIÓN DE " + magnitud.toUpperCase() + "] ---"); String origen = seleccionarUnidad("origen", unidades); if (origen == null) return null; String destino = seleccionarUnidad("destino", unidades); if (destino == null) return null; double valor = pedirValorNumerico(); return new ConversionRequest(magnitud, origen, destino, valor); } private String seleccionarUnidad(String tipo, String[] unidades) { System.out.println("Seleccione unidad de " + tipo + ":"); for (int i = 0; i < unidades.length; i++) { System.out.printf(" %d. %s\n", (i + 1), capitalizar(unidades[i])); } System.out.print("Elija una opción (1-" + unidades.length + "): "); String input = scanner.nextLine().trim(); try { int idx = Integer.parseInt(input) - 1; if (idx >= 0 && idx < unidades.length) { return unidades[idx]; } else { mostrarError("Opción de unidad fuera de rango."); return null; } } catch (NumberFormatException e) { mostrarError("Entrada no numérica."); return null; } } public double pedirValorNumerico() { while (true) { System.out.print("Ingrese el valor numérico a convertir (solo números y '.'): "); String input = scanner.nextLine().trim(); if (input.length() > 16) { mostrarError("Longitud excedida. El valor no puede superar los 16 caracteres."); continue; } if (!input.matches("^-?\\d+(\\.\\d+)?$")) { mostrarError("Entrada no válida. Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100)."); continue; } try { return Double.parseDouble(input); } catch (NumberFormatException e) { mostrarError("Ingrese un número válido (ejemplo: 25.5 o 100)."); } } } public void mostrarResultadoConversion(ConversionRequest req, ConversionResponse resp) { if (resp != null && resp.isExito()) { System.out.println("\n=========================================================="); System.out.println(" RESULTADO DE LA CONVERSIÓN "); System.out.println("=========================================================="); System.out.printf(Locale.US, " %.2f %s ---> %.2f %s\n", req.getValor(), capitalizar(req.getUnidadOrigen()), resp.getValorConvertido(), capitalizar(req.getUnidadDestino())); System.out.println("=========================================================="); } else { String err = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor"; mostrarError("En la conversión: " + err); } } public void mostrarMensaje(String mensaje) { System.out.println(mensaje); } public void mostrarExito(String mensaje) { System.out.println("\n[OK] " + mensaje); } public void mostrarError(String mensaje) { System.out.println("\n[ERROR] " + mensaje); } public void mostrarDespedida() { System.out.println("\n=========================================================="); System.out.println(" Gracias por utilizar el Conversor de Unidades RESTful (GR09)"); System.out.println("==========================================================\n"); } private String capitalizar(String str) { if (str == null // str.isEmpty()) return ""; return str.substring(0, 1).toUpperCase() + str.substring(1); }} |
+| namespace ClienteConsola_DotNet_REST_GR09.Vista; public sealed class VistaConsola { public void MostrarBanner() { Console.WriteLine("=== CLIENTE CONSOLA RESTFUL .NET 10 (GR09) ==="); } public (string usuario, string clave) PedirCredenciales() { Console.Write("Usuario: "); var u = Console.ReadLine()?.Trim() ?? ""; Console.Write("Contraseña: "); var c = Console.ReadLine()?.Trim() ?? ""; return (u, c); } public double PedirValorNumerico() { while (true) { Console.Write("Valor numérico (máx 16 car., 2 decimales): "); var s = Console.ReadLine()?.Trim() ?? ""; if (s.Length <= 16 && System.Text.RegularExpressions.Regex.IsMatch(s, @"^-?\d+(\.\d+)?$")) return double.Parse(s, System.Globalization.CultureInfo.InvariantCulture); Console.WriteLine("[ERROR] Entrada inválida."); } } public void MostrarResultado(double v, string o, double r, string d) => Console.WriteLine($"\n[RESULTADO] {v:F2} {o} ---> {r:F2} {d}"); } |
 | --- |
 
-Tabla 10. Clase RestClient - Cliente consola
+Tabla 10. Clase ClienteServicioRest - Cliente consola (.NET 10)
 
-| package Monster.Client.rest;import com.fasterxml.jackson.databind.JsonNode;import com.fasterxml.jackson.databind.ObjectMapper;import Monster.Client.model.ConversionResponse;import Monster.Client.model.LoginResponse;import java.io.IOException;import java.net.URI;import java.net.http.HttpClient;import java.net.http.HttpRequest;import java.net.http.HttpResponse;import java.time.Duration;import java.util.HashMap;import java.util.Map;/** * Cliente HTTP RESTful con soporte de fallback dinámico de URLs y serialización JSON. * Se comunica con WS_CONV_UNI_RESTFULL_JAVA. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class RestClient { private static final String DEFAULT_URL_8080 = "http://localhost:8080/api/"; private static final String FALLBACK_URL_8085 = "http://localhost:8085/api/"; private final HttpClient httpClient; private final ObjectMapper objectMapper; private String baseUrl; public RestClient() { this(null); } public RestClient(String customBaseUrl) { this.httpClient = HttpClient.newBuilder() .connectTimeout(Duration.ofSeconds(5)) .build(); this.objectMapper = new ObjectMapper(); if (customBaseUrl != null && !customBaseUrl.trim().isEmpty()) { this.baseUrl = normalizarUrl(customBaseUrl); } else { this.baseUrl = resolverUrlActiva(); } } private String normalizarUrl(String url) { String u = url.trim(); return u.endsWith("/") ? u : u + "/"; } private String resolverUrlActiva() { // 1. Probar variable de entorno o propiedad del sistema String envUrl = System.getenv("API_BASE_URL"); if (envUrl == null) { envUrl = System.getProperty("api.base.url"); } if (envUrl != null && !envUrl.trim().isEmpty()) { return normalizarUrl(envUrl); } // 2. Probar puerto 8080 if (probarServidor(DEFAULT_URL_8080)) { return DEFAULT_URL_8080; } // 3. Probar puerto 8085 (por si 8080 estaba ocupado) if (probarServidor(FALLBACK_URL_8085)) { return FALLBACK_URL_8085; } // Predeterminado return DEFAULT_URL_8080; } private boolean probarServidor(String testUrl) { try { HttpRequest req = HttpRequest.newBuilder() .uri(URI.create(testUrl + "health")) .timeout(Duration.ofMillis(800)) .GET() .build(); HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString()); return resp.statusCode() == 200; } catch (Exception e) { return false; } } public String getBaseUrl() { return baseUrl; } public void setBaseUrl(String baseUrl) { this.baseUrl = normalizarUrl(baseUrl); } public LoginResponse login(String usuario, String clave) { try { Map<String, Object> payload = new HashMap<>(); payload.put("from", usuario); payload.put("to", clave); String requestJson = objectMapper.writeValueAsString(payload); HttpRequest request = HttpRequest.newBuilder() .uri(URI.create(baseUrl + "auth/login")) .header("Content-Type", "application/json") .timeout(Duration.ofSeconds(10)) .POST(HttpRequest.BodyPublishers.ofString(requestJson)) .build(); HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); JsonNode root = objectMapper.readTree(response.body()); boolean success = root.path("success").asBoolean(false); String token = root.path("token").asText(null); String message = root.path("message").asText(success ? "OK" : "Error en autenticación"); return new LoginResponse(success, token, message); } catch (Exception e) { return new LoginResponse(false, null, "Error conectando con el servidor REST: " + e.getMessage()); } } public ConversionResponse convertir(String magnitud, String unidadOrigen, String unidadDestino, double valor, String token) { try { String endpoint = switch (magnitud.toLowerCase().trim()) { case "longitud" -> "conversor/longitud"; case "masa" -> "conversor/masa"; case "temperatura" -> "conversor/temperatura"; default -> throw new IllegalArgumentException("Magnitud no reconocida: " + magnitud); }; Map<String, Object> payload = new HashMap<>(); payload.put("from", unidadOrigen); payload.put("to", unidadDestino); payload.put("value", valor); payload.put("token", token); String requestJson = objectMapper.writeValueAsString(payload); HttpRequest request = HttpRequest.newBuilder() .uri(URI.create(baseUrl + endpoint)) .header("Content-Type", "application/json") .timeout(Duration.ofSeconds(10)) .POST(HttpRequest.BodyPublishers.ofString(requestJson)) .build(); HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); JsonNode root = objectMapper.readTree(response.body()); boolean success = root.path("success").asBoolean(false); double result = root.path("result").asDouble(0.0); String message = root.path("message").asText(""); if (success) { return new ConversionResponse(true, result, null); } else { return new ConversionResponse(false, 0.0, message); } } catch (Exception e) { return new ConversionResponse(false, 0.0, "Error de comunicación REST: " + e.getMessage()); } }} |
+| namespace ClienteConsola_DotNet_REST_GR09.Servicios; public sealed class ClienteServicioRest { private readonly HttpClient _http = new() { BaseAddress = new Uri("http://127.0.0.1:5000/"), Timeout = TimeSpan.FromSeconds(10) }; public async Task<TokenRespuesta> IniciarSesionAsync(string u, string c) { var res = await _http.PostAsJsonAsync("api/auth/login", new { usuario = u, clave = c }); return (await res.Content.ReadFromJsonAsync<TokenRespuesta>())!; } public async Task<ConversionRespuesta> ConvertirAsync(string mag, string ori, string des, double val, string tok) { var req = new HttpRequestMessage(HttpMethod.Post, $"api/conversor/{mag}") { Content = JsonContent.Create(new { origen = ori, destino = des, valor = val, token = tok }) }; req.Headers.Authorization = new("Bearer", tok); var res = await _http.SendAsync(req); return (await res.Content.ReadFromJsonAsync<ConversionRespuesta>())!; } } |
 | --- |
 
 CONSUMO DEL Servicio RESTful (CONTROLADOR)
 
-Los clientes Java usan RestClient para enviar solicitudes HTTP/JSON a la API. El cliente conserva la URL base y el token de sesión y procesa los modelos JSON de respuesta.
+Los clientes .NET usan ClienteServicioRest para enviar solicitudes HTTP/JSON a la API. El cliente conserva la URL base y el token de sesión y procesa los modelos JSON de respuesta.
 
 ![Captura](imagenes/image28.png)
 
@@ -586,9 +511,9 @@ Figura 27. Creación de controlador - Cliente consola
 
 ConversionController coordina la selección de magnitud y unidades con RestClient. Valida la sesión, invoca la ruta REST correspondiente y entrega el resultado a la vista.
 
-Tabla 11. Clase ConversionController - Cliente consola
+Tabla 11. Clase ControladorConsola - Cliente consola (.NET 10)
 
-| package Monster.Client.controller;import Monster.Client.model.ConversionRequest;import Monster.Client.model.ConversionResponse;import Monster.Client.model.SessionModel;import Monster.Client.rest.RestClient;/** * [CONTROLADOR] Orquesta la ejecución de conversiones consumiendo el servicio RESTful. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversionController { private final RestClient restClient; private final SessionModel session; public ConversionController(RestClient restClient, SessionModel session) { this.restClient = restClient; this.session = session; } public ConversionResponse ejecutarConversion(ConversionRequest req) { if (!session.isActivo() // session.getToken() == null) { return new ConversionResponse(false, 0.0, "Sesión inactiva. Debe iniciar sesión primero."); } if (req == null) { return new ConversionResponse(false, 0.0, "Parámetros de conversión inválidos."); } return restClient.convertir( req.getMagnitud(), req.getUnidadOrigen(), req.getUnidadDestino(), req.getValor(), session.getToken() ); }} |
+| namespace ClienteConsola_DotNet_REST_GR09.Controlador; public sealed class ControladorConsola { private readonly VistaConsola _vista = new(); private readonly ClienteServicioRest _servicio = new(); private readonly ModeloSesion _sesion = new(); public async Task IniciarAsync() { _vista.MostrarBanner(); var (u, c) = _vista.PedirCredenciales(); var resp = await _servicio.IniciarSesionAsync(u, c); if (resp.Exito) { _sesion.Token = resp.Token; _vista.MostrarExito($"Autenticado: {_sesion.TokenAbreviado}"); } } } |
 | --- |
 
 CLASE PRINCIPAL (EJECUCIÓN)
@@ -599,9 +524,9 @@ Finalmente, se codifica la clase Program.cs (Consola) que orquesta el flujo comp
 
 Figura 28. Creación de clase principal - Cliente consola
 
-Tabla 12. Clase ConsoleClientApplication - Cliente consola
+Tabla 12. Punto de Entrada - Program.cs (.NET 10)
 
-| package Monster.Client;import Monster.Client.controller.ConsoleAppController;import Monster.Client.model.SessionModel;import Monster.Client.rest.RestClient;import Monster.Client.view.ConsoleView;/** * Punto de entrada principal para el Cliente de Consola (TI.1.3 RESTful .NET). * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConsoleClientApplication { public static void main(String[] args) { // Inicializar componentes MVC RestClient restClient = new RestClient(); SessionModel session = new SessionModel(); ConsoleView view = new ConsoleView(); ConsoleAppController controller = new ConsoleAppController(restClient, session, view); controller.iniciar(); }} |
+| using ClienteConsola_DotNet_REST_GR09.Controlador; var controlador = new ControladorConsola(); await controlador.IniciarAsync(); |
 | --- |
 
 #### EJECUCIÓN DEL CLIENTE DE CONSOLA
@@ -654,18 +579,10 @@ El cliente de escritorio usa RestClient para invocar la API REST. Sus controlado
 
 Figura 35. Creación de servicio - Cliente consola
 
-Tabla 13. Clase ConversionController - Cliente escritorio
+Tabla 13. Clase VentanaPrincipal.xaml.cs - Cliente escritorio (WPF .NET 10)
 
-| package Monster.Client.controller;import Monster.Client.model.ConversionRequest;import Monster.Client.model.ConversionResponse;import Monster.Client.model.SessionModel;import Monster.Client.rest.RestClient;/** * [CONTROLADOR] Ejecución de conversiones desde la interfaz de escritorio Swing. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversionController { private final RestClient restClient; private final SessionModel sessionModel; public ConversionController(RestClient restClient, SessionModel sessionModel) { this.restClient = restClient; this.sessionModel = sessionModel; } public ConversionResponse convertir(ConversionRequest req) { if (!sessionModel.isActivo() // sessionModel.getToken() == null) { return new ConversionResponse(false, 0.0, "Sesión no iniciada o token vencido."); } return restClient.convertir( req.getMagnitud(), req.getUnidadOrigen(), req.getUnidadDestino(), req.getValor(), sessionModel.getToken() ); }} |
+| namespace ClienteEscritorio_DotNet_REST_GR09.Vistas; public partial class VentanaPrincipal : Window { private readonly ClienteServicioRest _servicio; private readonly ModeloSesion _sesion; public VentanaPrincipal(ClienteServicioRest servicio, ModeloSesion sesion) { InitializeComponent(); _servicio = servicio; _sesion = sesion; } private async void BtnConvertir_Click(object sender, RoutedEventArgs e) { double val = double.Parse(TxtValor.Text, CultureInfo.InvariantCulture); var res = await _servicio.ConvertirAsync(CmbMagnitud.Text, CmbOrigen.Text, CmbDestino.Text, val, _sesion.Token!); LblResultado.Text = $"{res.ValorConvertido:F2} {CmbDestino.Text}"; } } |
 | --- |
-
-CREACIÓN DE VISTAS
-
-En el paquete vista se diseñaron las interfaces gráficas utilizando los formularios (JFrames) de Visual Studio. Estas ventanas contienen los componentes visuales necesarios para interactuar con el usuario. Su función es estrictamente visual: capturan los datos de entrada y muestran los resultados obtenidos, delegando todo el procesamiento al controlador.
-
-![Captura](imagenes/image37.png)
-
-Figura 36. Creación de vistas - Cliente escritorio
 
 CLASE PRINCIPAL (EJECUCIÓN)
 
@@ -709,14 +626,14 @@ El cliente web usa LoginServlet y ConversionServlet para gestionar solicitudes d
 
 Figura 41. Creación de servlets - Cliente web
 
-Tabla 14. Clase ConversionServlet - Cliente web
+Tabla 14. Clase ConversorController - Cliente web (ASP.NET Core C#)
 
-| package Monster.Client.controller;import Monster.Client.model.ConversionRequest;import Monster.Client.model.ConversionResponse;import Monster.Client.model.SessionModel;import Monster.Client.rest.RestClient;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;import java.io.IOException;import java.net.URLEncoder;import java.nio.charset.StandardCharsets;import java.util.Locale;/** * [CONTROLADOR] Servlet para el procesamiento de conversiones RESTful JSON. * Formateo numérico estricto a 2 decimales con punto decimal (Locale.US) * y límite de 16 caracteres. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */@WebServlet(name = "ConversionServlet", urlPatterns = {"/convertir"})public class ConversionServlet extends HttpServlet { private final RestClient restClient = new RestClient(); @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { request.setCharacterEncoding("UTF-8"); response.setCharacterEncoding("UTF-8"); HttpSession session = request.getSession(false); SessionModel sessionUser = (session != null) ? (SessionModel) session.getAttribute("sessionUser") : null; // Validación estricta de sesión activa (SINBDD) if (sessionUser == null // !sessionUser.isActivo() // sessionUser.getToken() == null) { response.sendRedirect(request.getContextPath() + "/index.html?error=SesionInvalida"); return; } String magnitud = request.getParameter("magnitud"); String unidadOrigen = request.getParameter("unidadOrigen"); String unidadDestino = request.getParameter("unidadDestino"); String valorStr = request.getParameter("valor"); if (magnitud == null // unidadOrigen == null // unidadDestino == null // valorStr == null) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Faltan parámetros obligatorios para la conversión.", StandardCharsets.UTF_8)); return; } double valor; try { String valorLimpio = valorStr.trim(); if (valorLimpio.length() > 16) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("El valor numérico no puede superar los 16 caracteres.", StandardCharsets.UTF_8)); return; } if (!valorLimpio.matches("^-?\\d+(\\.\\d+)?$")) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Solo se permiten números y el punto decimal '.' (ejemplo: 25.5 o 100).", StandardCharsets.UTF_8)); return; } valor = Double.parseDouble(valorLimpio); } catch (NumberFormatException e) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Formato numérico no válido.", StandardCharsets.UTF_8)); return; } try { ConversionResponse resp = restClient.convertir( magnitud, unidadOrigen, unidadDestino, valor, sessionUser.getToken() ); if (resp != null && resp.isExito()) { String valorOrigenFmt = String.format(Locale.US, "%.2f", valor); String valorDestinoFmt = String.format(Locale.US, "%.2f", resp.getValorConvertido()); String resultadoTexto = valorDestinoFmt + " " + capitalizar(unidadDestino); String detalleTexto = valorOrigenFmt + " " + capitalizar(unidadOrigen) + " equivale a " + resultadoTexto; response.sendRedirect(request.getContextPath() + "/conversor.html?resultado=" + URLEncoder.encode(resultadoTexto, StandardCharsets.UTF_8) + "&detalle=" + URLEncoder.encode(detalleTexto, StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } else { String errorMsg = (resp != null) ? resp.getMensajeError() : "Sin respuesta del servidor REST"; response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode(errorMsg, StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } } catch (Exception e) { response.sendRedirect(request.getContextPath() + "/conversor.html?error=" + URLEncoder.encode("Error de comunicación: " + e.getMessage(), StandardCharsets.UTF_8) + "&usuario=" + URLEncoder.encode(sessionUser.getUsuario(), StandardCharsets.UTF_8) + "&token=" + sessionUser.getTokenAbreviado()); } } private String capitalizar(String str) { if (str == null // str.isEmpty()) return ""; return str.substring(0, 1).toUpperCase() + str.substring(1); }} |
+| namespace ClienteWeb_DotNet_REST_GR09.Controladores; [Route("conversor")] public sealed class ConversorController : Controller { private readonly ClienteServicioRest _servicio; public ConversorController(ClienteServicioRest servicio) => _servicio = servicio; [HttpPost] public async Task<IActionResult> Convertir([FromForm] string magnitud, [FromForm] string origen, [FromForm] string destino, [FromForm] double valor, [FromForm] string token) { var resp = await _servicio.ConvertirAsync(magnitud, origen, destino, valor, token); return Json(resp); } } |
 | --- |
 
-Tabla 15. Clase LoginServlet - Cliente web
+Tabla 15. Clase AuthController - Cliente web (ASP.NET Core C#)
 
-| package Monster.Client.controller;import Monster.Client.model.LoginResponse;import Monster.Client.model.SessionModel;import Monster.Client.rest.RestClient;import jakarta.servlet.ServletException;import jakarta.servlet.annotation.WebServlet;import jakarta.servlet.http.HttpServlet;import jakarta.servlet.http.HttpServletRequest;import jakarta.servlet.http.HttpServletResponse;import jakarta.servlet.http.HttpSession;import java.io.IOException;import java.net.URLEncoder;import java.nio.charset.StandardCharsets;/** * [CONTROLADOR] Servlet para el procesamiento del inicio de sesión RESTful. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})public class LoginServlet extends HttpServlet { private final RestClient restClient = new RestClient(); @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { request.setCharacterEncoding("UTF-8"); response.setCharacterEncoding("UTF-8"); String usuario = request.getParameter("usuario"); String clave = request.getParameter("clave"); if (usuario == null // usuario.trim().isEmpty() // clave == null // clave.trim().isEmpty()) { response.sendRedirect(request.getContextPath() + "/index.html?error=" + URLEncoder.encode("Por favor, complete todos los campos de acceso.", StandardCharsets.UTF_8)); return; } try { LoginResponse loginResp = restClient.login(usuario.trim(), clave.trim()); if (loginResp != null && loginResp.isExito()) { HttpSession session = request.getSession(true); SessionModel sessionModel = new SessionModel(usuario.trim(), loginResp.getToken()); session.setAttribute("sessionUser", sessionModel); response.sendRedirect(request.getContextPath() + "/conversor.html?usuario=" + URLEncoder.encode(usuario.trim(), StandardCharsets.UTF_8) + "&token=" + sessionModel.getTokenAbreviado()); } else { String errorMsg = (loginResp != null) ? loginResp.getMensaje() : "Credenciales inválidas."; response.sendRedirect(request.getContextPath() + "/index.html?error=" + URLEncoder.encode(errorMsg, StandardCharsets.UTF_8)); } } catch (Exception e) { String errorMsg = "Error de comunicación con el Servidor REST: " + e.getMessage(); response.sendRedirect(request.getContextPath() + "/index.html?error=" + URLEncoder.encode(errorMsg, StandardCharsets.UTF_8)); } }} |
+| namespace ClienteWeb_DotNet_REST_GR09.Controladores; [Route("auth")] public sealed class AuthController : Controller { private readonly ClienteServicioRest _servicio; public AuthController(ClienteServicioRest servicio) => _servicio = servicio; [HttpPost("login")] public async Task<IActionResult> Login([FromForm] string usuario, [FromForm] string clave) { var resp = await _servicio.IniciarSesionAsync(usuario, clave); return Json(resp); } } |
 | --- |
 
 CREACIÓN DE VISTAS
@@ -729,12 +646,12 @@ Figura 42. Creación de vistas - Cliente web
 
 Tabla 16. Archivo conversor.html - Cliente web
 
-| <!DOCTYPE html><html lang="es"><head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Conversor de Unidades RESTful - Panel Web (GR09)</title> <link rel="stylesheet" href="css/style.css"></head><body> <!-- Encabezado con sesión activa --> <header class="header-bar"> <div class="header-brand"> <h1>CONVERSOR DE UNIDADES (RESTFUL JAVA · SINBDD)</h1> <p>ESPE · Arquitectura de Software (TI.1.3) / Autor: Julio Enrique Viche Castillo</p> </div> <div class="header-user"> <span class="badge-session"> <span class="status-dot">●</span> <strong id="lblUsuario">MONSTER</strong> <span style="opacity: 0.8; font-size: 0.75rem;" id="lblToken">(Sesión Activa)</span> </span> <a href="logout" class="btn-logout">Cerrar Sesión</a> </div> </header> <!-- Panel Central del Conversor --> <main class="main-wrapper"> <div class="card-box"> <h2 class="card-title">Conversor de Unidades Multimagnitud</h2> <p class="card-subtitle">Cálculos procesados mediante servicios web RESTful JSON protegidos por token</p> <div id="alertBox" class="alert alert-error" style="display: none;"></div> <!-- 1. Pestañas de Magnitud --> <label class="form-label">1. Seleccione la Magnitud Física:</label> <div class="segmented-group"> <button type="button" class="segment-btn active" id="btnLongitud" onclick="cambiarMagnitud('Longitud')"> Longitud </button> <button type="button" class="segment-btn" id="btnMasa" onclick="cambiarMagnitud('Masa')"> Masa </button> <button type="button" class="segment-btn" id="btnTemperatura" onclick="cambiarMagnitud('Temperatura')"> Temperatura </button> </div> <!-- Formulario de Conversión --> <form action="convertir" method="POST" id="formConversion"> <input type="hidden" id="inputMagnitud" name="magnitud" value="Longitud"> <!-- 2. Valor Numérico --> <div class="form-group"> <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label> <input type="text" id="txtValor" name="valor" class="form-input" autocomplete="off" inputmode="decimal" maxlength="16" pattern="^-?\d+(\.\d+)?$" title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) // (event.charCode === 46 && this.value.indexOf('.') === -1)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" value="100.00" required> </div> <!-- 3. Unidades Origen y Destino --> <label class="form-label">3. Configuración de Unidades:</label> <div class="units-row"> <div class="units-col"> <select id="cmbOrigen" name="unidadOrigen" class="form-select"></select> </div> <button type="button" class="btn-swap" title="Intercambiar unidades" onclick="intercambiarUnidades()"> ⇄ </button> <div class="units-col"> <select id="cmbDestino" name="unidadDestino" class="form-select"></select> </div> </div> <button type="submit" class="btn-primary" style="margin-top: 20px;"> Calcular Conversión REST </button> </form> <!-- 4. Tarjeta de Resultado --> <div id="pnlResultado" class="result-card" style="display: none;"> <div class="result-value" id="lblResultadoValor">0.00</div> <div class="result-detail" id="lblResultadoDetalle">Cálculo completado exitosamente</div> </div> </div> </main> <!-- Barra de Estado Inferior --> <footer class="footer-bar"> <span>Servidor Backend: <code>WS_CONV_UNI_RESTFULL_JAVA</code> (Modalidad SINBDD)</span> <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span> </footer> <script> const CATALOGO = { 'Longitud': ['metro', 'centimetro', 'pie', 'yarda', 'milla'], 'Masa': ['gramo', 'kilogramo', 'libra', 'onza', 'quintal'], 'Temperatura': ['celsius', 'fahrenheit', 'kelvin', 'newton', 'reaumur'] }; let magnitudActual = 'Longitud'; function cambiarMagnitud(magnitud) { magnitudActual = magnitud; document.getElementById('inputMagnitud').value = magnitud; ['Longitud', 'Masa', 'Temperatura'].forEach(m => { const btn = document.getElementById('btn' + m); if (m === magnitud) { btn.classList.add('active'); } else { btn.classList.remove('active'); } }); const unidades = CATALOGO[magnitud]; const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); cmbO.innerHTML = ''; cmbD.innerHTML = ''; unidades.forEach((u, i) => { const nombre = u.charAt(0).toUpperCase() + u.slice(1); cmbO.add(new Option(nombre, u)); cmbD.add(new Option(nombre, u)); }); if (unidades.length > 1) { cmbD.selectedIndex = 1; } document.getElementById('pnlResultado').style.display = 'none'; } function intercambiarUnidades() { const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); const tmp = cmbO.selectedIndex; cmbO.selectedIndex = cmbD.selectedIndex; cmbD.selectedIndex = tmp; } // Leer parámetros URL (para mensajes de servlet o login) const params = new URLSearchParams(window.location.search); if (params.has('usuario')) { document.getElementById('lblUsuario').textContent = params.get('usuario'); } if (params.has('token')) { document.getElementById('lblToken').textContent = '(Token: ' + params.get('token') + ')'; } if (params.has('resultado')) { const pnl = document.getElementById('pnlResultado'); const val = document.getElementById('lblResultadoValor'); const det = document.getElementById('lblResultadoDetalle'); val.textContent = params.get('resultado'); det.textContent = params.get('detalle') // 'Cálculo completado exitosamente'; pnl.style.display = 'block'; } if (params.has('error')) { const alertBox = document.getElementById('alertBox'); alertBox.textContent = params.get('error'); alertBox.style.display = 'block'; } // Inicializar con Longitud cambiarMagnitud('Longitud'); </script></body></html> |
+| <!DOCTYPE html><html lang="es"><head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Conversor de Unidades RESTful - Panel Web (GR09)</title> <link rel="stylesheet" href="css/style.css"></head><body> <!-- Encabezado con sesión activa --> <header class="header-bar"> <div class="header-brand"> <h1>CONVERSOR DE UNIDADES (RESTFUL JAVA · SINBDD)</h1> <p>ESPE · Arquitectura de Software (TI.1.3) / Autor: Julio Enrique Viche Castillo</p> </div> <div class="header-user"> <span class="badge-session"> <span class="status-dot">●</span> <strong id="lblUsuario">MONSTER</strong> <span style="opacity: 0.8; font-size: 0.75rem;" id="lblToken">(Sesión Activa)</span> </span> <a href="logout" class="btn-logout">Cerrar Sesión</a> </div> </header> <!-- Panel Central del Conversor --> <main class="main-wrapper"> <div class="card-box"> <h2 class="card-title">Conversor de Unidades Multimagnitud</h2> <p class="card-subtitle">Cálculos procesados mediante servicios web RESTful JSON protegidos por token</p> <div id="alertBox" class="alert alert-error" style="display: none;"></div> <!-- 1. Pestañas de Magnitud --> <label class="form-label">1. Seleccione la Magnitud Física:</label> <div class="segmented-group"> <button type="button" class="segment-btn active" id="btnLongitud" onclick="cambiarMagnitud('Longitud')"> Longitud </button> <button type="button" class="segment-btn" id="btnMasa" onclick="cambiarMagnitud('Masa')"> Masa </button> <button type="button" class="segment-btn" id="btnTemperatura" onclick="cambiarMagnitud('Temperatura')"> Temperatura </button> </div> <!-- Formulario de Conversión --> <form action="convertir" method="POST" id="formConversion"> <input type="hidden" id="inputMagnitud" name="magnitud" value="Longitud"> <!-- 2. Valor Numérico --> <div class="form-group"> <label class="form-label" for="txtValor">2. Ingrese el Valor a Convertir:</label> <input type="text" id="txtValor" name="valor" class="form-input" autocomplete="off" inputmode="decimal" maxlength="16" pattern="^-?\d+(\.\d+)?$" title="Solo se permiten números y el punto decimal '.' (ej. 100 o 25.5)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) // (event.charCode === 46 && this.value.indexOf('.') === -1)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)" value="100.00" required> </div> <!-- 3. Unidades Origen y Destino --> <label class="form-label">3. Configuración de Unidades:</label> <div class="units-row"> <div class="units-col"> <select id="cmbOrigen" name="unidadOrigen" class="form-select"></select> </div> <button type="button" class="btn-swap" title="Intercambiar unidades" onclick="intercambiarUnidades()"> ⇄ </button> <div class="units-col"> <select id="cmbDestino" name="unidadDestino" class="form-select"></select> </div> </div> <button type="submit" class="btn-primary" style="margin-top: 20px;"> Calcular Conversión REST </button> </form> <!-- 4. Tarjeta de Resultado --> <div id="pnlResultado" class="result-card" style="display: none;"> <div class="result-value" id="lblResultadoValor">0.00</div> <div class="result-detail" id="lblResultadoDetalle">Cálculo completado exitosamente</div> </div> </div> </main> <!-- Barra de Estado Inferior --> <footer class="footer-bar"> <span>Servidor Backend: <code>WSConversionUnidades_DotNet_REST_GR09</code> (Modalidad SINBDD)</span> <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span> </footer> <script> const CATALOGO = { 'Longitud': ['metro', 'centimetro', 'pie', 'yarda', 'milla'], 'Masa': ['gramo', 'kilogramo', 'libra', 'onza', 'quintal'], 'Temperatura': ['celsius', 'fahrenheit', 'kelvin', 'newton', 'reaumur'] }; let magnitudActual = 'Longitud'; function cambiarMagnitud(magnitud) { magnitudActual = magnitud; document.getElementById('inputMagnitud').value = magnitud; ['Longitud', 'Masa', 'Temperatura'].forEach(m => { const btn = document.getElementById('btn' + m); if (m === magnitud) { btn.classList.add('active'); } else { btn.classList.remove('active'); } }); const unidades = CATALOGO[magnitud]; const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); cmbO.innerHTML = ''; cmbD.innerHTML = ''; unidades.forEach((u, i) => { const nombre = u.charAt(0).toUpperCase() + u.slice(1); cmbO.add(new Option(nombre, u)); cmbD.add(new Option(nombre, u)); }); if (unidades.length > 1) { cmbD.selectedIndex = 1; } document.getElementById('pnlResultado').style.display = 'none'; } function intercambiarUnidades() { const cmbO = document.getElementById('cmbOrigen'); const cmbD = document.getElementById('cmbDestino'); const tmp = cmbO.selectedIndex; cmbO.selectedIndex = cmbD.selectedIndex; cmbD.selectedIndex = tmp; } // Leer parámetros URL (para mensajes de servlet o login) const params = new URLSearchParams(window.location.search); if (params.has('usuario')) { document.getElementById('lblUsuario').textContent = params.get('usuario'); } if (params.has('token')) { document.getElementById('lblToken').textContent = '(Token: ' + params.get('token') + ')'; } if (params.has('resultado')) { const pnl = document.getElementById('pnlResultado'); const val = document.getElementById('lblResultadoValor'); const det = document.getElementById('lblResultadoDetalle'); val.textContent = params.get('resultado'); det.textContent = params.get('detalle') // 'Cálculo completado exitosamente'; pnl.style.display = 'block'; } if (params.has('error')) { const alertBox = document.getElementById('alertBox'); alertBox.textContent = params.get('error'); alertBox.style.display = 'block'; } // Inicializar con Longitud cambiarMagnitud('Longitud'); </script></body></html> |
 | --- |
 
 Tabla 17. Archivo index.html - Cliente web
 
-| <!DOCTYPE html><html lang="es"><head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Acceso al Sistema - Conversor de Unidades RESTful (GR09)</title> <link rel="stylesheet" href="css/style.css"></head><body> <!-- Encabezado Institucional --> <header class="header-bar"> <div class="header-brand"> <h1>UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE</h1> <p>Arquitectura de Software (TI.1.3) · Grupo GR09 / Julio Enrique Viche Castillo</p> </div> <div class="header-user"> <span class="badge-session"> <span class="status-dot">●</span> Servidor RESTful JSON </span> </div> </header> <!-- Contenedor del Formulario de Login --> <main class="main-wrapper"> <div class="card-box card-login"> <h2 class="card-title">Iniciar Sesión</h2> <p class="card-subtitle">Autenticación requerida para acceder al Conversor REST (SINBDD)</p> <div id="alertBox" class="alert alert-error" style="display: none;"></div> <div id="infoBox" class="alert alert-info" style="display: none;"></div> <form action="login" method="POST"> <div class="form-group"> <label class="form-label" for="txtUsuario">Usuario:</label> <input type="text" id="txtUsuario" name="usuario" class="form-input" value="MONSTER" required autofocus> </div> <div class="form-group"> <label class="form-label" for="txtClave">Contraseña:</label> <input type="password" id="txtClave" name="clave" class="form-input" value="MONSTER9" required> </div> <div class="alert alert-info" style="font-size: 0.8rem; padding: 8px 12px; margin-bottom: 20px;"> <strong>Credenciales del curso:</strong> Usuario: <code>MONSTER</code> / Clave: <code>MONSTER9</code> </div> <button type="submit" class="btn-primary">Ingresar al Conversor</button> </form> </div> </main> <!-- Barra de Estado Inferior --> <footer class="footer-bar"> <span>Servidor Backend: <code>WS_CONV_UNI_RESTFULL_JAVA</code> (Modalidad SINBDD)</span> <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span> </footer> <script> const params = new URLSearchParams(window.location.search); if (params.has('error')) { const alertBox = document.getElementById('alertBox'); let err = params.get('error'); if (err === 'SesionInvalida') err = 'Su sesión ha expirado o es inválida. Inicie sesión nuevamente.'; alertBox.textContent = err; alertBox.style.display = 'block'; } if (params.has('msg')) { const infoBox = document.getElementById('infoBox'); infoBox.textContent = params.get('msg'); infoBox.style.display = 'block'; } </script></body></html> |
+| <!DOCTYPE html><html lang="es"><head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Acceso al Sistema - Conversor de Unidades RESTful (GR09)</title> <link rel="stylesheet" href="css/style.css"></head><body> <!-- Encabezado Institucional --> <header class="header-bar"> <div class="header-brand"> <h1>UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE</h1> <p>Arquitectura de Software (TI.1.3) · Grupo GR09 / Julio Enrique Viche Castillo</p> </div> <div class="header-user"> <span class="badge-session"> <span class="status-dot">●</span> Servidor RESTful JSON </span> </div> </header> <!-- Contenedor del Formulario de Login --> <main class="main-wrapper"> <div class="card-box card-login"> <h2 class="card-title">Iniciar Sesión</h2> <p class="card-subtitle">Autenticación requerida para acceder al Conversor REST (SINBDD)</p> <div id="alertBox" class="alert alert-error" style="display: none;"></div> <div id="infoBox" class="alert alert-info" style="display: none;"></div> <form action="login" method="POST"> <div class="form-group"> <label class="form-label" for="txtUsuario">Usuario:</label> <input type="text" id="txtUsuario" name="usuario" class="form-input" value="MONSTER" required autofocus> </div> <div class="form-group"> <label class="form-label" for="txtClave">Contraseña:</label> <input type="password" id="txtClave" name="clave" class="form-input" value="MONSTER9" required> </div> <div class="alert alert-info" style="font-size: 0.8rem; padding: 8px 12px; margin-bottom: 20px;"> <strong>Credenciales del curso:</strong> Usuario: <code>MONSTER</code> / Clave: <code>MONSTER9</code> </div> <button type="submit" class="btn-primary">Ingresar al Conversor</button> </form> </div> </main> <!-- Barra de Estado Inferior --> <footer class="footer-bar"> <span>Servidor Backend: <code>WSConversionUnidades_DotNet_REST_GR09</code> (Modalidad SINBDD)</span> <span>Patrón Arquitectónico: Modelo - Vista - Controlador (JSP / Servlet)</span> </footer> <script> const params = new URLSearchParams(window.location.search); if (params.has('error')) { const alertBox = document.getElementById('alertBox'); let err = params.get('error'); if (err === 'SesionInvalida') err = 'Su sesión ha expirado o es inválida. Inicie sesión nuevamente.'; alertBox.textContent = err; alertBox.style.display = 'block'; } if (params.has('msg')) { const infoBox = document.getElementById('infoBox'); infoBox.textContent = params.get('msg'); infoBox.style.display = 'block'; } </script></body></html> |
 | --- |
 
 EJECUCIÓN DEL CLIENTE DE WEB
@@ -747,81 +664,80 @@ Figura 43. Login - Cliente web
 
 Figura 44. Pantalla de Conversiones - Cliente web
 
-### CLIENTE MÓVIL
+### CLIENTE MÓVIL (.NET MAUI)
 
 #### CREACIÓN DEL PROYECTO
 
-El proyecto se debe crear en Android Studio. Se selecciona la opción ‘New Project’, en la pantalla siguiente ‘Empty Activity’ y finalmente se configura el proyecto con nombre, ubicación y la opción ‘Java’ en Build Configuration Laguaje. Finalizamos haciendo click en el botón ‘Finish’.
+El proyecto móvil se crea en Visual Studio 2022 seleccionando la plantilla ".NET MAUI App" con destino .NET 10 y plataforma Android. Se establece el espacio de nombres `ClienteMovilGR09` y el identificador de aplicación `ec.edu.monster.conversor.gr09`.
 
 ![Captura](imagenes/image45.png)
 
-Figura 45. Configuración del proyecto - Cliente móvil
+Figura 45. Configuración del proyecto - Cliente móvil .NET MAUI
 
 #### ESTRUCTURA DEL PROYECTO
 
-El desarrollo de la aplicación móvil en Android Studio se organizó bajo el patrón arquitectónico MVC (Modelo-Vista-Controlador). Para asegurar el desacoplamiento de la lógica, la vista y el consumo de red, se estructuró el proyecto en los paquetes model, view y controller.
+El cliente móvil .NET MAUI se estructura bajo el patrón Modelo-Vista-Controlador (MVC), separando claramente las responsabilidades:
+- **Modelos**: Registros inmutables en C# (`SolicitudInicioSesion`, `TokenRespuesta`, `ConversionSolicitud`, `ConversionRespuesta`).
+- **Servicios**: `ClienteRest` implementado con `HttpClient` y `System.Text.Json` para consumir la API RESTful.
+- **Controladores**: `ControladorConversor` que coordina el estado de la sesión y las llamadas asíncronas.
+- **Vistas**: Páginas XAML declarativas (`PaginaInicioSesion.xaml`, `PaginaConversor.xaml`).
 
 ![Captura](imagenes/image46.png)
 
-Figura 46. Estructura del proyecto - Cliente móvil
+Figura 46. Estructura del proyecto - Cliente móvil .NET MAUI
 
 ### CODIFICACIÓN DEL PROYECTO CLIENTE MÓVIL
 
-#### CREACIÓN DE MODELOS
+#### CREACIÓN DE MODELOS Y SERVICIOS REST
 
-En el paquete model se crearon las clases necesarias para el intercambio de información: ConversionRequest, ConversionResult, LoginResult y la enumeración ServiceType.
-
-La aplicación Android usa RestClient, HttpURLConnection y org.json para enviar solicitudes HTTP/JSON al servidor. Los controladores procesan inicio de sesión y conversiones de forma asíncrona y actualizan las actividades.
+En la carpeta `Modelos` se definen los DTOs de intercambio de datos, y en `Servicios` se implementa `ClienteRest.cs`, encargado de la serialización JSON, configuración de cabeceras `Authorization: Bearer` y manejo de excepciones de red con fallback de endpoint local (`http://10.0.2.2:5000/` en emulador Android o `http://127.0.0.1:5000/` en escritorio).
 
 ![Captura](imagenes/image47.png)
 
-Figura 47. Creación de modelos - Cliente móvil
+Figura 47. Creación de modelos y cliente REST - Cliente móvil
 
-CREACIÓN DE CONTROLADORES
+#### CREACIÓN DE CONTROLADORES
 
-LoginController y ConversionController coordinan las actividades Android con RestClient. Ejecutan las llamadas de red fuera del hilo de interfaz y devuelven el resultado a las vistas.
+`ControladorConversor.cs` administra la sesión del usuario en memoria (SINBDD) y provee métodos asíncronos para autenticación con credenciales quemadas (`MONSTER` / `MONSTER9`) y conversión paramétrica por magnitud (longitud, masa, temperatura).
 
 ![Captura](imagenes/image48.png)
 
 Figura 48. Creación de controladores - Cliente móvil
 
-Tabla 18. Clase LoginController - Cliente móvil
+Tabla 18. ControladorConversor - Cliente móvil .NET MAUI
 
-| package Monster.Client.controller;import android.os.Handler;import android.os.Looper;import Monster.Client.model.LoginResponse;import Monster.Client.model.RestClient;import Monster.Client.model.SessionModel;/** * [CONTROLADOR] Gestiona el flujo de autenticación para la vista móvil RESTful. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class LoginController { public interface LoginCallback { void onSuccess(SessionModel session, String resolvedBaseUrl); void onError(String mensaje); } private final RestClient restClient; private final Handler mainHandler; public LoginController() { this.restClient = new RestClient(); this.mainHandler = new Handler(Looper.getMainLooper()); } public void procesarLogin(String baseUrl, String usuario, String clave, LoginCallback callback) { new Thread(() -> { try { if (baseUrl != null && !baseUrl.trim().isEmpty()) { restClient.setBaseUrl(baseUrl); } LoginResponse resp = restClient.login(usuario, clave); mainHandler.post(() -> { if (resp != null && resp.isExito() && resp.getToken() != null) { SessionModel session = new SessionModel(usuario, resp.getToken()); callback.onSuccess(session, restClient.getBaseUrl()); } else { String err = (resp != null && resp.getMensaje() != null) ? resp.getMensaje() : "Error al iniciar sesión."; callback.onError(err); } }); } catch (Exception e) { mainHandler.post(() -> callback.onError("Error de conexión: " + e.getMessage())); } }).start(); }} |
+| using ClienteMovilGR09.Modelos;using ClienteMovilGR09.Servicios;namespace ClienteMovilGR09.Controladores;public sealed class ControladorConversor{ private readonly ClienteRest _servicio; private readonly EstadoCliente _estado = new(); public ControladorConversor(ClienteRest? servicio = null){ _servicio = servicio ?? new ClienteRest(); } public async Task<TokenRespuesta> IniciarSesionAsync(string usuario, string clave){ var resp = await _servicio.IniciarSesionAsync(new SolicitudInicioSesion(usuario, clave)); if (resp.Exito){ _estado.Token = resp.Token; _estado.Usuario = usuario; } return resp; } public Task<ConversionRespuesta> ConvertirAsync(string magnitud, double valor, string origen, string destino){ if (string.IsNullOrWhiteSpace(_estado.Token)) throw new InvalidOperationException("Debe iniciar sesión primero."); return _servicio.ConvertirAsync(magnitud, new ConversionSolicitud(valor, origen, destino), _estado.Token); }} |
 | --- |
 
-Tabla 19. Clase ConversionController - Cliente móvil
+#### CREACIÓN DE VISTAS (XAML)
 
-| package Monster.Client.controller;import android.os.Handler;import android.os.Looper;import Monster.Client.model.ConversionRequest;import Monster.Client.model.ConversionResponse;import Monster.Client.model.RestClient;/** * [CONTROLADOR] Gestiona el despacho de conversiones de unidades RESTful. * * @author Julio Enrique Viche Castillo - GR09 - NRC 36884 */public class ConversionController { public interface ConversionCallback { void onSuccess(ConversionResponse response); void onError(String mensaje); } private final RestClient restClient; private final Handler mainHandler; public ConversionController() { this.restClient = new RestClient(); this.mainHandler = new Handler(Looper.getMainLooper()); } public void procesarConversion(String baseUrl, String token, ConversionRequest req, ConversionCallback callback) { new Thread(() -> { try { if (baseUrl != null && !baseUrl.trim().isEmpty()) { restClient.setBaseUrl(baseUrl); } ConversionResponse resp = restClient.convertir(req, token); mainHandler.post(() -> { if (resp != null && resp.isExito()) { callback.onSuccess(resp); } else { String err = (resp != null && resp.getMensajeError() != null) ? resp.getMensajeError() : "Error al procesar la conversión."; callback.onError(err); } }); } catch (Exception e) { mainHandler.post(() -> callback.onError("Error de red: " + e.getMessage())); } }).start(); }} |
-| --- |
-
-CREACIÓN DE VISTAS
-
-Se crean los archivos de interfaz gráfica en el paquete views.
+Las interfaces gráficas se diseñan en XAML con estilos visuales modernos, contenedores responsivos y validaciones de entrada en tiempo de digitación (máximo 16 caracteres, dígitos y punto decimal).
 
 ![Captura](imagenes/image49.png)
 
-Figura 49. Creación de vistas - Cliente móvil
+Figura 49. Creación de vistas XAML - Cliente móvil
 
-#### EJECUCIÓN DEL CLIENTE DE MÓVIL
+#### EJECUCIÓN DEL CLIENTE MÓVIL (.NET MAUI)
+
+Se despliega la aplicación en el emulador Android de Visual Studio o dispositivo físico, verificando el inicio de sesión y la ejecución de conversiones con formateo estricto a 2 decimales.
 
 ![Captura](imagenes/image50.png)
 
-Figura 50. Login - Cliente móvil
+Figura 50. Inicio de sesión - Cliente móvil .NET MAUI
 
 ![Captura](imagenes/image51.png)
 
-Figura 51. Pantalla de Conversiones - Cliente móvil
+Figura 51. Pantalla de Conversiones - Cliente móvil .NET MAUI
 
 #### CONCLUSIONES
 
-El proyecto integra Java, Jakarta REST con Jersey, Kestrel y clientes HTTP/JSON. La configuración de Visual Studio, Maven y Android Studio permite ejecutar el servidor y los clientes con una arquitectura RESTful y sin base de datos.
+El proyecto integra la plataforma .NET 10, ASP.NET Core con servidor Kestrel y clientes multiplataforma (Consola, WPF, Web y .NET MAUI). La configuración de Visual Studio 2022 y el SDK de .NET permite ejecutar el servidor y los cuatro clientes bajo una arquitectura RESTful robusta y sin base de datos.
 
 La implementación de los módulos de seguridad y conversiones evidenció la importancia de separar correctamente la lógica de negocio y la capa de exposición del servicio web. A pesar de no contar con conexión a una base de datos, el uso de DTOs, validaciones en memoria y manejo de sesiones simuladas dio como resultado soluciones mantenibles, escalables y con un nivel adecuado de desacoplamiento.
 
 Los clientes de consola, escritorio, web con HTML/Controllers ASP.NET Core y móvil Android consumen la API REST. Envían solicitudes HTTP con JSON, obtienen un token en auth/login y lo incluyen en las conversiones de longitud, masa y temperatura.
 
-La solución organiza la API en recursos Jakarta REST implementados con Jersey y ejecutados sobre Kestrel (.NET 10). Los clientes Java consumen rutas HTTP con JSON y completan el flujo desde la autenticación hasta las conversiones, sin una base de datos.
+La solución organiza la API en recursos Jakarta REST implementados con Jersey y ejecutados sobre Kestrel (.NET 10). Los clientes .NET consumen rutas HTTP con JSON y completan el flujo desde la autenticación hasta las conversiones, sin una base de datos.
 
 #### RECOMENDACIONES
 

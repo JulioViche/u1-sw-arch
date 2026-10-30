@@ -68,7 +68,7 @@ Se desea implementar un sistema de serávicios de software basado en una Arquite
 
 - El sistema debe exponer los serávicios que permitan árealizar transformaciones precisas entre diversas unidades de medida, organizadas en Longitud, Masa y Temperatura.
 
-- Multi-canal: La aplicación se despliega como cliente de consola, cliente de escritorio (Java Swing), aplicación Web (navegador) y Aplicación Móvil (Android), todas consumiendo el mismo serávicio backend para garantizar consistencia en los resultados independientemente del canal.
+- Multi-canal: La aplicación se despliega como cliente de consola (.NET 10), cliente de escritorio (WPF / .NET 10), aplicación Web (ASP.NET Core Web) y Aplicación Móvil (.NET MAUI / C#), todas consumiendo el mismo servicio backend para garantizar consistencia en los resultados independientemente del canal.
 
 - En cada solicitud de procesamiento, el consumidor del serávicio debe proporcionar la unidad de origen, la de destáino y el valor número que se desea transformar.
 
@@ -82,7 +82,7 @@ Se desea implementar un sistema de serávicios de software basado en una Arquite
 
 - Se debe implementar un control de errores robusto que gestáione solicitudes con datos inconsistentes, unidades no soportadas o credenciales de sesión erróneas, garantizando que el cliente siempre tenga una respuestáa del sistema.
 
-- El sistema usa Visual Studio y no implementa base de datos (SINBDD). El repositorio no fija la versión del IDE; Visual Studio 2026, versión 18.0 o superior, admite net10.0. Los proyectos C# usan .NET 10: net10.0 para servidor, consola y cliente web; net10.0-windows para el cliente WPF. El servidor ASP.NET Core usa Kestrel e implementa SOAP 1.1 en ManejadorSOAP, con mensajes XML y WSDL generado. Android usa Java 17, compileSdk/targetSdk 35 y minSdk 24.
+- El sistema usa Visual Studio y no implementa base de datos (SINBDD). Visual Studio 2022 o superior admite net10.0. Los proyectos C# usan .NET 10: net10.0 para servidor, consola y cliente web; net10.0-windows para el cliente WPF; net10.0-android con .NET MAUI (C# / XAML) para el cliente móvil. El servidor ASP.NET Core usa Kestrel e implementa SOAP 1.1 en ManejadorSOAP, con mensajes XML y WSDL generado.
 
 ## Introducción
 

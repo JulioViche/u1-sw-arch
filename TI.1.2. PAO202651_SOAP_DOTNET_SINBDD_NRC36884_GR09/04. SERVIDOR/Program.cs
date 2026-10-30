@@ -19,6 +19,11 @@ var app = builder.Build();
 app.UseRouting();
 
 // Rutas compatibles con todos los clientes SOAP (móvil, escritorio, consola, web)
+app.MapMethods("/04.SERVIDOR/WSConversionUnidades_DotNet_SOAP_GR09", ["GET", "POST"], async (HttpContext ctx, ManejadorSOAP handler) =>
+{
+    await handler.ProcesarSolicitudAsync(ctx);
+});
+
 app.MapMethods("/ServidorSOAP", ["GET", "POST"], async (HttpContext ctx, ManejadorSOAP handler) =>
 {
     await handler.ProcesarSolicitudAsync(ctx);

@@ -15,6 +15,12 @@ public sealed record ConversionRespuesta(
     [JsonPropertyName("result")]
     public double Result => ValorConvertido;
 
+    [JsonPropertyName("resultado")]
+    public double Resultado => ValorConvertido;
+
     [JsonPropertyName("message")]
     public string? Message => MensajeError ?? (Exito ? "Conversión realizada exitosamente." : "Error en conversión.");
+
+    [JsonPropertyName("mensaje")]
+    public string Mensaje => Message ?? "";
 }

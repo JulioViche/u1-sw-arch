@@ -8,6 +8,8 @@ namespace WSConversionUnidades_DotNet_REST_GR09.Controladores;
 [ApiController]
 [Route("api/conversor")]
 [Route("conversor")]
+[Route("api/conversiones")]
+[Route("conversiones")]
 [Produces("application/json")]
 public sealed class ControladorConversiones : ControllerBase
 {

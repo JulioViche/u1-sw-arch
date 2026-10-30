@@ -25,4 +25,10 @@ public sealed class ConversionSolicitud
 
     [JsonPropertyName("to")]
     public string? To { set => Destino = string.IsNullOrEmpty(Destino) ? (value ?? "") : Destino; }
+
+    [JsonPropertyName("unidadOrigen")]
+    public string? UnidadOrigen { set => Origen = string.IsNullOrEmpty(Origen) ? (value ?? "") : Origen; }
+
+    [JsonPropertyName("unidadDestino")]
+    public string? UnidadDestino { set => Destino = string.IsNullOrEmpty(Destino) ? (value ?? "") : Destino; }
 }
