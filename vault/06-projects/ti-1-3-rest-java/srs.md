@@ -20,7 +20,7 @@ tags: [deliverable, uml, ers, srs, template, requirements]
 | **Tarea / Taller** | **TI.1.3** |
 | **NRC** | 36884 |
 | **Grupo** | GR09 |
-| **Integrantes** | **Viche Castillo, Julio Enrique**, **Murillo Medina, Gabriel Omar** |
+| **Integrantes** | **Viche Castillo, Julio Enrique**; **Murillo Medina, Gabriel Omar** |
 | **Docente / Tutor** | Ing. Eduardo Mauricio Campaña Ortega, MIS.MDU.CCNA.CCIA . PhD. (c) Ingeniería de Software, PhD. (c) Seguridad Información |
 | **Fecha** | 23/09/2026 |
 
@@ -78,11 +78,11 @@ Se desea implementar un sistema de serávicios de software basado en una Arquite
 
 - El diseño de los serávicios debe garantizar que la lógica de negocio sea consumida de la misma forma para los cuatro clientes: aplicación de consola, aplicación de escritorio, aplicación web y una aplicación móvil.
 
-- La arquitectura del sistema debe separar la lógica de cálculo de los puntos de exposición, permitiendo que el núcleo sea reutilizable sin importar si la comuúnicación se árealiza mediante protocolos basados en texto o estáructurado en objetos.
+- La arquitectura del sistema debe separar la lógica de cálculo de los puntos de exposición, permitiendo que el núcleo sea reutilizable sin importar si la comunicación se realiza mediante protocolos basados en texto o estructurados en objetos.
 
 - Se debe implementar un control de errores robusto que gestáione solicitudes con datos inconsistentes, unidades no soportadas o credenciales de sesión erróneas, garantizando que el cliente siempre tenga una respuestáa del sistema.
 
-- El sistema seráá desarrollado con NetBeans como IDE y sin uso base de datos. La arquitectura es SOA (Service Oriented Architecture) usando Servicios Web SOAP con Java (JAX-WS)
+- El sistema usa NetBeans y no implementa base de datos (SINBDD). El backend REST se compila con Java 17, Jakarta RESTful Web Services API 3.1.0, Jersey 3.1.5, Servlet 6.0.0 y Jackson; se empaqueta como WAR para Payara Server 7.2026.10. Los módulos cliente Java usan release 11; Android usa Java 17, compileSdk/targetSdk 35 y minSdk 24.
 
 ## Introducción
 
@@ -139,8 +139,8 @@ Tabla 1. Definiciones
 | Magnitud Física | Propiedad de los cuerpos que puede será medida. Para estáe proyecto en concreto se utiliza Longitud, Masa y Temperatura. |
 | Capa de Lógica de Negocio | Parte del software que contiene las reglas, cálculos y procesos principales que se separa de la interfaz de usuario. |
 | IDE de desarrollo | Aplicación informática que proporciona serávicios integrales para facilitarle el desarrollo de software. |
-| Netbeans | Entorno de desarrollo integrado libre, hecho principalmente para el lenguaje de programación Java. |
-| Java – Java web | Entorno o plataforma de computación, capaz de ejecutar aplicaciones desarrolladas usando el lenguaje de programación Java |
+| NetBeans | NetBeans; versión no declarada en los archivos del proyecto. |
+| Java – Java web | Lenguaje y plataforma del servidor y clientes Java; servidor release 17, clientes Maven release 11 y Android Java 17. |
 
 
 ### Acrónimos y abreviaturas
@@ -234,11 +234,11 @@ El sistema no requiere ni implementa conexión a ningún motor de base de datos.
 
 - El sistema debe tener una conexión a internet con un buen ancho de banda que permita árealizar transacciones sobre backend.
 
-- Toda la lógica del serávidor de conversiones debe programarse utilizando el lenguaje Java, independiente de la versión del JDK.
+- El servidor REST compila con Java 17 y usa Jakarta RESTful Web Services API 3.1.0, Jersey 3.1.5 y Servlet 6.0.0.
 
-- El serávidor de aplicaciones es Payara y la arquitectura es Jakarta EE.
+- El servidor se empaqueta como WAR y se despliega en Payara Server 7.2026.10.
 
-- El entorno de desarrollo para la construcción del sistema es NetBeans.
+- El desarrollo Java usa NetBeans; los archivos del proyecto no fijan la versión del IDE.
 
 - Se mantiene la restáricción de no implementar base de datos, toda la gestáión de las conversiones y el control de token se manejará directamente en la memoria y lógica del código.
 
@@ -281,19 +281,19 @@ Tabla 9.Interfaces de software
 |  | Detalles | Definición | Propósito |
 | --- | --- | --- | --- |
 | Sistema operativo | Nombre: Windows Número de especificación: 11  Fuente: http://windows.microsoft.com/ Distribución: Pagada Precio: $10 en adelante | Windows es el nombre de una familia de distribuciones de software para PC, smartphone, serávidores y sistemas empotrados, desarrollados y vendidos por Microsoft y disponibles para múltiples arquitecturas, tales como x86 y ARM | Es la plataforma sobre la cual se va a ejecutar la aplicación y la base de datos el cual cuenta con un soporte hasta 2020 |
-| Herramienta de desarrollo | Nombre: NetBeans Número de especificación: 8 Número de versión: 8.0.2 Fuente: https://www.netbeanside.com/ Distribución: libre | Diseñar y generar interfaces y el funcionamiento del programa mediante el lenguaje de programación Java. | Herramienta que se utiliza para desarrollar aplicaciones Web, Móvil y de Escritorio para diferentes lenguajes de programación como son Java, C++, Ruby y    PHP entre    otros |
+| Herramienta de desarrollo | NetBeans; versión no declarada en los archivos del proyecto. | IDE para desarrollar y ejecutar módulos Java. | Desarrollo del servidor y clientes Java. |
 | Diseño de diagramas UML | Nombre: Power Designer Desarrollador: SAP Version:16.5  Distribución: Pagada Precio: $3750 | Es una herramienta para el análisis, diseño inteligente y construcción sólida de una base de datos y un desarrollo orientado a modelos de datos a nivel físico y conceptual, que da a los desarrolladores | El propósito de estáe programa en el proyecto es diseñar un modelo relacional de base de datos |
-| Especificación de software | Nombre: Jakarta EE  Versión: 8/10  Fuente: https://jakarta.ee/  Distribución: Código abierto Precio: Gratuito | Plataforma de código abierto impulsada por la Eclipse Foundation para el desarrollo de aplicaciones empresariales e institucionales en Java. | Proveer el conjunto de APIs y anotaciones necesarias para construir la lógica del serávidor y estáructurar los serávicios web de conversión. |
-| Servidor de Aplicaciones | Nombre: Payara Server Versión: 5/6 Community Edition  Fuente: https://www.payara.fish/ Distribución: Código abierto  Precio: Gratuito | Servidor de aplicaciones nativo para la nube y de código abierto, optimizado para desplegar aplicaciones Jakarta EE de forma segura y robusta. | Alojar, compilar y mantener en ejecución el proyecto del backend. Es el encargado de exponer los serávicios en la red para que los cuatro clientes puedan conectarse. |
+| Especificación de software | Java 17; Jakarta RESTful Web Services API 3.1.0; Jersey 3.1.5; Servlet 6.0.0; Jackson. | API REST Jakarta y Jersey como implementación del servidor. | El servidor expone endpoints REST JSON; Maven genera un WAR. |
+| Servidor de Aplicaciones | Payara Server 7.2026.10. | Servidor Jakarta EE configurado para el backend. | Desplegar el WAR del servidor REST. |
 
 
 #### 8.1.4 Interfaces de comuúnicación
 
 El sistema de “Conversor de Unidades Monster” no interactúa con bases de datos. La comuúnicación se árealiza de forma exclusiva a través de la red utilizando el protocolo HTTP/HTTPS.
 
-- Intercambio de datos: La comuúnicación entre los cuatro clientes (web, móvil, escritorio, consola) y el serávidor central se rige por el estáándar SOAP.
+- Intercambio de datos: Los clientes consumen endpoints REST mediante HTTP.
 
-- Formato de datos: Tanto las peticiones enviadas por los clientes como las respuestáas generadas por el serávidor se estáructuran por formato XML, de acuerdo con el contrato definido en el documentación de endpoints / OpenAPI.
+- Formato de datos: Las peticiones y respuestas REST usan JSON; el token se envía en la propiedad token del cuerpo de la solicitud.
 
 ### 8.2 Requisitos Funcionales
 
@@ -409,7 +409,7 @@ Tabla 26. Requerimiento no funcional Protocolo de Arquitectura (RESTful)
 
 | RNF-001 | Protocolo de Arquitectura (RESTful) |
 | --- | --- |
-| Descripción | El serávidor central debe exponer sus serávicios de conversión y autenticación estárictamente mediante el arquitectura REST, utilizando archivos API REST para definir el contrato del serávicio. |
+| Descripción | El servidor expone autenticación y conversiones mediante endpoints REST sobre HTTP; usa JSON y códigos de estado HTTP. |
 | Importancia | Alta |
 | Estado | Aprobado |
 
@@ -418,7 +418,7 @@ Tabla 27. Requerimiento no funcional Especificación de Software.
 
 | RNF-002 | Especificación de Software |
 | --- | --- |
-| Descripción | El backend del sistema debe será desarrollado utilizando el lenguaje Java e implementando obligatoriamente la especificación Jakarta EE para la construcción de los serávicios web. |
+| Descripción | El backend usa Java 17, Jakarta RESTful Web Services API 3.1.0, Jersey 3.1.5, Servlet 6.0.0 y Jackson. |
 | Importancia | Alta |
 | Estado | Aprobado |
 
@@ -427,7 +427,7 @@ Tabla 28. Requerimiento no funcional Entorno de Desarrollo.
 
 | RNF-003 | Entorno de Desarrollo |
 | --- | --- |
-| Descripción | El código fuente del serávidor de conversiones debe será construido, gestáionado y estáructurado utilizando exclusivamente el Entorno de Desarrollo Integrado (IDE) NetBeans. |
+| Descripción | El desarrollo Java usa NetBeans y Maven; el proyecto no fija la versión del IDE. |
 | Importancia | Alta |
 | Estado | Aprobado |
 
@@ -436,7 +436,7 @@ Tabla 29. Requerimiento no funcional Servidor de Aplicaciones
 
 | RNF-004 | Servidor de Aplicaciones |
 | --- | --- |
-| Descripción | El despliegue y la ejecución en red del proyecto backend debe árealizarse obligatoriamente sobre Payara Server. |
+| Descripción | El servidor se empaqueta como WAR y se despliega en Payara Server 7.2026.10. |
 | Importancia | Alta |
 | Estado | Aprobado |
 
@@ -445,7 +445,7 @@ Tabla 30. Requerimiento no funcional Seguridad y autorización de Token.
 
 | RNF-005 | Seguridad y Autorización mediante Token |
 | --- | --- |
-| Descripción | El sistema debe restáringir el acceso a los serávicios de cálculo matemático. Solo procesará aquellas peticiones SOAP que incluyan un token de autenticación válido, el cual debe será generado y proporcionado previamente por el endpoint de Login. |
+| Descripción | El servidor protege endpoints de conversión; cada cuerpo JSON incluye la propiedad token y el backend la valida en memoria. |
 | Importancia | Alta |
 | Estado | Aprobado |
 
@@ -510,7 +510,7 @@ Los equipos disponibles deben tener las siguientes características:
 
 Fiabilidad. - El sistema, ofrecerá garantía de funcionar correctamente y cumplir con los requisitos 	presentados previamente.
 
-Portabilidad. - Al tratarse de una arquitectura SOA utilizando SOAP, el sistema garantiza que cualquier cliente pueda consumir los serávicios mediante el intercambio de cargas JSON, independiente del lenguaje de programación del cliente.
+Portabilidad. - Los clientes consumen endpoints REST mediante HTTP y mensajes JSON, sin depender del lenguaje del cliente.
 
 Seguridad. – La solución abarca múltiples plataformas, el usuario final puede acceder a los serávicios de conversión desde cualquier dispositivo con conexión a la red.
 
@@ -552,7 +552,7 @@ Periféricos de entrada (teclado, ratón y touch): Necesarios para interactuar c
 
 #### 9.1.4. Interfaces de Comuúnicación
 
-Los cuatro clientes y el serávidor central de conversiones se comuúnicarán exclusivamente a través de la red utilizando el protocolo HTTP/HTTPS, intercambiando información estáructurada mediante el estáándar de mensajería REST / JSON y respetando el contrato definido en el documentación de endpoints / OpenAPI.
+Los cuatro clientes y el servidor central se comunican mediante HTTP; los endpoints REST intercambian JSON y reciben el token en la propiedad token del cuerpo de la solicitud.
 
 #### 9.1.5. Base de Datos
 
@@ -572,6 +572,6 @@ El sistema no implementa comuúnicación con ningún motor de base de datos. Tod
 ## 12. Bibliografía
 
 1. **IEEE Computer Society.** (1998). *IEEE Recommended Practice for Software Requirements Specifications* (IEEE Std 830-1998). Institute of Electrical and Electronics Engineers.
-2. **World Wide Web Consortium (W3C).** (2007). *SOAP Version 1.2 Part 1: Messaging Framework (Second Edition)*. W3C Recommendation. Disponible en: https://www.w3.org/TR/soap12-part1/
-3. **Oracle Corporation.** (2023). *Java Platform, Standard Edition & Java Web Services Documentation (JAX-WS)*. Oracle Help Center.
+2. **Fielding, Roy T.** (2000). *Architectural Styles and the Design of Network-based Software Architectures*. University of California, Irvine. Disponible en: https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm
+3. **Eclipse Foundation.** (2022). *Jakarta RESTful Web Services Specification 3.1*. Disponible en: https://jakarta.ee/specifications/restful-ws/3.1/
 4. **Universidad de las Fuerzas Armadas ESPE.** (2026). *Guía de Prácticas y Talleres - Arquitectura de Software*. Sangolquí, Ecuador.
