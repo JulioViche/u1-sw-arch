@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ClienteMovilGR09.PaginaPrincipal" Shell.NavBarIsVisible="False"
+             Title="Conversor REST .NET" BackgroundColor="#F8FAFC">
+    <ScrollView x:Name="Desplazamiento" VerticalScrollBarVisibility="Never">
+        <VerticalStackLayout Padding="20,24" Spacing="14">
+            <VerticalStackLayout x:Name="LoginHeader" Spacing="3" HorizontalOptions="Center">
+                <Label Text="UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE" TextColor="#0F3C6E" FontSize="13"
+                       FontAttributes="Bold" CharacterSpacing="0.6" HorizontalTextAlignment="Center" />
+                <Label Text="Conversor de Unidades (RESTful .NET MAUI)" TextColor="#64748B" FontSize="12"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="NRC: 36884 | Grupo: GR09" TextColor="#64748B" FontSize="11"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <Border x:Name="panelLogin" BackgroundColor="White" Stroke="#E2E8F0" StrokeThickness="1"
+                    Padding="20" StrokeShape="RoundRectangle 14">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Inicio de Sesión" TextColor="#1E293B" FontSize="20" FontAttributes="Bold" />
+                    <Label Text="Credenciales fijas: MONSTER / MONSTER9 (SINBDD)" TextColor="#64748B" FontSize="12" />
+                    <Entry x:Name="txtUsuario" Text="MONSTER" Placeholder="Usuario" MaxLength="40"
+                           ReturnType="Next" IsTextPredictionEnabled="False" IsSpellCheckEnabled="False"
+                           TextColor="#1E293B" PlaceholderColor="#64748B" />
+                    <Entry x:Name="txtClave" Text="MONSTER9" Placeholder="Contraseña" IsPassword="True" MaxLength="40"
+                           ReturnType="Go" Completed="IniciarSesion_Clicked" TextColor="#1E293B" PlaceholderColor="#64748B" />
+                    <HorizontalStackLayout Spacing="4">
+                        <CheckBox x:Name="VerContrasenia" Color="#0F3C6E" CheckedChanged="AlMostrarContrasenia" />
+                        <Label Text="Mostrar contraseña" TextColor="#64748B" FontSize="12" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <Button x:Name="BotonIngresar" Text="Ingresar al Conversor" Clicked="IniciarSesion_Clicked"
+                            BackgroundColor="#0F3C6E" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50" />
+                    <ActivityIndicator x:Name="ActividadLogin" IsRunning="False" IsVisible="False"
+                                       Color="#0D9488" HorizontalOptions="Center" />
+                    <Label x:Name="lblMensajeLogin" IsVisible="False" TextColor="#DC2626" FontSize="12" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border x:Name="SessionCard" IsVisible="False" BackgroundColor="White" Stroke="#E2E8F0"
+                    StrokeThickness="1" Padding="12" StrokeShape="RoundRectangle 10">
+                <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                    <VerticalStackLayout Spacing="2">
+                        <Label x:Name="lblSesion" Text="Usuario: MONSTER" TextColor="#0F3C6E" FontSize="13" FontAttributes="Bold" />
+                        <Label Text="Token: activo" TextColor="#64748B" FontSize="11" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="Salir" Clicked="CerrarSesion_Clicked" BackgroundColor="#FEE2E2"
+                            TextColor="#991B1B" CornerRadius="6" HeightRequest="36" Padding="14,0" />
+                </Grid>
+            </Border>
+
+            <Border x:Name="panelConversion" IsVisible="False" BackgroundColor="White" Stroke="#E2E8F0"
+                    StrokeThickness="1" Padding="18" StrokeShape="RoundRectangle 12">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Conversor de Unidades" TextColor="#1E293B" FontSize="19" FontAttributes="Bold" />
+                    <Label Text="1. Magnitud Física:" TextColor="#1E293B" FontSize="13" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                        <Button x:Name="BotonLongitud" Text="Longitud" CommandParameter="Longitud" Clicked="Magnitud_Clicked"
+                                BackgroundColor="#0F3C6E" TextColor="White" FontSize="12" CornerRadius="7" Padding="3,10" />
+                        <Button x:Name="BotonMasa" Grid.Column="1" Text="Masa" CommandParameter="Masa" Clicked="Magnitud_Clicked"
+                                BackgroundColor="White" TextColor="#0F3C6E" BorderColor="#0F3C6E" BorderWidth="1" FontSize="12" CornerRadius="7" Padding="3,10" />
+                        <Button x:Name="BotonTemperatura" Grid.Column="2" Text="Temp." CommandParameter="Temperatura" Clicked="Magnitud_Clicked"
+                                BackgroundColor="White" TextColor="#0F3C6E" BorderColor="#0F3C6E" BorderWidth="1" FontSize="12" CornerRadius="7" Padding="3,10" />
+                    </Grid>
+
+                    <Label Text="2. Valor a Convertir (máx. 16 caracteres):" TextColor="#1E293B" FontSize="13" FontAttributes="Bold" Margin="0,4,0,0" />
+                    <Border Stroke="#CBD5E1" StrokeThickness="1" StrokeShape="RoundRectangle 6" Padding="8,0">
+                        <Entry x:Name="txtValor" Text="100.00" Placeholder="100.00" Keyboard="Numeric" MaxLength="16"
+                               FontSize="16" FontAttributes="Bold" TextColor="#1E293B" TextChanged="AlCambiarEntrada" />
+                    </Border>
+
+                    <Label Text="3. Unidades (Origen y Destino):" TextColor="#1E293B" FontSize="13" FontAttributes="Bold" Margin="0,4,0,0" />
+                    <Grid ColumnDefinitions="*,44,*" ColumnSpacing="6">
+                        <Picker x:Name="pickerOrigen" Title="Origen" TextColor="#1E293B" SelectedIndexChanged="AlCambiarEntrada" />
+                        <Button Grid.Column="1" Text="⇄" Clicked="AlIntercambiarUnidades" BackgroundColor="Transparent"
+                                TextColor="#0F3C6E" FontSize="21" HeightRequest="44" VerticalOptions="Center" />
+                        <Picker x:Name="pickerDestino" Grid.Column="2" Title="Destino" TextColor="#1E293B" SelectedIndexChanged="AlCambiarEntrada" />
+                    </Grid>
+
+                    <Button x:Name="BotonConvertir" Text="Calcular Conversión REST" Clicked="Convertir_Clicked"
+                            BackgroundColor="#0F3C6E" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="48" Margin="0,4,0,0" />
+                    <ActivityIndicator x:Name="ActividadConversion" IsRunning="False" IsVisible="False" Color="#0D9488" HorizontalOptions="Center" />
+                    <Border x:Name="TarjetaResultado" IsVisible="False" BackgroundColor="#F0FDF4" Stroke="#99F6E4"
+                            StrokeThickness="1" Padding="14" StrokeShape="RoundRectangle 10">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="4. RESULTADO" FontSize="11" FontAttributes="Bold" TextColor="#0D9488" />
+                            <Label x:Name="lblResultado" Text="Tu resultado aparecerá aquí" FontSize="28" FontAttributes="Bold" TextColor="#1E293B" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Label x:Name="lblMensaje" IsVisible="False" TextColor="#DC2626" FontSize="12" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
