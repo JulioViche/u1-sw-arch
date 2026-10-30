@@ -35,6 +35,10 @@ Carpeta de trabajo y documentación maestra para la variante **RESTful en .NET**
 - 📋 **`use-cases.md`**: Especificación formal de Casos de Uso Detallados.
 - 📊 **`presentation.md`**: Guion de diapositivas para la defensa.
 
+## Cliente móvil
+
+El cliente Android .NET MAUI está en `04. CLIMOV/ClienteMovil/ClienteMovilGR09/`. Para compilar el APK y conectarlo al hotspot de Windows, consulta el README del cliente en esa carpeta. El servidor REST escucha por TCP `5000` en todas las interfaces. El teléfono usa `192.168.137.1:5000` automáticamente y el emulador `10.0.2.2:5000`; no hay campo de URL ni dependencia de mDNS.
+
 ---
 
 > [!info] Enlaces relacionados
