@@ -17,6 +17,19 @@ tags: [manual-tecnico, sinbdd, entrega, capturas]
 
 ---
 
+## Pila tecnológica implementada (fuente vigente)
+
+| Componente | Tecnología comprobada |
+| --- | --- |
+| Servidor SOAP | C# 14 y .NET 10 (`net10.0`), ASP.NET Core 10 y Kestrel. `ManejadorSOAP` procesa SOAP 1.1/XML y genera el WSDL; no se usa WCF ni CoreWCF. Escucha en todas las interfaces por TCP 8733. |
+| Consola | C# y .NET 10 (`net10.0`), cliente HTTP SOAP/XML. |
+| Escritorio | C# y .NET 10 (`net10.0-windows`) con WPF. |
+| Web | C# y .NET 10 (`net10.0`), aplicación ASP.NET Core. |
+| Móvil Android | .NET MAUI 10, C# 14, XAML y `HttpClient`; destino `net10.0-android`, API mínima 21. La compilación revisada usó .NET SDK 10.0.402, workload MAUI 10.0.110, Android SDK 36 y JDK 17 como herramienta del build Android. El dispositivo usa `192.168.137.1:8733`; el emulador Android, `10.0.2.2:8733`. El endpoint queda definido en el cliente y no se solicita una URL en la interfaz. |
+| Persistencia | SINBDD: credenciales, token y catálogos en memoria. |
+
+Esta tabla describe la implementación vigente del repositorio. Las capturas o ejemplos históricos que mencionen WCF, Java, Maven, Swing o un puerto distinto no describen estos proyectos .NET y no son instrucciones de compilación.
+
 ### PARTE PRÁCTICA
 
 ### ESTRUCTURA DEL PROYECTO

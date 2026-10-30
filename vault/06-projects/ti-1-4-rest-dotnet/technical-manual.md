@@ -17,6 +17,19 @@ tags: [manual-tecnico, sinbdd, rest, dotnet, webapi, kestrel, capturas]
 
 ---
 
+## Pila tecnológica implementada (fuente vigente)
+
+| Componente | Tecnología comprobada |
+| --- | --- |
+| Servidor REST | C# 14 y .NET 10 (`net10.0`), ASP.NET Core Web API, controladores y Kestrel. JSON se procesa con `System.Text.Json`; `Microsoft.AspNetCore.OpenApi` 10.0.12 publica OpenAPI en Development. Escucha por TCP 5000 en todas las interfaces. |
+| Consola | C# y .NET 10 (`net10.0`), cliente HTTP/JSON. |
+| Escritorio | C# y .NET 10 (`net10.0-windows`) con WPF. |
+| Web | C# y .NET 10 (`net10.0`), cliente ASP.NET Core. |
+| Móvil Android | .NET MAUI 10, C# 14, XAML, `HttpClient`, `System.Net.Http.Json` y `System.Text.Json`; destino `net10.0-android`, API mínima 21. La compilación revisada usó .NET SDK 10.0.402, workload MAUI 10.0.110, Android SDK 36 y JDK 17 como herramienta del build Android. El dispositivo usa `192.168.137.1:5000`; el emulador Android, `10.0.2.2:5000`. El endpoint queda definido en el cliente y no se solicita una URL en la interfaz. |
+| Persistencia | SINBDD: credenciales, token y catálogos en memoria. |
+
+Esta tabla describe la implementación vigente del repositorio. Las capturas o ejemplos históricos que mencionen Java, Maven, Swing, Jersey, Jetty o puertos distintos no describen estos proyectos .NET y no son instrucciones de compilación.
+
 ## PARTE PRÁCTICA
 
 ### INTRODUCCIÓN

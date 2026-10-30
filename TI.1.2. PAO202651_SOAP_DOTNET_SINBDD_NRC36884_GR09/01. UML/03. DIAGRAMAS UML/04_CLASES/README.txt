@@ -7,7 +7,7 @@ Integrante:
 Julio Enrique Viche Castillo
 
 Protocolo: SOAP
-Plataforma: .NET 8
+Plataforma: .NET 10
 
 Este proyecto no tiene Base de Datos (SINBDD)
 Las credenciales del sistema son:

@@ -21,7 +21,7 @@ Carpeta de trabajo y documentación maestra para la variante **RESTful en .NET**
 | **Grupo / NRC** | GR09 / NRC 36884 |
 | **Periodo** | PAO 2026-51 |
 | **Estilo de Servicio** | RESTful (ASP.NET Core Web API) con JSON y Swagger / OpenAPI 3.0 |
-| **Plataforma / SDK** | .NET 8.0 SDK / C# 12 / Kestrel |
+| **Plataforma / SDK** | .NET 10 SDK / C# 14 / ASP.NET Core Web API / Kestrel |
 | **Persistencia** | `SINBDD` (Sin Base de Datos). Credenciales fijas `MONSTER`/`MONSTER9`, tokens en memoria |
 | **Carpeta del Proyecto** | `TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09/` |
 
@@ -31,7 +31,7 @@ Carpeta de trabajo y documentación maestra para la variante **RESTful en .NET**
 
 - 📄 **[srs.md](srs.md)**: Especificación de Requisitos de Software (IEEE-830). Fuente de `ERS_RESTFUL_DOTNET_SINBDD_GR09.docx`.
 - 📐 **[diagrams.md](diagrams.md)**: Modelos UML interactivos en sintaxis Mermaid (Casos de Uso, Actividades con swimlanes, Secuencia multicapa y Arquitectura).
-- 📘 **[technical-manual.md](technical-manual.md)**: Manual técnico del sistema, controladores Web API y guía de ejecución de clientes. Fuente de `CONVUNI_RESTFUL_DOTNET_GR09.docx`.
+- 📘 **[technical-manual.md](technical-manual.md)**: Manual técnico del sistema .NET 10, ASP.NET Core Web API y guía de ejecución de clientes, incluido .NET MAUI para Android. Fuente de `CONVUNI_RESTFUL_DOTNET_GR09.docx`.
 - 📋 **`use-cases.md`**: Especificación formal de Casos de Uso Detallados.
 - 📊 **`presentation.md`**: Guion de diapositivas para la defensa.
 

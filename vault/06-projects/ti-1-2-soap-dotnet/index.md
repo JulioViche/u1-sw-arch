@@ -20,8 +20,8 @@ Carpeta de trabajo y documentación maestra para la variante **SOAP en .NET** de
 | **Estudiantes** | Julio Enrique Viche Castillo, Gabriel Omar Murillo Medina |
 | **Grupo / NRC** | GR09 / NRC 36884 |
 | **Periodo** | PAO 2026-51 |
-| **Estilo de Servicio** | SOAP con contratos WSDL y servicios CoreWCF / ASMX |
-| **Plataforma / SDK** | .NET 8.0 SDK / C# |
+| **Estilo de Servicio** | SOAP 1.1/XML procesado por código propio en ASP.NET Core 10 / Kestrel; WSDL generado |
+| **Plataforma / SDK** | .NET 10 SDK / C# 14; ASP.NET Core 10 |
 | **Persistencia** | `SINBDD` (Sin Base de Datos). Credenciales fijas `MONSTER`/`MONSTER9`, tokens en memoria |
 | **Carpeta del Proyecto** | `TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09/` |
 
@@ -31,7 +31,7 @@ Carpeta de trabajo y documentación maestra para la variante **SOAP en .NET** de
 
 - 📄 **[srs.md](srs.md)**: Especificación de Requisitos de Software (IEEE-830). Fuente de `ERS_SOAP_DOTNET_SINBDD_GR09.docx`.
 - 📐 **[diagrams.md](diagrams.md)**: Modelos UML interactivos en sintaxis Mermaid (Casos de Uso, Actividades con swimlanes, Secuencia multicapa y Arquitectura).
-- 📘 **[technical-manual.md](technical-manual.md)**: Manual técnico del sistema, arquitectura CoreWCF/.NET y guía de ejecución de clientes. Fuente de `CONVUNI_SOAP_DOTNET_GR09.docx`.
+- 📘 **[technical-manual.md](technical-manual.md)**: Manual técnico del sistema, arquitectura ASP.NET Core 10, Kestrel y SOAP 1.1 y guía de ejecución de clientes. Fuente de `CONVUNI_SOAP_DOTNET_GR09.docx`.
 - 📱 **[mobile-hotspot.md](mobile-hotspot.md)**: Compilación del cliente móvil .NET MAUI y configuración de red para conectarlo al servidor desde el hotspot de Windows.
 - 📋 **`use-cases.md`**: Especificación formal de Casos de Uso Detallados.
 - 📊 **`presentation.md`**: Guion de diapositivas para la defensa.

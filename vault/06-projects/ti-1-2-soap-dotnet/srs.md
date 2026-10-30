@@ -82,7 +82,7 @@ Se desea implementar un sistema de serávicios de software basado en una Arquite
 
 - Se debe implementar un control de errores robusto que gestáione solicitudes con datos inconsistentes, unidades no soportadas o credenciales de sesión erróneas, garantizando que el cliente siempre tenga una respuestáa del sistema.
 
-- El sistema usa Visual Studio y no implementa base de datos (SINBDD). El repositorio no fija la versión del IDE; Visual Studio 2026, versión 18.0 o superior, admite net10.0. Los proyectos C# usan .NET 10: net10.0 para servidor, consola y cliente web; net10.0-windows para el cliente WPF. El servidor ASP.NET Core usa Kestrel e implementa SOAP 1.1 en ManejadorSOAP, con mensajes XML y WSDL generado. Android usa Java 17, compileSdk/targetSdk 35 y minSdk 24.
+- El sistema usa Visual Studio y no implementa base de datos (SINBDD). El repositorio no fija la versión del IDE; Visual Studio 2026, versión 18.0 o superior, admite net10.0. Los proyectos C# usan .NET 10: net10.0 para servidor, consola y cliente web; net10.0-windows para el cliente WPF. El servidor ASP.NET Core usa Kestrel e implementa SOAP 1.1 en ManejadorSOAP, con mensajes XML y WSDL generado. El cliente Android usa .NET MAUI, C# 14 y XAML, con destino net10.0-android y API mínima 21. La compilación verificada usa .NET MAUI 10.0.110 y Android SDK 36; JDK 17 forma parte de la cadena de herramientas Android, no del lenguaje del cliente.
 
 ## Introducción
 

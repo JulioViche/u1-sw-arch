@@ -9,7 +9,7 @@ tags: [diagrams, uml, mermaid, soap, dotnet, ti-1-2]
 # Diagramas UML · TI.1.2 SOAP .NET (SINBDD)
 
 Este documento contiene la representación visual en sintaxis **Mermaid** de todos los modelos
-UML correspondientes al taller **TI.1.2** (Servicios Web SOAP en plataforma **.NET 8 / C#**, `SINBDD`).
+UML correspondientes al taller **TI.1.2** (Servicios Web SOAP 1.1/XML en plataforma **.NET 10 / C# 14**, `SINBDD`).
 
 ---
 
@@ -72,7 +72,7 @@ flowchart LR
 ## 2. Diagramas de Actividad (`02_ACTIVIDAD`)
 
 ### 2.1. Actividad: Iniciar Sesión
-Flujo con 3 swimlanes (*Usuario*, *Cliente .NET*, *Servidor CoreWCF .NET*).
+Flujo con 3 swimlanes (*Usuario*, *Cliente .NET*, *Servidor ASP.NET Core .NET*).
 
 ```mermaid
 flowchart TD
@@ -88,7 +88,7 @@ flowchart TD
     subgraph LaneCliente ["Cliente (Consola / WPF / Móvil / Web)"]
         A5 --> B1["Capturar usuario y clave"]
         B1 --> B2["Construir mensaje SOAP Envelope"]
-        B2 --> B3["Enviar HTTP POST a endpoint CoreWCF"]
+        B2 --> B3["Enviar HTTP POST a endpoint ASP.NET Core"]
         B4["Deserializar respuesta XML SOAP"] --> B5{"¿Exito == true?"}
         B5 -- Sí --> B6["Almacenar Token en contexto de sesión"]
         B6 --> B7["Navegar a vista de conversiones"]
@@ -97,7 +97,7 @@ flowchart TD
         B8 --> A15
     end
 
-    subgraph LaneServidor ["Servidor CoreWCF (Kestrel / .NET 8)"]
+    subgraph LaneServidor ["Servidor ASP.NET Core (Kestrel / .NET 10)"]
         B3 --> S1["Recibir solicitud SOAP y parsear credenciales"]
         S1 --> S2{"¿Usuario == 'MONSTER' y Password == 'MONSTER9'?"}
         S2 -- Sí --> S3["Generar Guid de sesión y almacenar en ConcurrentDictionary"]
@@ -109,7 +109,7 @@ flowchart TD
 ```
 
 ### 2.2. Actividad: Convertir Unidades
-Flujo de validación de token y cómputo matemático en el servicio CoreWCF.
+Flujo de validación de token y cómputo matemático en el servicio ASP.NET Core.
 
 ```mermaid
 flowchart TD
@@ -126,7 +126,7 @@ flowchart TD
         D1 --> C3
         C4 --> D2["Capturar parámetros"]
         D2 --> D3["Construir Solicitud SOAP con Token de Sesión"]
-        D3 --> D4["Invocar operación CoreWCF via ChannelFactory"]
+        D3 --> D4["Invocar operación ASP.NET Core via HttpClient"]
         D5["Procesar respuesta SOAP"] --> D6{"¿Exito == true?"}
         D6 -- Sí --> D7["Mostrar valor calculado"]
         D7 --> C11
@@ -134,7 +134,7 @@ flowchart TD
         D8 --> C13
     end
 
-    subgraph LaneServer ["Servidor CoreWCF (.NET 8 / Kestrel)"]
+    subgraph LaneServer ["Servidor ASP.NET Core (.NET 10 / Kestrel)"]
         D4 --> E1["Extraer parámetros y Token de sesión"]
         E1 --> E2{"¿Token registrado en memoria?"}
         E2 -- Sí --> E3["Convertir unidad origen a unidad base"]
@@ -156,10 +156,10 @@ flowchart TD
 sequenceDiagram
     autonumber
     actor U as Usuario
-    participant V as Vista (UI WPF/Blazor/CLI)
+    participant V as Vista (UI WPF/ASP.NET Core/CLI)
     participant C as AuthController
-    participant P as ClientProxy (ChannelFactory CoreWCF)
-    participant S as AuthService CoreWCF (Kestrel .NET)
+    participant P as ClientProxy (HttpClient ASP.NET Core)
+    participant S as AuthService ASP.NET Core (Kestrel .NET)
 
     U->>V: Abre aplicación
     V-->>U: Formulario de Login
@@ -194,8 +194,8 @@ sequenceDiagram
     actor U as Usuario
     participant V as Vista (UI)
     participant C as ConversionController
-    participant P as ClientProxy (ChannelFactory)
-    participant S as ConversionService CoreWCF (Kestrel)
+    participant P as ClientProxy (HttpClient)
+    participant S as ConversionService ASP.NET Core (Kestrel)
 
     U->>V: Selecciona Magnitud (Longitud/Masa/Temperatura)
     V-->>U: Muestra unidades disponibles
@@ -239,20 +239,20 @@ flowchart TB
     subgraph ClientesDotNet ["Capa de Consumidores (Clientes)"]
         direction LR
         CC["Cliente Consola<br/>(C# .NET CLI)"]
-        CE["Cliente Escritorio<br/>(C# WPF / WinForms)"]
-        CM["Cliente Móvil<br/>(Android Java / .NET MAUI)"]
-        CW["Cliente Web<br/>(ASP.NET Core / Blazor)"]
+        CE["Cliente Escritorio<br/>(C# WPF)"]
+        CM["Cliente Móvil<br/>(.NET MAUI para Android)"]
+        CW["Cliente Web<br/>(ASP.NET Core)"]
     end
 
     subgraph Integracion ["Capa de Red y WSDL"]
         direction TB
         WSDL_DEF["Contratos WSDL / Schemas XSD<br/>SOAP Envelopes sobre HTTP"]
-        PROXY_CF["ChannelFactory&lt;T&gt; / ServiceReference"]
+        PROXY_CF["HttpClient&lt;T&gt; / ServiceReference"]
     end
 
-    subgraph ServidorKestrel ["Servidor CoreWCF (Kestrel / .NET 8)"]
+    subgraph ServidorKestrel ["Servidor ASP.NET Core (Kestrel / .NET 10)"]
         direction TB
-        subgraph ServiciosWCF ["Servicios CoreWCF"]
+        subgraph ServiciosSoap ["Endpoint SOAP implementado en ASP.NET Core"]
             SVC_AUTH["AuthService<br/>([ServiceContract])"]
             SVC_CONV["ConversionService<br/>([ServiceContract])"]
         end

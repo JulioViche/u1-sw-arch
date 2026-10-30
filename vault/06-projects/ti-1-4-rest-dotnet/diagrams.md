@@ -9,7 +9,7 @@ tags: [diagrams, uml, mermaid, rest, dotnet, webapi, ti-1-4]
 # Diagramas UML · TI.1.4 RESTful .NET (SINBDD)
 
 Este documento contiene la representación visual en sintaxis **Mermaid** de todos los modelos
-UML correspondientes al taller **TI.1.4** (Servicios Web RESTful en plataforma **.NET 8 / C# / ASP.NET Core Web API**, `SINBDD`).
+UML correspondientes al taller **TI.1.4** (Servicios Web RESTful en plataforma **.NET 10 / C# 14 / ASP.NET Core Web API**, `SINBDD`).
 
 ---
 
@@ -22,7 +22,7 @@ El actor `Usuario` interactúa con la API RESTful expuesta por Kestrel en .NET. 
 flowchart LR
     user(["fa:fa-user Usuario"])
 
-    subgraph Sistema ["API RESTful ASP.NET Core (.NET 8)"]
+    subgraph Sistema ["API RESTful ASP.NET Core (.NET 10)"]
         direction TB
         CU1(["CU1: Iniciar Sesión (Adquirir Token)"])
         CU2(["CU2: Convertir Longitud"])
@@ -85,7 +85,7 @@ flowchart TD
         A15["Visualizar mensaje de error 401"] --> A16([Fin - Acceso Denegado])
     end
 
-    subgraph LaneCliente ["Cliente .NET (Consola / WPF / MAUI / Blazor)"]
+    subgraph LaneCliente ["Cliente .NET (Consola / WPF / ASP.NET Core / MAUI)"]
         A5 --> B1["Serializar credenciales a JSON con System.Text.Json"]
         B1 --> B2["Enviar HTTP POST a /api/auth/login"]
         B3["Recibir respuesta HTTP"] --> B4{"¿StatusCode == 200?"}
@@ -96,7 +96,7 @@ flowchart TD
         B7 --> A15
     end
 
-    subgraph LaneServidor ["Backend ASP.NET Core (Kestrel / C# 12)"]
+    subgraph LaneServidor ["Backend ASP.NET Core (Kestrel / C# 14)"]
         B2 --> S1["Enrutar petición a AuthController"]
         S1 --> S2{"¿Username == 'MONSTER' && Password == 'MONSTER9'?"}
         S2 -- Sí --> S3["Generar Guid de sesión y almacenar en ConcurrentDictionary"]
@@ -120,7 +120,7 @@ flowchart TD
         C13["Visualizar mensaje de error en pantalla"] --> C14([Fin con Error])
     end
 
-    subgraph LaneClient ["Cliente .NET (Consola / WPF / MAUI / Blazor)"]
+    subgraph LaneClient ["Cliente .NET (Consola / WPF / ASP.NET Core / MAUI)"]
         C2 --> D1["GET /api/conversion/units/{tipo} y llenar selectores"]
         D1 --> C3
         C4 --> D2["Serializar payload ConversionRequest a JSON"]
@@ -133,7 +133,7 @@ flowchart TD
         D8 --> C13
     end
 
-    subgraph LaneServer ["Backend ASP.NET Core (.NET 8 / Kestrel)"]
+    subgraph LaneServer ["Backend ASP.NET Core (.NET 10 / Kestrel)"]
         D4 --> E1["Extraer y validar Token de la cabecera Authorization"]
         E1 --> E2{"¿Token activo en ConcurrentDictionary?"}
         E2 -- Sí --> E3["Cálculo matemático: unidad origen -> base -> destino"]
@@ -236,9 +236,9 @@ flowchart TB
     subgraph ClientesDotNet ["Capa de Consumidores (Clientes)"]
         direction LR
         CC["Cliente Consola<br/>(C# CLI HttpClient)"]
-        CE["Cliente Escritorio<br/>(C# WPF / WinForms)"]
-        CM["Cliente Móvil<br/>(Android Java / .NET MAUI)"]
-        CW["Cliente Web<br/>(Blazor / Fetch API)"]
+        CE["Cliente Escritorio<br/>(C# WPF)"]
+        CM["Cliente Móvil<br/>(.NET MAUI para Android)"]
+        CW["Cliente Web<br/>(ASP.NET Core web client / HTTP)"]
     end
 
     subgraph CapaHttpNet ["Capa de Red HTTP / Enrutamiento"]
@@ -247,7 +247,7 @@ flowchart TB
         SWAGGER["Swagger UI / OpenAPI 3.0 (/swagger)"]
     end
 
-    subgraph BackendNetCore ["Backend ASP.NET Core (.NET 8 SDK / C# 12)"]
+    subgraph BackendNetCore ["Backend ASP.NET Core (.NET 10 SDK / C# 14)"]
         direction TB
         subgraph ControladoresApi ["Controladores API ([ApiController])"]
             CTRL_AUTH["AuthController<br/>(/api/auth)"]
