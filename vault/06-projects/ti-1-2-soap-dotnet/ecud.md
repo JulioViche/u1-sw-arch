@@ -3,18 +3,18 @@ tipo: deliverable
 taller: TI.1.2
 protocolo: SOAP
 plataforma: .NET
-tags: [ecud, soap, dotnet, use-cases, wcf, sinbdd]
+tags: [ecud, soap, dotnet, use-cases, aspnetcore, sinbdd]
 ---
 
 # Casos de Uso Detallados (ECUD) - TI.1.2 (SOAP .NET)
 
 > [!NOTE]
-> Especificación de Casos de Uso Detallados para la variante **SOAP en .NET (WCF / CoreWCF)** bajo arquitectura **SINBDD**.
+> Especificación de Casos de Uso Detallados para la variante **SOAP 1.1 en ASP.NET Core 10** bajo arquitectura **SINBDD**.
 > Documento general de referencia: [ecud.md](../../03-deliverables/ecud.md).
 
 ---
 
-## 1. Mapeo de Casos de Uso a Contratos WCF
+## 1. Mapeo de Casos de Uso a Operaciones SOAP
 
 | Caso de Uso | Contrato de Operación | Endpoint SOAP | Descripción |
 | :--- | :--- | :--- | :--- |
@@ -33,7 +33,7 @@ tags: [ecud, soap, dotnet, use-cases, wcf, sinbdd]
 flowchart TD
     User(["fa:fa-user Usuario"])
 
-    subgraph SOAP_Server ["Servidor SOAP WCF (.NET / CoreWCF)"]
+    subgraph SOAP_Server ["Servidor SOAP ASP.NET Core 10 / Kestrel"]
         WS_AUTH["ServicioAutenticacion (/ServicioAutenticacion.svc)"]
         WS_CONV["ServicioConversion (/ServicioConversion.svc)"]
         CU01(["CU-01: Login (MONSTER / MONSTER9)"])

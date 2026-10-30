@@ -3,7 +3,7 @@ tipo: taller
 taller: TI.1.4
 protocolo: RESTful
 plataforma: .NET
-tags: [taller, rest, dotnet, webapi, ti-1-4]
+tags: [taller, restful, dotnet, ti-1-4]
 ---
 
 # Taller TI.1.4 · RESTful .NET (SINBDD)
@@ -21,7 +21,7 @@ Carpeta de trabajo y documentación maestra para la variante **RESTful en .NET**
 | **Grupo / NRC** | GR09 / NRC 36884 |
 | **Periodo** | PAO 2026-51 |
 | **Estilo de Servicio** | RESTful (ASP.NET Core Web API) con JSON y Swagger / OpenAPI 3.0 |
-| **Plataforma / SDK** | .NET 10.0 SDK / C# 12 / Kestrel |
+| **Plataforma / SDK** | .NET 10.0 SDK / C# 14 / ASP.NET Core Web API / Kestrel |
 | **Clientes** | Consola (.NET 10), Escritorio (WPF), Web (ASP.NET Core), Móvil (.NET MAUI) |
 | **Persistencia** | `SINBDD` (Sin Base de Datos). Credenciales fijas `MONSTER`/`MONSTER9`, tokens en memoria |
 | **Carpeta del Proyecto** | `TI.1.4. PAO202651_RESTFUL_DOTNET_SINBDD_NRC36884_GR09/` |
@@ -32,13 +32,10 @@ Carpeta de trabajo y documentación maestra para la variante **RESTful en .NET**
 
 - 📄 **[srs.md](srs.md)**: Especificación de Requisitos de Software (IEEE-830). Fuente de `ERS_RESTFUL_DOTNET_SINBDD_GR09.docx`.
 - 📐 **[diagrams.md](diagrams.md)**: Modelos UML interactivos en sintaxis Mermaid (Casos de Uso, Actividades con swimlanes, Secuencia multicapa y Arquitectura).
-- 📘 **[technical-manual.md](technical-manual.md)**: Manual técnico del sistema, controladores Web API y guía de ejecución de clientes. Fuente de `CONVUNI_RESTFUL_DOTNET_GR09.docx`.
+- 📘 **[technical-manual.md](technical-manual.md)**: Manual técnico del sistema .NET 10, ASP.NET Core Web API y guía de ejecución de clientes, incluido .NET MAUI para Android. Fuente de `CONVUNI_RESTFUL_DOTNET_GR09.docx`.
 - 📋 **`use-cases.md`**: Especificación formal de Casos de Uso Detallados.
 - 📊 **`presentation.md`**: Guion de diapositivas para la defensa.
 
----
+## Cliente móvil
 
-> [!info] Enlaces relacionados
-> - [06-projects](../index.md): Índice general de proyectos.
-> - [srs-variations](../../03-deliverables/srs-variations.md): Diferencias entre las 4 variantes.
-> - [01-uml](../../03-deliverables/01-uml.md): Catálogo general de UML en el vault.
+El cliente Android .NET MAUI está en `04. CLIMOV/ClienteMovilGR09/`. Para compilar el APK y conectarlo al hotspot de Windows, consulta el README del cliente en esa carpeta. El servidor REST escucha por TCP `5000` en todas las interfaces. El teléfono usa `192.168.137.1:5000/api` automáticamente y el emulador `10.0.2.2:5000/api`; no hay campo de URL ni dependencia de mDNS.

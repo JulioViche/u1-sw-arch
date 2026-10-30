@@ -82,7 +82,7 @@ Se desea implementar un sistema de ser√°vicios de software basado en una Arquite
 
 - Se debe implementar un control de errores robusto que gest√°ione solicitudes con datos inconsistentes, unidades no soportadas o credenciales de sesi√≥n err√≥neas, garantizando que el cliente siempre tenga una respuest√°a del sistema.
 
-- El sistema usa Visual Studio y no implementa base de datos (SINBDD). Visual Studio 2022 o superior admite net10.0. Los proyectos C# usan .NET 10: net10.0 para servidor, consola y cliente web; net10.0-windows para el cliente WPF; net10.0-android con .NET MAUI (C# / XAML) para el cliente m√≥vil. El servidor REST usa ASP.NET Core Web API con controladores y Kestrel; Microsoft.AspNetCore.OpenApi est√° en versi√≥n 10.0.12.
+- El sistema usa Visual Studio y no implementa base de datos (SINBDD). El repositorio no fija la versiÛn del IDE; Visual Studio 2026, versiÛn 18.0 o superior, admite net10.0. Los proyectos C# usan .NET 10: net10.0 para servidor, consola y cliente web; net10.0-windows para el cliente WPF. El servidor REST usa ASP.NET Core Web API con controladores y Kestrel; Microsoft.AspNetCore.OpenApi est· en versiÛn 10.0.12. El cliente Android usa .NET MAUI, C# 14 y XAML, con destino net10.0-android y API mÌnima 21. La compilaciÛn verificada usa .NET MAUI 10.0.110 y Android SDK 36; JDK 17 forma parte de la cadena de herramientas Android, no del lenguaje del cliente.
 
 ## Introducci√≥n
 

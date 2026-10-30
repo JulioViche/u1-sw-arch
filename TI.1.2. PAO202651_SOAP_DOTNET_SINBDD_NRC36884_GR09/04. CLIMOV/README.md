@@ -8,15 +8,17 @@ El proyecto sigue una arquitectura en capas adaptada a .NET MAUI:
 
 ```
 04. CLIMOV/
+├── APK/                                # Ejecutables APK compilados y optimizados
+│   └── app-soap-maui-signed.apk
 ├── ClienteMovilGR09/                   # Proyecto principal .NET MAUI (C# / XAML)
 │   ├── ClienteMovilGR09.csproj         # Definición del proyecto MAUI
 │   ├── InicializadorMaui.cs            # Configuración de MauiAppBuilder y servicios
 │   ├── Aplicacion.xaml / .cs           # Ciclo de vida de la aplicación MAUI
 │   ├── NavegacionAplicacion.xaml / .cs # Shell de navegación móvil
 │   ├── Modelos/                        # Modelos de sesión, catálogos y magnitudes (SINBDD)
-│   ├── Servicios/                      # ClienteSOAP (HttpClient + sobres SOAP XML)
+│   ├── Servicios/                      # ClienteSOAP (detección automática de endpoints)
 │   ├── Controladores/                  # ControladorConversor (estado, token, validación)
-│   ├── Vistas/                         # Vistas XAML (PaginaPrincipal con diseño Monster)
+│   ├── Vistas/                         # Vistas XAML (PaginaPrincipal con diseño institucional)
 │   ├── Platforms/                      # Adaptadores específicos (Android, Windows, iOS)
 │   └── Resources/                      # Recursos visuales (colores, estilos, fuentes, splash)
 └── ClienteMovilGR09.Pruebas/           # Proyecto de pruebas y verificación de lógica (CLI)
@@ -34,29 +36,34 @@ El proyecto sigue una arquitectura en capas adaptada a .NET MAUI:
 
 ## Cómo Probar y Ejecutar
 
-### Opción 1: Verificación Rápida por Línea de Comandos (CLI)
+### Opción 1: Compilación de APK Android (.NET MAUI)
+Desde esta carpeta, ejecuta:
+
+```powershell
+dotnet publish ".\ClienteMovilGR09\ClienteMovilGR09.csproj" -f net10.0-android -c Release -p:AndroidPackageFormat=apk
+```
+
+El APK optimizado y firmado para entrega se genera en `04. CLIMOV/APK/app-soap-maui-signed.apk`.
+
+### Opción 2: Verificación Rápida por Línea de Comandos (CLI)
 Para verificar que toda la lógica de red, modelos, controladores y validaciones compilan y funcionan correctamente sin necesidad de emulador:
 
 ```powershell
 # 1. Asegúrate de tener el servidor SOAP iniciado (en otra terminal)
-cd "TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09\04. SERVIDOR"
+cd "..\04. SERVIDOR"
 dotnet run
 
 # 2. Ejecutar la suite de pruebas del cliente móvil
-cd "TI.1.2. PAO202651_SOAP_DOTNET_SINBDD_NRC36884_GR09\04. CLIMOV\ClienteMovilGR09.Pruebas"
+cd "..\04. CLIMOV\ClienteMovilGR09.Pruebas"
 dotnet run
 ```
 
-### Opción 2: Ejecución de la Interfaz Visual en Visual Studio 2022
+### Opción 3: Ejecución en Emulador o Dispositivo Físico
 1. Abrir la solución o el proyecto `ClienteMovilGR09\ClienteMovilGR09.csproj` en **Visual Studio 2022**.
-2. Asegurarse de tener instalada la carga de trabajo:
-   - **Desarrollo de interfaz de usuario de aplicaciones multiplataforma de .NET (.NET MAUI)**.
-3. En la barra superior de dispositivos de depuración:
-   - Seleccionar un emulador de Android (ej. `Pixel 5 - API 34`).
-   - O bien conectar un dispositivo físico con *Depuración por USB*.
+2. Asegurarse de tener instalada la carga de trabajo **.NET MAUI** y el workload `maui-android`.
+3. Seleccionar el emulador Android (ej. `Pixel 5 - API 34`) o conectar dispositivo físico por USB.
 4. Presionar **F5** (Iniciar depuración).
 
-> **Nota sobre Direcciones IP en Emuladores:**
-> - En el emulador Android de Visual Studio / Android SDK, el equipo host (anfitrión) se accede mediante `http://10.0.2.2:19081`. La clase `ClienteSOAP.cs` detecta automáticamente el entorno Android y redirige las peticiones al puerto del servidor host.
-> - Para dispositivos físicos en la misma red Wi-Fi, configura la variable de entorno `CONVERSOR_SOAP_URL` o define la IP LAN del host (ej. `http://192.168.1.50:19081/...`).
-
+> **Nota sobre Direcciones IP y Red:**
+> - En emulador Android: se redirige automáticamente al host en `10.0.2.2:8733`.
+> - En dispositivo físico (Hotspot o Wi-Fi institucional): se conecta automáticamente a `192.168.137.1:8733` o `10.40.64.228:8733`. Consulta `../../vault/06-projects/ti-1-2-soap-dotnet/mobile-hotspot.md` para habilitar el puerto TCP `8733` en el Firewall de Windows.
