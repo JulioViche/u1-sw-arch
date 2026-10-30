@@ -12,20 +12,29 @@ public sealed record OpcionUnidad(string Codigo, string Etiqueta);
 public sealed class ModeloSesion
 {
     public string? Token { get; private set; }
+    public string Usuario { get; private set; } = "MONSTER";
     public bool Autenticado => !string.IsNullOrWhiteSpace(Token);
 
-    public void Iniciar(string token) => Token = token;
-    public void Cerrar() => Token = null;
+    public void Iniciar(string token, string usuario = "MONSTER")
+    {
+        Token = token;
+        Usuario = usuario;
+    }
+
+    public void Cerrar()
+    {
+        Token = null;
+        Usuario = "MONSTER";
+    }
 }
 
 public static class CatalogoUnidades
 {
+    // Exactamente 5 unidades por magnitud (REGLA 10 AGENTS.md)
     private static readonly OpcionUnidad[] Longitudes =
     [
-        new("MILIMETROS", "Milímetros"),
-        new("CENTIMETROS", "Centímetros"),
         new("METROS", "Metros"),
-        new("KILOMETROS", "Kilómetros"),
+        new("CENTIMETROS", "Centímetros"),
         new("PIES", "Pies"),
         new("YARDAS", "Yardas"),
         new("MILLAS", "Millas")
@@ -33,12 +42,10 @@ public static class CatalogoUnidades
 
     private static readonly OpcionUnidad[] Masas =
     [
-        new("MILIGRAMOS", "Miligramos"),
-        new("GRAMOS", "Gramos"),
         new("KILOGRAMOS", "Kilogramos"),
-        new("TONELADAS", "Toneladas"),
-        new("ONZAS", "Onzas"),
+        new("GRAMOS", "Gramos"),
         new("LIBRAS", "Libras"),
+        new("ONZAS", "Onzas"),
         new("QUINTALES", "Quintales")
     ];
 
@@ -47,17 +54,16 @@ public static class CatalogoUnidades
         new("CELSIUS", "Celsius"),
         new("FAHRENHEIT", "Fahrenheit"),
         new("KELVIN", "Kelvin"),
-        new("RANKINE", "Rankine"),
         new("NEWTON", "Newton"),
         new("REAUMUR", "Réaumur")
     ];
 
-    public static IReadOnlyList<OpcionUnidad> Obtener(TipoConversion tipo) => tipo switch
+    public static IReadOnlyList<OpcionUnidad> Unidades(TipoConversion tipo) => tipo switch
     {
         TipoConversion.Longitud => Longitudes,
         TipoConversion.Masa => Masas,
         TipoConversion.Temperatura => Temperaturas,
-        _ => throw new ArgumentOutOfRangeException(nameof(tipo))
+        _ => throw new ArgumentOutOfRangeException(nameof(tipo), tipo, null)
     };
 
     public static string Operacion(TipoConversion tipo) => tipo switch
@@ -65,6 +71,6 @@ public static class CatalogoUnidades
         TipoConversion.Longitud => "convertirLongitud",
         TipoConversion.Masa => "convertirMasa",
         TipoConversion.Temperatura => "convertirTemperatura",
-        _ => throw new ArgumentOutOfRangeException(nameof(tipo))
+        _ => throw new ArgumentOutOfRangeException(nameof(tipo), tipo, null)
     };
 }

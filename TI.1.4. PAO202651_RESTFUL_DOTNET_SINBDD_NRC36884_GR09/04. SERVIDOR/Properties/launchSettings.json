@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSConversionUnidades_DotNet_REST_GR09": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:55478;http://localhost:55479"
+    }
+  }
+}

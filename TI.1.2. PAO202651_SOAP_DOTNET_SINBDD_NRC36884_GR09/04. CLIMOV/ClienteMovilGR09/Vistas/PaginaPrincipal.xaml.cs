@@ -1,194 +1,260 @@
 using System.Globalization;
-using ClienteMovilGR09.Modelos;
+using System.Text.RegularExpressions;
 using ClienteMovilGR09.Controladores;
+using ClienteMovilGR09.Modelos;
 
 namespace ClienteMovilGR09.Vistas;
 
 public partial class PaginaPrincipal : ContentPage
 {
+    private static readonly Regex FormatoNumerico = new(@"^-?\d+(\.\d+)?$", RegexOptions.Compiled);
+    private static readonly Color ColorTabActivo = Color.FromArgb("#0F3C6E");
+    private static readonly Color ColorTabInactivo = Color.FromArgb("#F1F5F9");
+    private static readonly Color ColorTextoActivo = Colors.White;
+    private static readonly Color ColorTextoInactivo = Color.FromArgb("#64748B");
+
     private readonly ControladorConversor _controlador = new();
+    private TipoConversion _tipoActivo = TipoConversion.Longitud;
     private bool _ocupado;
 
     public PaginaPrincipal()
     {
         InitializeComponent();
-        TipoPicker.SelectedIndex = 0;
+        AplicarEstiloTabs();
+        CargarUnidadesPorMagnitud();
     }
 
-    private async void AlPulsarIniciarSesion(object? sender, EventArgs e)
+    private void AlMostrarContrasenia(object? sender, CheckedChangedEventArgs e)
+    {
+        txtClave.IsPassword = !e.Value;
+    }
+
+    private async void IniciarSesion_Clicked(object? sender, EventArgs e)
     {
         if (_ocupado) return;
-        if (string.IsNullOrWhiteSpace(UsuarioEntry.Text) || string.IsNullOrWhiteSpace(ContraseniaEntry.Text))
+
+        lblMensajeLogin.IsVisible = false;
+        lblMensajeLogin.Text = "";
+
+        string usuario = txtUsuario.Text?.Trim() ?? "";
+        string clave = txtClave.Text?.Trim() ?? "";
+
+        if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(clave))
         {
-            MostrarMensaje("Ingresa usuario y contraseña.", true);
+            MostrarErrorLogin("Por favor, ingrese usuario y contraseña.");
             return;
         }
 
         try
         {
-            EstablecerOcupado(true, BotonIngresar, "Conectando…");
-            ContraseniaEntry.Unfocus();
-            await _controlador.IniciarSesionAsync(UsuarioEntry.Text.Trim(), ContraseniaEntry.Text);
-            ContraseniaEntry.Text = string.Empty;
-            PanelInicioSesion.IsVisible = false;
-            TarjetaInicioSesion.IsVisible = false;
-            PanelConversor.IsVisible = true;
-            Presentacion.IsVisible = false;
-            VerContrasenia.IsChecked = false;
-            ResumenSesion.Text = $"Hola, {UsuarioEntry.Text.Trim()}. Elige qué convertir.";
-            MostrarMensaje("Sesión iniciada.", false);
+            EstablecerOcupadoLogin(true);
+            txtClave.Unfocus();
+
+            await _controlador.IniciarSesionAsync(usuario, clave);
+
+            txtUsuarioActivo.Text = $"Usuario: {usuario.ToUpperInvariant()}";
+            txtTokenActivo.Text = "Token: activo (SINBDD)";
+
+            panelLogin.IsVisible = false;
+            panelConversion.IsVisible = true;
             await Desplazamiento.ScrollToAsync(0, 0, false);
         }
-        catch (Exception excepcion)
+        catch (Exception ex)
         {
-            MostrarMensaje(excepcion.Message, true);
+            MostrarErrorLogin(ex.Message);
         }
         finally
         {
-            EstablecerOcupado(false, BotonIngresar, "Entrar al conversor");
+            EstablecerOcupadoLogin(false);
         }
     }
 
-    private async void AlPulsarConvertir(object? sender, EventArgs e)
+    private async void CerrarSesion_Clicked(object? sender, EventArgs e)
     {
-        if (_ocupado || !PanelConversor.IsVisible) return;
-        AlCambiarEntrada(sender, e);
-        if (!double.TryParse(ValorEntry.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var valor)
-            || !double.IsFinite(valor))
+        try
         {
-            MostrarMensaje("Ingresa un número finito válido.", true);
+            _controlador.CerrarSesion();
+        }
+        catch
+        {
+            // Fallback silencioso
+        }
+
+        txtClave.Text = "MONSTER9";
+        chkMostrarClave.IsChecked = false;
+        txtClave.IsPassword = true;
+        lblMensajeConversion.IsVisible = false;
+        cardResultado.BackgroundColor = Color.FromArgb("#F0FDF4");
+        txtResultadoValor.Text = "Presione 'Calcular Conversión'";
+        txtResultadoDetalle.Text = "Listo para despachar petición SOAP.";
+        btnCopiarResultado.IsVisible = false;
+
+        panelConversion.IsVisible = false;
+        panelLogin.IsVisible = true;
+        await Desplazamiento.ScrollToAsync(0, 0, false);
+    }
+
+    private void TabLongitud_Clicked(object? sender, EventArgs e) => CambiarMagnitud(TipoConversion.Longitud);
+    private void TabMasa_Clicked(object? sender, EventArgs e) => CambiarMagnitud(TipoConversion.Masa);
+    private void TabTemperatura_Clicked(object? sender, EventArgs e) => CambiarMagnitud(TipoConversion.Temperatura);
+
+    private void CambiarMagnitud(TipoConversion tipo)
+    {
+        _tipoActivo = tipo;
+        AplicarEstiloTabs();
+        CargarUnidadesPorMagnitud();
+        lblMensajeConversion.IsVisible = false;
+    }
+
+    private void AplicarEstiloTabs()
+    {
+        btnTabLongitud.BackgroundColor = _tipoActivo == TipoConversion.Longitud ? ColorTabActivo : ColorTabInactivo;
+        btnTabLongitud.TextColor = _tipoActivo == TipoConversion.Longitud ? ColorTextoActivo : ColorTextoInactivo;
+
+        btnTabMasa.BackgroundColor = _tipoActivo == TipoConversion.Masa ? ColorTabActivo : ColorTabInactivo;
+        btnTabMasa.TextColor = _tipoActivo == TipoConversion.Masa ? ColorTextoActivo : ColorTextoInactivo;
+
+        btnTabTemperatura.BackgroundColor = _tipoActivo == TipoConversion.Temperatura ? ColorTabActivo : ColorTabInactivo;
+        btnTabTemperatura.TextColor = _tipoActivo == TipoConversion.Temperatura ? ColorTextoActivo : ColorTextoInactivo;
+    }
+
+    private void CargarUnidadesPorMagnitud()
+    {
+        var unidades = CatalogoUnidades.Unidades(_tipoActivo);
+        var etiquetas = unidades.Select(u => u.Etiqueta).ToList();
+
+        pickerOrigen.ItemsSource = etiquetas;
+        pickerDestino.ItemsSource = etiquetas;
+
+        pickerOrigen.SelectedIndex = 0;
+        pickerDestino.SelectedIndex = etiquetas.Count > 1 ? 1 : 0;
+    }
+
+    private void Swap_Clicked(object? sender, EventArgs e)
+    {
+        int idxOrigen = pickerOrigen.SelectedIndex;
+        int idxDestino = pickerDestino.SelectedIndex;
+
+        pickerOrigen.SelectedIndex = idxDestino;
+        pickerDestino.SelectedIndex = idxOrigen;
+    }
+
+    private async void Convertir_Clicked(object? sender, EventArgs e)
+    {
+        if (_ocupado || !panelConversion.IsVisible) return;
+
+        lblMensajeConversion.IsVisible = false;
+        string valorTexto = (txtValor.Text ?? "").Trim();
+
+        if (string.IsNullOrWhiteSpace(valorTexto))
+        {
+            MostrarErrorConversion("Ingrese un valor numérico para convertir.");
             return;
         }
 
-        var tipo = TipoSeleccionado();
-        if (tipo == TipoConversion.Masa && valor < 0)
+        if (valorTexto.Length > 16)
         {
-            MostrarMensaje("La masa no puede ser negativa.", true);
+            MostrarErrorConversion("El valor no puede superar 16 caracteres.");
             return;
         }
 
-        if (UnidadInicialPicker.SelectedItem is not OpcionUnidad inicial ||
-            UnidadFinalPicker.SelectedItem is not OpcionUnidad final)
+        if (!FormatoNumerico.IsMatch(valorTexto))
         {
-            MostrarMensaje("Selecciona las unidades de origen y destino.", true);
+            MostrarErrorConversion("Formato numérico inválido. Solo dígitos y punto (ej. 100.00).");
             return;
         }
+
+        if (!double.TryParse(valorTexto, NumberStyles.Float, CultureInfo.InvariantCulture, out double valor) || !double.IsFinite(valor))
+        {
+            MostrarErrorConversion("El valor ingresado no es un número válido.");
+            return;
+        }
+
+        if (_tipoActivo == TipoConversion.Masa && valor < 0)
+        {
+            MostrarErrorConversion("La magnitud 'Masa' no admite valores negativos.");
+            return;
+        }
+
+        int idxOrigen = pickerOrigen.SelectedIndex;
+        int idxDestino = pickerDestino.SelectedIndex;
+
+        var unidades = CatalogoUnidades.Unidades(_tipoActivo);
+        if (idxOrigen < 0 || idxOrigen >= unidades.Count || idxDestino < 0 || idxDestino >= unidades.Count)
+        {
+            MostrarErrorConversion("Debe seleccionar las unidades de origen y destino.");
+            return;
+        }
+
+        var unidadOrigen = unidades[idxOrigen];
+        var unidadDestino = unidades[idxDestino];
 
         try
         {
-            EstablecerOcupado(true, BotonConvertir, "Convirtiendo…");
-            ValorEntry.Unfocus();
-            var resultado = await _controlador.ConvertirAsync(tipo, valor, inicial.Codigo, final.Codigo);
+            EstablecerOcupadoConversion(true);
+            txtValor.Unfocus();
+
+            double resultado = await _controlador.ConvertirAsync(_tipoActivo, valor, unidadOrigen.Codigo, unidadDestino.Codigo);
+
             if (!double.IsFinite(resultado))
             {
-                throw new InvalidOperationException("El resultado excede el rango permitido.");
+                throw new InvalidOperationException("El servidor devolvió un resultado numérico inválido.");
             }
-            ResultadoLabel.Text = $"{resultado.ToString("G", CultureInfo.CurrentCulture)} {final.Etiqueta}";
-            MostrarMensaje("Conversión completada.", false);
-            await Desplazamiento.ScrollToAsync(TarjetaResultado, ScrollToPosition.MakeVisible, true);
+
+            // Formateo estricto a 2 decimales (REGLA 10 AGENTS.md)
+            string valorFormateado = valor.ToString("F2", CultureInfo.InvariantCulture);
+            string resultadoFormateado = resultado.ToString("F2", CultureInfo.InvariantCulture);
+
+            txtResultadoValor.Text = $"{valorFormateado} {unidadOrigen.Codigo} = {resultadoFormateado} {unidadDestino.Codigo}";
+            txtResultadoDetalle.Text = "Conversión procesada exitosamente en el servidor SOAP.";
+            btnCopiarResultado.IsVisible = true;
         }
-        catch (Exception excepcion)
+        catch (Exception ex)
         {
-            MostrarMensaje(excepcion.Message, true);
+            MostrarErrorConversion(ex.Message);
         }
         finally
         {
-            EstablecerOcupado(false, BotonConvertir, "Convertir ahora");
+            EstablecerOcupadoConversion(false);
         }
     }
 
-    private async void AlPulsarCambiarContrasenia(object? sender, EventArgs e)
+    private async void CopiarResultado_Clicked(object? sender, EventArgs e)
     {
-        if (_ocupado) return;
-        if (string.IsNullOrWhiteSpace(ContraseniaActualEntry.Text) || string.IsNullOrWhiteSpace(ContraseniaNuevaEntry.Text))
+        if (!string.IsNullOrWhiteSpace(txtResultadoValor.Text))
         {
-            MostrarMensaje("Ingresa ambas contraseñas.", true);
-            return;
-        }
-        try
-        {
-            EstablecerOcupado(true, BotonCambiarContrasenia, "Actualizando…");
-            var respuesta = await _controlador.CambiarContraseniaAsync(ContraseniaActualEntry.Text, ContraseniaNuevaEntry.Text);
-            ContraseniaActualEntry.Text = string.Empty;
-            ContraseniaNuevaEntry.Text = string.Empty;
-            PanelContrasenia.IsVisible = false;
-            MostrarMensaje(respuesta, false);
-        }
-        catch (Exception excepcion)
-        {
-            MostrarMensaje(excepcion.Message, true);
-        }
-        finally
-        {
-            EstablecerOcupado(false, BotonCambiarContrasenia, "Actualizar contraseña");
+            await Clipboard.Default.SetTextAsync(txtResultadoValor.Text);
+            txtResultadoDetalle.Text = "¡Resultado copiado al portapapeles!";
         }
     }
 
-    private void AlPulsarCerrarSesion(object? sender, EventArgs e)
+    private void MostrarErrorLogin(string mensaje)
     {
-        _controlador.CerrarSesion();
-        PanelConversor.IsVisible = false;
-        PanelInicioSesion.IsVisible = true;
-        TarjetaInicioSesion.IsVisible = true;
-        Presentacion.IsVisible = true;
-        PanelContrasenia.IsVisible = false;
-        ContraseniaActualEntry.Text = string.Empty;
-        ContraseniaNuevaEntry.Text = string.Empty;
-        AlCambiarEntrada(sender, e);
-        UsuarioEntry.Text = string.Empty;
-        MostrarMensaje("Sesión cerrada.", false);
+        lblMensajeLogin.Text = mensaje;
+        lblMensajeLogin.IsVisible = true;
     }
 
-    private void AlCambiarTipo(object? sender, EventArgs e)
+    private void MostrarErrorConversion(string mensaje)
     {
-        var opciones = CatalogoUnidades.Obtener(TipoSeleccionado()).ToList();
-        UnidadInicialPicker.ItemsSource = opciones;
-        UnidadInicialPicker.ItemDisplayBinding = new Binding(nameof(OpcionUnidad.Etiqueta));
-        UnidadFinalPicker.ItemsSource = opciones;
-        UnidadFinalPicker.ItemDisplayBinding = new Binding(nameof(OpcionUnidad.Etiqueta));
-        UnidadInicialPicker.SelectedIndex = 0;
-        UnidadFinalPicker.SelectedIndex = Math.Min(1, opciones.Count - 1);
+        lblMensajeConversion.Text = mensaje;
+        lblMensajeConversion.IsVisible = true;
     }
 
-    private void AlMostrarContrasenia(object? sender, CheckedChangedEventArgs e) =>
-        ContraseniaEntry.IsPassword = !e.Value;
-
-    private void AlAlternarContrasenia(object? sender, EventArgs e) =>
-        PanelContrasenia.IsVisible = !PanelContrasenia.IsVisible;
-
-    private void AlIntercambiarUnidades(object? sender, EventArgs e)
-    {
-        var origen = UnidadInicialPicker.SelectedIndex;
-        UnidadInicialPicker.SelectedIndex = UnidadFinalPicker.SelectedIndex;
-        UnidadFinalPicker.SelectedIndex = origen;
-    }
-
-    private void AlCambiarEntrada(object? sender, EventArgs e)
-    {
-        ResultadoLabel.Text = "Tu resultado aparecerá aquí";
-        MensajeLabel.IsVisible = false;
-    }
-
-    private void EstablecerOcupado(bool ocupado, Button boton, string texto)
+    private void EstablecerOcupadoLogin(bool ocupado)
     {
         _ocupado = ocupado;
-        TarjetaInicioSesion.IsEnabled = !ocupado;
-        PanelConversor.IsEnabled = !ocupado;
-        boton.Text = texto;
+        btnIngresar.IsEnabled = !ocupado;
+        btnIngresar.Text = ocupado ? "Conectando..." : "Ingresar al Conversor";
+        indicadorLogin.IsRunning = ocupado;
+        indicadorLogin.IsVisible = ocupado;
     }
 
-    private TipoConversion TipoSeleccionado() => TipoPicker.SelectedIndex switch
+    private void EstablecerOcupadoConversion(bool ocupado)
     {
-        1 => TipoConversion.Masa,
-        2 => TipoConversion.Temperatura,
-        _ => TipoConversion.Longitud
-    };
-
-    private void MostrarMensaje(string mensaje, bool esError)
-    {
-        MensajeLabel.Text = mensaje;
-        MensajeLabel.TextColor = Color.FromArgb(esError ? "#FF8585" : "#52E0D2");
-        MensajeLabel.BackgroundColor = Color.FromArgb(esError ? "#302034" : "#132E3A");
-        MensajeLabel.IsVisible = true;
+        _ocupado = ocupado;
+        btnCalcular.IsEnabled = !ocupado;
+        btnCalcular.Text = ocupado ? "Procesando..." : "Calcular Conversión SOAP (.NET MAUI)";
+        indicadorConversion.IsRunning = ocupado;
+        indicadorConversion.IsVisible = ocupado;
     }
 }

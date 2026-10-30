@@ -9,6 +9,7 @@ public sealed class ClienteServicioRest
     private static readonly string[] UrlsBase =
     [
         "http://192.168.137.1:5000/api",
+        "http://10.40.64.228:5000/api",
         "http://localhost:5000/api",
         "http://127.0.0.1:5000/api"
     ];

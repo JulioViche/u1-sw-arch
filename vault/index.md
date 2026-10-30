@@ -182,6 +182,8 @@ flowchart TD
 
 - [Generar el ERS](04-guides/generate-ers.md)
 
+- [Ubicación e instalación de APKs móviles](04-guides/apks-moviles.md)
+
 
 
 ### 05 · Referencia

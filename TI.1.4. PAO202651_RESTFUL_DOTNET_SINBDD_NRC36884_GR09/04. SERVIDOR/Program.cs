@@ -30,6 +30,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseRouting();
 app.UseCors("PermitirTodo");
 
 if (app.Environment.IsDevelopment())
@@ -37,7 +38,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseRouting();
 app.MapControllers();
 
 // Endpoint raíz informativo
