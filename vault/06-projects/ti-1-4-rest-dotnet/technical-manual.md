@@ -14,7 +14,7 @@ tags: [technical-manual, rest, dotnet, webapi, kestrel, sinbdd]
 **Asignatura:** Arquitectura de Software  
 **Tarea:** TI.1.4 (PAO 2026-51)  
 **NRC:** 36884 | **Grupo:** GR09  
-**Autor:** Julio Enrique Viche Castillo  
+**Autores:** Julio Enrique Viche Castillo, Gabriel Omar Murillo Medina  
 **Docente:** Ing. Eduardo Mauricio Campaña Ortega, MIS.MDU.CCNA.CCIA. PhD. (c)  
 **Fecha:** 27 de Octubre de 2026  
 

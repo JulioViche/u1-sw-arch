@@ -21,7 +21,7 @@ tags: [deliverable, uml, ecud, use-cases, requirements, sinbdd]
 | **Tarea / Taller** | Entregable UML: 02. ECUD |
 | **NRC** | 36884 |
 | **Grupo** | GR09 |
-| **Autor / Integrante** | **Julio Enrique Viche Castillo** |
+| **Autores / Integrantes** | **Julio Enrique Viche Castillo**, **Gabriel Omar Murillo Medina** |
 | **Docente / Tutor** | Ing. Eduardo Mauricio Campaña Ortega, MIS.MDU.CCNA.CCIA. PhD. (c) |
 | **Fecha** | 28 de Octubre de 2026 |
 

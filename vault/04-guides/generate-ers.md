@@ -23,7 +23,7 @@ Para evitar la manipulación manual propensa a errores en archivos binarios `.do
 - **Eliminación de bloques obsoletos:** Se eliminó la sección inconclusa que iba desde `GRUPO 01` hasta la viñeta vacía `4.`.
 - **Estandarización de Integrantes:** Se configuró el formato reglamentario con apellidos primero y solo el autor del taller:
   ```markdown
-  | **Integrantes** | **Viche Castillo, Julio Enrique** |
+  | **Integrantes** | **Viche Castillo, Julio Enrique**, **Murillo Medina, Gabriel Omar** |
   ```
 - **Corrección de Jerarquías Markdown:**
   - `#### 8.2.2. Objetivos Específicos` (corregido desde estilo de texto normal a H4).

@@ -17,7 +17,7 @@ Carpeta de trabajo y documentación maestra para la variante **SOAP en .NET** de
 | Parámetro | Detalle |
 | :--- | :--- |
 | **Código Tarea** | TI.1.2 |
-| **Estudiante** | Julio Enrique Viche Castillo |
+| **Estudiantes** | Julio Enrique Viche Castillo, Gabriel Omar Murillo Medina |
 | **Grupo / NRC** | GR09 / NRC 36884 |
 | **Periodo** | PAO 2026-51 |
 | **Estilo de Servicio** | SOAP con contratos WSDL y servicios CoreWCF / ASMX |

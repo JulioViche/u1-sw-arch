@@ -34,3 +34,6 @@ scratch/
 **/.gradle/
 **/build/
 **/local.properties
+
+__pycache__/
+*.pyc

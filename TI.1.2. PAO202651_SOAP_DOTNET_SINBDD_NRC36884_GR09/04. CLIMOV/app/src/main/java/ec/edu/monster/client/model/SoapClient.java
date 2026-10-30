@@ -1,55 +1,129 @@
 package ec.edu.monster.client.model;
 
+import android.os.Build;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * [MODELO DE RED] Cliente SOAP para Android utilizando la biblioteca ksoap2-android.
- * Ejecuta llamadas asíncronas a los endpoints JAX-WS del Servidor SOAP.
+ * [MODELO DE RED] Cliente SOAP para Android conectándose a SOAP .NET CoreWCF (Kestrel).
+ * Ejecuta llamadas asíncronas a los endpoints del Servidor SOAP .NET (puerto 8733).
+ * Soporta fallback inteligente entre Emulador (10.0.2.2) y Hotspot (192.168.137.1).
+ *
+ * @author Julio Enrique Viche Castillo - GR09 - NRC 36884
  */
 public class SoapClient {
 
     private static final String NAMESPACE = "http://ws.monster.edu.ec/";
-    private static final int TIMEOUT_MS = 10000;
+    private static final int TIMEOUT_MS = 6000;
+
+    public static final String EMULATOR_URL_8733 = "http://10.0.2.2:8733/ServidorSOAP";
+    public static final String HOTSPOT_URL_8733 = "http://192.168.137.1:8733/ServidorSOAP";
 
     private final ExecutorService executor;
+    private String activeBaseUrl;
 
     public SoapClient() {
         this.executor = Executors.newFixedThreadPool(2);
+        this.activeBaseUrl = isEmulator() ? EMULATOR_URL_8733 : HOTSPOT_URL_8733;
+    }
+
+    public static boolean isEmulator() {
+        return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+                || Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.HARDWARE.contains("goldfish")
+                || Build.HARDWARE.contains("ranchu")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || Build.PRODUCT.contains("sdk_google")
+                || Build.PRODUCT.contains("google_sdk")
+                || Build.PRODUCT.contains("sdk")
+                || Build.PRODUCT.contains("sdk_x86")
+                || Build.PRODUCT.contains("vbox86p")
+                || Build.PRODUCT.contains("emulator")
+                || Build.PRODUCT.contains("simulator");
+    }
+
+    public static List<String> getCandidateUrls(String preferredUrl) {
+        List<String> list = new ArrayList<>();
+        boolean isEmu = isEmulator();
+
+        if (preferredUrl != null && !preferredUrl.trim().isEmpty()) {
+            list.add(normalizarUrl(preferredUrl));
+        }
+
+        if (isEmu) {
+            list.add(EMULATOR_URL_8733);
+            list.add(HOTSPOT_URL_8733);
+        } else {
+            list.add(HOTSPOT_URL_8733);
+            list.add(EMULATOR_URL_8733);
+        }
+
+        List<String> unique = new ArrayList<>();
+        for (String url : list) {
+            if (!unique.contains(url)) {
+                unique.add(url);
+            }
+        }
+        return unique;
+    }
+
+    public String getActiveBaseUrl() {
+        return activeBaseUrl != null ? activeBaseUrl : (isEmulator() ? EMULATOR_URL_8733 : HOTSPOT_URL_8733);
+    }
+
+    public void setActiveBaseUrl(String url) {
+        this.activeBaseUrl = normalizarUrl(url);
     }
 
     public Future<LoginResponse> iniciarSesion(String baseUrl, String usuario, String clave) {
         return executor.submit(() -> {
-            try {
-                String endpoint = normalizarUrl(baseUrl) + "/ServicioAutenticacion";
-                String soapAction = NAMESPACE + "iniciarSesion";
+            List<String> candidates = getCandidateUrls(baseUrl);
+            LoginResponse lastResponse = null;
 
-                SoapObject request = new SoapObject(NAMESPACE, "iniciarSesion");
-                request.addProperty("usuario", usuario);
-                request.addProperty("clave", clave);
+            for (String candidate : candidates) {
+                try {
+                    String endpoint = normalizarUrl(candidate) + "/ServicioAutenticacion";
+                    String soapAction = NAMESPACE + "iniciarSesion";
 
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                envelope.setOutputSoapObject(request);
+                    SoapObject request = new SoapObject(NAMESPACE, "iniciarSesion");
+                    request.addProperty("usuario", usuario);
+                    request.addProperty("clave", clave);
 
-                HttpTransportSE transport = new HttpTransportSE(endpoint, TIMEOUT_MS);
-                transport.call(soapAction, envelope);
+                    SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                    envelope.setOutputSoapObject(request);
 
-                SoapObject response = (SoapObject) envelope.getResponse();
-                boolean exito = Boolean.parseBoolean(obtenerPropiedad(response, "exito"));
-                String token = obtenerPropiedad(response, "token");
-                String mensaje = obtenerPropiedad(response, "mensaje");
+                    HttpTransportSE transport = new HttpTransportSE(endpoint, 3000);
+                    transport.call(soapAction, envelope);
 
-                return new LoginResponse(exito, token, mensaje);
+                    SoapObject response = (SoapObject) envelope.getResponse();
+                    boolean exito = Boolean.parseBoolean(obtenerPropiedad(response, "exito"));
+                    String token = obtenerPropiedad(response, "token");
+                    String mensaje = obtenerPropiedad(response, "mensaje");
 
-            } catch (Exception e) {
-                return new LoginResponse(false, null, "Error de comunicación SOAP: " + e.getMessage());
+                    if (exito && token != null) {
+                        this.activeBaseUrl = candidate;
+                        return new LoginResponse(true, token, mensaje);
+                    }
+                    lastResponse = new LoginResponse(exito, token, mensaje);
+
+                } catch (Exception e) {
+                    lastResponse = new LoginResponse(false, null, "Error conectando a " + candidate + ": " + e.getMessage());
+                }
             }
+
+            return (lastResponse != null) ? lastResponse : new LoginResponse(false, null, "No se pudo conectar a ningún servidor.");
         });
     }
 
@@ -67,38 +141,45 @@ public class SoapClient {
 
     private Future<ConversionResponse> ejecutarConversion(String baseUrl, String operacion, String token, double valor, String origen, String destino) {
         return executor.submit(() -> {
-            try {
-                String endpoint = normalizarUrl(baseUrl) + "/ServicioConversion";
-                String soapAction = NAMESPACE + operacion;
+            List<String> candidates = getCandidateUrls(baseUrl != null ? baseUrl : activeBaseUrl);
 
-                SoapObject request = new SoapObject(NAMESPACE, operacion);
-                request.addProperty("token", token);
-                request.addProperty("valor", String.valueOf(valor));
-                request.addProperty("unidadOrigen", origen);
-                request.addProperty("unidadDestino", destino);
+            for (String candidate : candidates) {
+                try {
+                    String endpoint = normalizarUrl(candidate) + "/ServicioConversion";
+                    String soapAction = NAMESPACE + operacion;
 
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                envelope.setOutputSoapObject(request);
+                    SoapObject request = new SoapObject(NAMESPACE, operacion);
+                    request.addProperty("token", token);
+                    request.addProperty("valor", String.valueOf(valor));
+                    request.addProperty("unidadOrigen", origen);
+                    request.addProperty("unidadDestino", destino);
 
-                HttpTransportSE transport = new HttpTransportSE(endpoint, TIMEOUT_MS);
-                transport.call(soapAction, envelope);
+                    SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                    envelope.setOutputSoapObject(request);
 
-                SoapObject response = (SoapObject) envelope.getResponse();
-                boolean exito = Boolean.parseBoolean(obtenerPropiedad(response, "exito"));
-                double valorConvertido = 0.0;
-                String valorStr = obtenerPropiedad(response, "valorConvertido");
-                if (valorStr != null && !valorStr.trim().isEmpty()) {
-                    try {
-                        valorConvertido = Double.parseDouble(valorStr);
-                    } catch (NumberFormatException ignored) {}
+                    HttpTransportSE transport = new HttpTransportSE(endpoint, TIMEOUT_MS);
+                    transport.call(soapAction, envelope);
+
+                    SoapObject response = (SoapObject) envelope.getResponse();
+                    boolean exito = Boolean.parseBoolean(obtenerPropiedad(response, "exito"));
+                    double valorConvertido = 0.0;
+                    String valorStr = obtenerPropiedad(response, "valorConvertido");
+                    if (valorStr != null && !valorStr.trim().isEmpty()) {
+                        try {
+                            valorConvertido = Double.parseDouble(valorStr);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    String mensajeError = obtenerPropiedad(response, "mensajeError");
+
+                    this.activeBaseUrl = candidate;
+                    return new ConversionResponse(exito, valorConvertido, mensajeError);
+
+                } catch (Exception ignored) {
+                    // Si falla el candidato actual, continuar con el siguiente
                 }
-                String mensajeError = obtenerPropiedad(response, "mensajeError");
-
-                return new ConversionResponse(exito, valorConvertido, mensajeError);
-
-            } catch (Exception e) {
-                return new ConversionResponse(false, 0.0, "Error de comunicación SOAP (" + operacion + "): " + e.getMessage());
             }
+
+            return new ConversionResponse(false, 0.0, "Error de comunicación SOAP (" + operacion + "): No hubo respuesta del servidor.");
         });
     }
 
@@ -113,9 +194,9 @@ public class SoapClient {
         return null;
     }
 
-    private String normalizarUrl(String url) {
+    public static String normalizarUrl(String url) {
         if (url == null || url.trim().isEmpty()) {
-            return "http://192.168.137.1:8080/ServidorSOAP";
+            return isEmulator() ? EMULATOR_URL_8733 : HOTSPOT_URL_8733;
         }
         String u = url.trim();
         while (u.endsWith("/")) {
